@@ -1,0 +1,280 @@
+{
+  "version": 1,
+  "guides": [
+    {
+      "slug": "conservar-evidencia",
+      "title": "Conservar evidencia",
+      "summary": "Guarda lo que pasa de forma que pueda servirte después, aunque todavía no sepas si vas a denunciar.",
+      "icon": "camera",
+      "category": "primeros-pasos",
+      "lastReviewed": "2026-10-05",
+      "reviewStatus": "borrador",
+      "sections": [
+        {
+          "heading": "Capturas de pantalla",
+          "intro": "Una buena captura muestra qué pasó, quién lo hizo y cuándo.",
+          "items": [
+            { "id": "cap-fecha", "text": "Que se vea la fecha y la hora", "detail": "Si el chat no las muestra, toma también una captura de la pantalla de inicio o anota la hora." },
+            { "id": "cap-usuario", "text": "Que se vea el nombre de usuario o número", "detail": "Entra al perfil y toma captura de su nombre de usuario (no solo del nombre visible)." },
+            { "id": "cap-url", "text": "Copia el enlace (URL) de publicaciones o perfiles", "detail": "En la mayoría de apps: ⋯ o Compartir → Copiar enlace." },
+            { "id": "cap-sin-editar", "text": "No recortes ni edites las capturas", "detail": "Las capturas originales tienen más valor como evidencia." }
+          ]
+        },
+        {
+          "heading": "Conversaciones y archivos",
+          "items": [
+            { "id": "no-borrar", "text": "No borres la conversación", "detail": "Aunque quieras dejar de verla, puedes archivarla o silenciarla en lugar de borrarla." },
+            { "id": "exportar", "text": "Exporta el chat si la app lo permite", "detail": "En WhatsApp: abre el chat → toca el nombre → Exportar chat." },
+            { "id": "respaldo", "text": "Haz un respaldo en un lugar seguro", "detail": "Por ejemplo, en tu bitácora privada de esta app o en una nube con contraseña segura." },
+            { "id": "cronologia", "text": "Anota una cronología", "detail": "Qué pasó, cuándo, en qué plataforma y quién estuvo involucrado. Tu bitácora te ayuda con esto." }
+          ]
+        }
+      ],
+      "tips": ["Guardar evidencia no te obliga a denunciar. Solo te da opciones."]
+    },
+    {
+      "slug": "seguridad-cuentas",
+      "title": "Reforzar la seguridad de tus cuentas",
+      "summary": "Pasos sencillos para que nadie más pueda entrar a tus cuentas o ver lo que no quieres.",
+      "icon": "key-round",
+      "category": "primeros-pasos",
+      "lastReviewed": "2026-10-05",
+      "reviewStatus": "borrador",
+      "sections": [
+        {
+          "heading": "Contraseñas",
+          "items": [
+            { "id": "unicas", "text": "Usa una contraseña distinta en cada cuenta", "detail": "Si una se filtra, las demás siguen protegidas." },
+            { "id": "larga", "text": "Haz contraseñas largas", "detail": "Una frase de 4 o más palabras es más segura y fácil de recordar." },
+            { "id": "gestor", "text": "Considera un gestor de contraseñas", "detail": "El llavero de tu iPhone o un gestor reconocido las recuerda por ti." }
+          ]
+        },
+        {
+          "heading": "Accesos",
+          "items": [
+            { "id": "2fa", "text": "Activa la verificación en dos pasos", "detail": "Así, aunque alguien sepa tu contraseña, necesitará un código que solo llega a ti." },
+            { "id": "sesiones", "text": "Revisa sesiones y dispositivos abiertos", "detail": "Cierra los que no reconozcas (en WhatsApp: Dispositivos vinculados)." },
+            { "id": "recuperacion", "text": "Revisa tu correo y teléfono de recuperación", "detail": "Asegúrate de que sean tuyos y nadie más tenga acceso." }
+          ]
+        },
+        {
+          "heading": "Privacidad de tu perfil",
+          "items": [
+            { "id": "privado", "text": "Valora poner tu perfil en privado" },
+            { "id": "ubicacion", "text": "Desactiva compartir ubicación en publicaciones e historias" },
+            { "id": "datos", "text": "Quita datos personales visibles", "detail": "Teléfono, escuela, horarios o lugares frecuentes." }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "evitar-riesgos",
+      "title": "Evitar acciones que aumenten el riesgo",
+      "summary": "Algunas reacciones naturales pueden empeorar la situación. Aquí te contamos cuáles y por qué.",
+      "icon": "shield-alert",
+      "category": "primeros-pasos",
+      "lastReviewed": "2026-10-05",
+      "reviewStatus": "borrador",
+      "sections": [
+        {
+          "heading": "Mejor evita…",
+          "items": [
+            { "id": "no-confrontar", "text": "Confrontar a la persona", "detail": "Puede escalar la agresión. Si necesitas responder, que sea breve o con apoyo de alguien." },
+            { "id": "no-pagar", "text": "Pagar o ceder a una extorsión", "detail": "Normalmente las peticiones aumentan después del primer pago." },
+            { "id": "no-enviar", "text": "Enviar más fotos, videos o datos", "detail": "Cualquier material nuevo puede usarse para presionarte más." },
+            { "id": "no-compartir-datos", "text": "Compartir tu ubicación o datos personales", "detail": "Ni con la persona ni en publicaciones mientras pasa la situación." },
+            { "id": "no-borrar", "text": "Borrar todo de inmediato", "detail": "Primero guarda evidencia; después puedes bloquear y archivar." }
+          ]
+        }
+      ],
+      "tips": ["Si ya hiciste alguna de estas cosas, no es tu culpa. Puedes empezar a protegerte desde ahora."]
+    },
+    {
+      "slug": "rutas-formales",
+      "title": "Rutas formales: denunciar",
+      "summary": "Qué es una denuncia, a dónde puedes acudir y qué esperar. Tú decides si y cuándo hacerlo.",
+      "icon": "landmark",
+      "category": "rutas",
+      "lastReviewed": "2026-10-05",
+      "reviewStatus": "borrador",
+      "sections": [
+        {
+          "heading": "¿Qué es una denuncia?",
+          "intro": "Es avisar formalmente a la autoridad (Ministerio Público / Fiscalía) que ocurrió una conducta que puede ser delito, para que la investigue. También puedes pedir orientación antes de decidir.",
+          "items": [
+            { "id": "orientacion-primero", "text": "Puedes pedir orientación antes de denunciar", "detail": "Las instancias del directorio pueden explicarte tus opciones sin compromiso." },
+            { "id": "ante-quien", "text": "Ubica ante quién acudir", "detail": "Fiscalía o Ministerio Público, y la policía cibernética para reportes de delitos en internet. Consulta el directorio verificado." }
+          ]
+        },
+        {
+          "heading": "Qué llevar",
+          "items": [
+            { "id": "identificacion", "text": "Identificación oficial" },
+            { "id": "evidencia", "text": "Tu evidencia impresa y en digital", "detail": "Puedes exportar tu bitácora como PDF desde esta app." },
+            { "id": "cronologia-doc", "text": "Una cronología de lo que pasó" },
+            { "id": "datos-agresor", "text": "Datos de la persona, si los tienes", "detail": "Usuario, enlace del perfil, número de teléfono." },
+            { "id": "acompanante", "text": "Si quieres, una persona de confianza", "detail": "Ir acompañada puede ayudarte a sentirte más segura." }
+          ]
+        },
+        {
+          "heading": "Qué esperar y tus derechos",
+          "intro": "Esta información es general y está pendiente de verificación por el equipo con fuentes oficiales.",
+          "items": [
+            { "id": "trato-digno", "text": "A ser atendida con respeto y sin que se te culpe" },
+            { "id": "copia", "text": "Pide copia o el número de tu denuncia", "detail": "Te sirve para dar seguimiento." },
+            { "id": "asesoria", "text": "Pregunta por asesoría jurídica gratuita" },
+            { "id": "proteccion", "text": "Pregunta por medidas de protección si te sientes en riesgo" }
+          ]
+        }
+      ],
+      "tips": ["Si algo en el proceso te hace sentir mal o juzgada, puedes pedir hablar con otra persona o acudir a otra instancia del directorio."]
+    },
+    {
+      "slug": "plataforma-whatsapp",
+      "title": "WhatsApp",
+      "summary": "Bloquear, reportar y ajustar tu privacidad en WhatsApp.",
+      "icon": "message-circle",
+      "category": "plataforma",
+      "platform": "whatsapp",
+      "lastReviewed": "2026-10-05",
+      "reviewStatus": "borrador",
+      "sections": [
+        {
+          "heading": "Bloquear y reportar",
+          "items": [
+            { "id": "wa-evidencia", "text": "Primero guarda evidencia", "detail": "Capturas y, si quieres, Exportar chat (toca el nombre del contacto → Exportar chat)." },
+            { "id": "wa-bloquear", "text": "Abre el chat → toca el nombre → Bloquear" },
+            { "id": "wa-reportar", "text": "En el mismo menú, toca Reportar", "detail": "WhatsApp recibe los últimos mensajes del chat para revisarlo." }
+          ]
+        },
+        {
+          "heading": "Privacidad",
+          "items": [
+            { "id": "wa-ultima", "text": "Ajustes → Privacidad → Última vez y en línea" },
+            { "id": "wa-foto", "text": "Ajustes → Privacidad → Foto del perfil: Mis contactos" },
+            { "id": "wa-grupos", "text": "Ajustes → Privacidad → Grupos: quién puede agregarte" },
+            { "id": "wa-llamadas", "text": "Ajustes → Privacidad → Llamadas: silenciar desconocidos" },
+            { "id": "wa-2fa", "text": "Ajustes → Cuenta → Verificación en dos pasos" },
+            { "id": "wa-dispositivos", "text": "Ajustes → Dispositivos vinculados: cierra los que no reconozcas" }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "plataforma-instagram",
+      "title": "Instagram",
+      "summary": "Bloquear, restringir, reportar y proteger tu cuenta de Instagram.",
+      "icon": "instagram",
+      "category": "plataforma",
+      "platform": "instagram",
+      "lastReviewed": "2026-10-05",
+      "reviewStatus": "borrador",
+      "sections": [
+        {
+          "heading": "Bloquear, restringir y reportar",
+          "items": [
+            { "id": "ig-evidencia", "text": "Primero guarda evidencia", "detail": "Captura del perfil (con @usuario) y copia el enlace del perfil o publicación." },
+            { "id": "ig-bloquear", "text": "Entra al perfil → ⋯ → Bloquear", "detail": "Puedes bloquear también otras cuentas que cree." },
+            { "id": "ig-restringir", "text": "O usa Restringir", "detail": "La persona no sabe que la restringiste y sus comentarios solo los ve ella." },
+            { "id": "ig-reportar", "text": "⋯ en el perfil o publicación → Reportar", "detail": "Si se hace pasar por ti, elige la opción de suplantación." }
+          ]
+        },
+        {
+          "heading": "Privacidad y seguridad",
+          "items": [
+            { "id": "ig-privada", "text": "Configuración → Privacidad de la cuenta → Cuenta privada" },
+            { "id": "ig-palabras", "text": "Configuración → Palabras ocultas", "detail": "Filtra comentarios y mensajes ofensivos." },
+            { "id": "ig-mensajes", "text": "Configuración → Mensajes: controla quién puede escribirte" },
+            { "id": "ig-2fa", "text": "Centro de cuentas → Contraseña y seguridad → Autenticación en dos pasos" }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "plataforma-tiktok",
+      "title": "TikTok",
+      "summary": "Bloquear, reportar y ajustar tu privacidad en TikTok.",
+      "icon": "music",
+      "category": "plataforma",
+      "platform": "tiktok",
+      "lastReviewed": "2026-10-05",
+      "reviewStatus": "borrador",
+      "sections": [
+        {
+          "heading": "Bloquear y reportar",
+          "items": [
+            { "id": "tt-evidencia", "text": "Primero guarda evidencia", "detail": "Captura del perfil, del video o comentario, y copia el enlace." },
+            { "id": "tt-bloquear", "text": "Entra al perfil → ícono de compartir o ⋯ → Bloquear" },
+            { "id": "tt-reportar", "text": "En el mismo menú → Reportar", "detail": "También puedes mantener presionado un video o comentario para reportarlo." }
+          ]
+        },
+        {
+          "heading": "Privacidad y seguridad",
+          "items": [
+            { "id": "tt-privada", "text": "Configuración y privacidad → Privacidad → Cuenta privada" },
+            { "id": "tt-comentarios", "text": "Privacidad → Comentarios: filtra o limita quién comenta" },
+            { "id": "tt-mensajes", "text": "Privacidad → Mensajes directos: limita quién puede escribirte" },
+            { "id": "tt-2fa", "text": "Configuración y privacidad → Seguridad → Verificación en dos pasos" }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "plataforma-facebook",
+      "title": "Facebook",
+      "summary": "Bloquear, reportar y revisar tu privacidad en Facebook y Messenger.",
+      "icon": "users",
+      "category": "plataforma",
+      "platform": "facebook",
+      "lastReviewed": "2026-10-05",
+      "reviewStatus": "borrador",
+      "sections": [
+        {
+          "heading": "Bloquear y reportar",
+          "items": [
+            { "id": "fb-evidencia", "text": "Primero guarda evidencia", "detail": "Captura del perfil y copia el enlace (⋯ → Copiar enlace del perfil)." },
+            { "id": "fb-bloquear", "text": "Entra al perfil → ⋯ → Bloquear" },
+            { "id": "fb-reportar", "text": "⋯ → Reportar perfil (o Buscar ayuda o reportar)", "detail": "Hay opciones para acoso, suplantación y contenido íntimo." }
+          ]
+        },
+        {
+          "heading": "Privacidad y seguridad",
+          "items": [
+            { "id": "fb-revision", "text": "Configuración → Revisión de privacidad", "detail": "Te guía paso a paso por quién ve tu información." },
+            { "id": "fb-publicaciones", "text": "Limita quién ve tus publicaciones anteriores" },
+            { "id": "fb-2fa", "text": "Centro de cuentas → Contraseña y seguridad → Autenticación en dos pasos" },
+            { "id": "fb-sesiones", "text": "Centro de cuentas → Dónde iniciaste sesión: cierra lo que no reconozcas" }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "plataforma-otra",
+      "title": "Correo y otras apps",
+      "summary": "Pasos generales para correo electrónico y otras plataformas.",
+      "icon": "mail",
+      "category": "plataforma",
+      "platform": "otra",
+      "lastReviewed": "2026-10-05",
+      "reviewStatus": "borrador",
+      "sections": [
+        {
+          "heading": "Correo electrónico",
+          "items": [
+            { "id": "mail-guardar", "text": "No borres los correos", "detail": "Muévelos a una carpeta aparte si no quieres verlos." },
+            { "id": "mail-original", "text": "Guarda el correo completo", "detail": "En Gmail: ⋮ → Mostrar original. Eso incluye datos técnicos que pueden servir." },
+            { "id": "mail-bloquear", "text": "Bloquea al remitente", "detail": "En Gmail: ⋮ → Bloquear a [remitente]." },
+            { "id": "mail-2fa", "text": "Activa la verificación en dos pasos de tu correo", "detail": "Tu correo es la llave de tus otras cuentas." }
+          ]
+        },
+        {
+          "heading": "Otras apps",
+          "items": [
+            { "id": "otra-buscar", "text": "Busca en el perfil o mensaje las opciones Bloquear y Reportar", "detail": "Casi siempre están en ⋯ o en el nombre de la persona." },
+            { "id": "otra-ayuda", "text": "Consulta el centro de ayuda de la app", "detail": "Busca \"acoso\", \"suplantación\" o \"denunciar\"." }
+          ]
+        }
+      ]
+    }
+  ]
+}

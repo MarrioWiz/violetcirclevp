@@ -1,0 +1,252 @@
+{
+  "version": 1,
+  "reviewStatus": "borrador",
+  "start": "q_danger",
+  "nodes": [
+    {
+      "id": "q_danger",
+      "question": "Antes de empezar: ¿sientes que estás en peligro ahora mismo?",
+      "help": "Por ejemplo, alguien sabe dónde estás y amenaza con buscarte.",
+      "options": [
+        { "label": "Sí, siento que estoy en peligro", "next": "r_riesgo" },
+        { "label": "No en este momento", "next": "q_platform" },
+        { "label": "No estoy segura", "next": "q_platform", "set": { "unsure": "si" } }
+      ]
+    },
+    {
+      "id": "q_platform",
+      "question": "¿Dónde está pasando?",
+      "help": "Si pasa en varias, elige la principal.",
+      "options": [
+        { "label": "WhatsApp", "next": "q_what", "set": { "platform": "whatsapp" } },
+        { "label": "Instagram", "next": "q_what", "set": { "platform": "instagram" } },
+        { "label": "TikTok", "next": "q_what", "set": { "platform": "tiktok" } },
+        { "label": "Facebook", "next": "q_what", "set": { "platform": "facebook" } },
+        { "label": "Correo u otra", "next": "q_what", "set": { "platform": "otra" } }
+      ]
+    },
+    {
+      "id": "q_what",
+      "question": "¿Qué es lo que más se parece a lo que estás viviendo?",
+      "options": [
+        { "label": "Me piden dinero o más fotos a cambio de no publicar algo", "next": "q_sext" },
+        { "label": "Compartieron fotos o videos íntimos míos sin mi permiso", "next": "q_diffusion" },
+        { "label": "Publicaron mis datos (dirección, teléfono, horarios, escuela)", "next": "r_doxing" },
+        { "label": "Alguien se hace pasar por mí o usa mis fotos", "next": "r_suplantacion" },
+        { "label": "Me amenazan con hacerme daño", "next": "q_threat" },
+        { "label": "Recibo mensajes insistentes, insultos o burlas", "next": "q_known" },
+        { "label": "Soy menor de edad y una persona adulta me busca con intenciones sexuales", "next": "r_grooming" },
+        { "label": "Es otra cosa", "next": "r_otro" }
+      ]
+    },
+    {
+      "id": "q_sext",
+      "question": "¿Ya enviaste dinero o más contenido?",
+      "help": "No importa la respuesta: no es tu culpa y aún puedes protegerte.",
+      "options": [
+        { "label": "Sí", "next": "r_sextorsion", "set": { "paid": "si" } },
+        { "label": "No", "next": "r_sextorsion" }
+      ]
+    },
+    {
+      "id": "q_diffusion",
+      "question": "¿Además te están amenazando o pidiendo algo a cambio?",
+      "options": [
+        { "label": "Sí, me piden dinero o más contenido", "next": "r_sextorsion" },
+        { "label": "Sí, me amenazan con hacerme daño", "next": "q_threat" },
+        { "label": "No, solo lo compartieron", "next": "r_difusion" }
+      ]
+    },
+    {
+      "id": "q_threat",
+      "question": "¿Crees que podría cumplir la amenaza pronto, o sabe dónde estás?",
+      "options": [
+        { "label": "Sí", "next": "r_riesgo" },
+        { "label": "No lo sé", "next": "r_amenazas", "set": { "unsure": "si" } },
+        { "label": "No", "next": "r_amenazas" }
+      ]
+    },
+    {
+      "id": "q_known",
+      "question": "¿Conoces a la persona?",
+      "options": [
+        { "label": "Sí, es o fue mi pareja", "next": "r_ciberacoso", "set": { "relation": "pareja" } },
+        { "label": "Sí, es de la universidad", "next": "r_ciberacoso", "set": { "relation": "escuela" } },
+        { "label": "Sí, la conozco de otro lado", "next": "r_ciberacoso", "set": { "relation": "conocida" } },
+        { "label": "No / es una cuenta anónima", "next": "r_ciberacoso", "set": { "relation": "anonima" } }
+      ]
+    },
+    { "id": "r_riesgo", "result": "riesgo" },
+    { "id": "r_ciberacoso", "result": "ciberacoso" },
+    { "id": "r_sextorsion", "result": "sextorsion" },
+    { "id": "r_doxing", "result": "doxing" },
+    { "id": "r_suplantacion", "result": "suplantacion" },
+    { "id": "r_difusion", "result": "difusion" },
+    { "id": "r_grooming", "result": "grooming" },
+    { "id": "r_amenazas", "result": "amenazas" },
+    { "id": "r_otro", "result": "otro" }
+  ],
+  "results": {
+    "riesgo": {
+      "kind": "riesgo",
+      "title": "Posible riesgo inmediato",
+      "explanation": "Lo que describes puede ponerte en peligro. Tu seguridad física es lo primero; lo demás puede esperar.",
+      "urgent": true,
+      "doNow": [
+        "Si estás en peligro, llama al 911.",
+        "Avisa a alguien de tu círculo para que esté contigo o al pendiente.",
+        "Ve a un lugar donde haya más personas.",
+        "Cuando estés a salvo, guarda capturas de lo que recibiste."
+      ],
+      "dontDo": [
+        "No vayas sola a encontrarte con la persona.",
+        "No borres los mensajes: pueden servir después."
+      ],
+      "guides": ["conservar-evidencia", "rutas-formales"]
+    },
+    "ciberacoso": {
+      "kind": "ciberacoso",
+      "title": "Ciberacoso",
+      "explanation": "Es cuando alguien te molesta, insulta, humilla o persigue de forma insistente por medios digitales. No tiene que ser constante para afectarte, y no es algo que debas aguantar.",
+      "urgent": false,
+      "doNow": [
+        "Guarda capturas con fecha, hora y nombre de usuario visibles.",
+        "Bloquea y reporta la cuenta en la plataforma.",
+        "Revisa la privacidad de tu perfil.",
+        "Cuéntale a alguien de tu círculo."
+      ],
+      "dontDo": [
+        "No respondas desde el enojo: puede escalar la situación.",
+        "No borres la conversación antes de guardar evidencia."
+      ],
+      "guides": ["conservar-evidencia", "seguridad-cuentas"]
+    },
+    "sextorsion": {
+      "kind": "sextorsion",
+      "title": "Sextorsión",
+      "explanation": "Es cuando alguien te amenaza con publicar imágenes o videos íntimos (reales o falsos) si no le das dinero, más contenido u otra cosa. Es un delito y la responsabilidad es de quien extorsiona, no tuya.",
+      "urgent": false,
+      "doNow": [
+        "Deja de responder a la persona, sin avisarle.",
+        "Guarda capturas de las amenazas, el usuario y cualquier dato de pago que te haya pedido.",
+        "Bloquea y reporta la cuenta.",
+        "Habla con alguien de tu círculo: no tienes que pasar esto sola.",
+        "Considera acudir a la policía cibernética o la fiscalía (ver directorio)."
+      ],
+      "dontDo": [
+        "No pagues ni envíes más contenido: normalmente las peticiones aumentan.",
+        "No negocies ni amenaces a la persona.",
+        "No borres la conversación."
+      ],
+      "guides": ["conservar-evidencia", "evitar-riesgos", "rutas-formales"]
+    },
+    "doxing": {
+      "kind": "doxing",
+      "title": "Doxing (exposición de datos personales)",
+      "explanation": "Es cuando alguien publica o comparte tus datos personales —dirección, teléfono, horarios, escuela, familia— sin tu permiso, lo que puede ponerte en riesgo.",
+      "urgent": false,
+      "doNow": [
+        "Guarda capturas de dónde se publicaron tus datos (con enlace).",
+        "Reporta la publicación en la plataforma por compartir información privada.",
+        "Avisa a tu círculo y, si te sientes insegura, cambia rutinas por unos días.",
+        "Revisa qué datos tuyos son públicos en tus redes."
+      ],
+      "dontDo": [
+        "No publiques más datos para desmentir o aclarar.",
+        "No confrontes a la persona en público."
+      ],
+      "guides": ["conservar-evidencia", "seguridad-cuentas"]
+    },
+    "suplantacion": {
+      "kind": "suplantacion",
+      "title": "Suplantación de identidad",
+      "explanation": "Es cuando alguien crea una cuenta con tu nombre o fotos, o entra a tu cuenta, para hacerse pasar por ti.",
+      "urgent": false,
+      "doNow": [
+        "Guarda capturas y el enlace del perfil falso.",
+        "Repórtalo en la plataforma como suplantación (hay una opción específica).",
+        "Pide a tus contactos que también lo reporten y que no le respondan.",
+        "Cambia tus contraseñas y activa la verificación en dos pasos."
+      ],
+      "dontDo": [
+        "No escribas desde tu cuenta a la cuenta falsa.",
+        "No compartas tu identificación oficial fuera de los canales oficiales de la plataforma."
+      ],
+      "guides": ["seguridad-cuentas", "conservar-evidencia"]
+    },
+    "difusion": {
+      "kind": "difusion",
+      "title": "Difusión de contenido íntimo sin consentimiento",
+      "explanation": "Compartir imágenes o videos íntimos de una persona sin su permiso es violencia digital, aunque tú los hayas enviado antes a alguien de confianza. La culpa es de quien los difunde.",
+      "urgent": false,
+      "doNow": [
+        "Guarda capturas de dónde se publicó (enlaces, usuarios, fechas) sin volver a compartir el contenido.",
+        "Reporta la publicación en la plataforma como contenido íntimo sin consentimiento.",
+        "Busca apoyo en tu círculo y en las instancias del directorio.",
+        "Considera presentar una denuncia; es una conducta sancionada."
+      ],
+      "dontDo": [
+        "No reenvíes el contenido, ni siquiera para pedir ayuda: comparte solo el enlace o la captura con lo indispensable.",
+        "No te culpes: confiar en alguien no es un error."
+      ],
+      "guides": ["conservar-evidencia", "rutas-formales"]
+    },
+    "grooming": {
+      "kind": "grooming",
+      "title": "Grooming",
+      "explanation": "Es cuando una persona adulta busca ganarse la confianza de una persona menor de edad con fines sexuales. Nunca es culpa de la persona menor.",
+      "urgent": true,
+      "doNow": [
+        "Cuéntaselo a una persona adulta de confianza hoy mismo.",
+        "Guarda capturas de las conversaciones y el perfil.",
+        "Bloquea y reporta la cuenta.",
+        "Si te pide verte en persona, no vayas."
+      ],
+      "dontDo": [
+        "No envíes fotos ni datos personales.",
+        "No aceptes encuentros, aunque la persona parezca amable."
+      ],
+      "guides": ["conservar-evidencia", "rutas-formales"]
+    },
+    "amenazas": {
+      "kind": "amenazas",
+      "title": "Amenazas",
+      "explanation": "Recibir mensajes que anuncian un daño hacia ti o hacia alguien cercano es violencia, aunque sean por internet.",
+      "urgent": false,
+      "doNow": [
+        "Guarda capturas de cada amenaza con fecha y usuario.",
+        "Avisa a alguien de tu círculo.",
+        "Bloquea y reporta la cuenta.",
+        "Si la amenaza aumenta o sientes peligro, llama al 911."
+      ],
+      "dontDo": [
+        "No respondas a las amenazas.",
+        "No borres los mensajes."
+      ],
+      "guides": ["conservar-evidencia", "rutas-formales"]
+    },
+    "otro": {
+      "kind": "otro",
+      "title": "Algo que te incomoda o te afecta",
+      "explanation": "Si algo en línea te hace sentir incómoda, insegura o vigilada, vale la pena atenderlo. Tus sensaciones son válidas aunque no sepas cómo nombrarlo.",
+      "urgent": false,
+      "doNow": [
+        "Guarda capturas por si las necesitas después.",
+        "Revisa la seguridad y privacidad de tus cuentas.",
+        "Platica con alguien de tu círculo.",
+        "Consulta el directorio para recibir orientación profesional."
+      ],
+      "dontDo": [
+        "No minimices lo que sientes.",
+        "No borres información que podría servirte."
+      ],
+      "guides": ["conservar-evidencia", "seguridad-cuentas"]
+    }
+  },
+  "extras": [
+    { "when": { "paid": "si" }, "text": "Haber pagado o enviado algo no te quita el derecho a pedir ayuda ni a denunciar. Puedes dejar de responder desde hoy." },
+    { "when": { "relation": "pareja" }, "text": "Cuando la violencia viene de una pareja o expareja, suele combinarse con otras formas de control. Considera hablar con una instancia de atención a mujeres (ver directorio)." },
+    { "when": { "relation": "escuela" }, "text": "Si la persona es de la universidad, puedes buscar la instancia de atención de la UVP (ver directorio)." },
+    { "when": { "unsure": "si" }, "text": "Si en algún momento sientes que estás en peligro, llama al 911 o avisa a tu círculo." }
+  ]
+}

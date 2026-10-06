@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "reviewStatus": "borrador",
+  "templates": [
+    {
+      "id": "pedir-apoyo",
+      "title": "Pedir apoyo",
+      "body": "Necesito apoyo. ¿Puedes hablar conmigo?"
+    },
+    {
+      "id": "en-riesgo",
+      "title": "Me siento en riesgo",
+      "body": "Me siento en riesgo y necesito que estés al pendiente de mí. ¿Puedes llamarme en cuanto veas esto?"
+    },
+    {
+      "id": "acompanar-denuncia",
+      "title": "Acompañarme a denunciar",
+      "body": "Estoy pensando en denunciar algo que me está pasando. ¿Podrías acompañarme?"
+    },
+    {
+      "id": "guardar-evidencia",
+      "title": "Ayúdame con evidencia",
+      "body": "Me está pasando algo en redes. ¿Me ayudas a guardar capturas y a revisar qué hacer?"
+    }
+  ]
+}

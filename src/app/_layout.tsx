@@ -1,18 +1,127 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
+import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold } from '@expo-google-fonts/inter';
+import {
+  PlusJakartaSans_600SemiBold,
+  PlusJakartaSans_700Bold,
+  PlusJakartaSans_800ExtraBold,
+} from '@expo-google-fonts/plus-jakarta-sans';
+import { useFonts } from 'expo-font';
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { useEffect, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+import { DisguiseCalculator } from '@/features/auth/DisguiseCalculator';
+import { LockScreen } from '@/features/auth/LockScreen';
+import { PrivacyCover } from '@/features/auth/PrivacyCover';
+import { useAppLifecycle } from '@/features/auth/useAppLifecycle';
+import { useChecklist } from '@/store/checklistStore';
+import { useCircle } from '@/store/circleStore';
+import { useContent } from '@/store/contentStore';
+import { useIncidents } from '@/store/incidentsStore';
+import { useSession } from '@/store/sessionStore';
+import { useSettings } from '@/store/settingsStore';
+import { useTheme } from '@/theme';
 
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync().catch(() => undefined);
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+export default function RootLayout() {
+  const [fontsLoaded, fontError] = useFonts({
+    PlusJakartaSans_600SemiBold,
+    PlusJakartaSans_700Bold,
+    PlusJakartaSans_800ExtraBold,
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+  });
+  const [booted, setBooted] = useState(false);
+
+  useEffect(() => {
+    void (async () => {
+      await Promise.all([useSettings.getState().hydrate(), useSession.getState().hydrateDisguise()]);
+      void useContent.getState().init();
+      setBooted(true);
+    })();
+  }, []);
+
+  // Si las fuentes fallan, seguimos con las del sistema en lugar de quedarnos en el splash.
+  const ready = booted && (fontsLoaded || !!fontError);
+
+  useEffect(() => {
+    if (ready) SplashScreen.hideAsync().catch(() => undefined);
+  }, [ready]);
+
+  if (!ready) return null;
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <AppShell />
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
+  );
+}
+
+function AppShell() {
+  useAppLifecycle();
+  const { scheme, colors } = useTheme();
+  const onboarded = useSettings((s) => s.onboarded);
+  const locked = useSession((s) => s.locked);
+  const disguised = useSession((s) => s.disguised);
+  const covered = useSession((s) => s.covered);
+
+  const showLock = onboarded && locked;
+  const unlocked = onboarded && !locked && !disguised;
+
+  // Los datos cifrados se cargan en memoria solo después de desbloquear.
+  useEffect(() => {
+    if (!unlocked) return;
+    if (!useCircle.getState().hydrated) void useCircle.getState().hydrate();
+    if (!useChecklist.getState().hydrated) void useChecklist.getState().hydrate();
+    if (!useIncidents.getState().hydrated) void useIncidents.getState().hydrate();
+  }, [unlocked]);
+
+  const navTheme = scheme === 'dark' ? DarkTheme : DefaultTheme;
+
+  // Salida rápida: se desmonta toda la navegación, así no queda historial al que regresar.
+  if (disguised) {
+    return (
+      <View style={{ flex: 1 }}>
+        <DisguiseCalculator />
+        {covered && <PrivacyCover />}
+      </View>
+    );
+  }
+
+  return (
+    <ThemeProvider value={{ ...navTheme, colors: { ...navTheme.colors, background: colors.bg, primary: colors.primary } }}>
+      <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+      <View style={{ flex: 1, backgroundColor: colors.bg }}>
+        {/* La navegación se mantiene montada bajo el bloqueo para no perder dónde estaba ella,
+            pero queda oculta para lectores de pantalla y tapada por completo. */}
+        <View
+          style={{ flex: 1 }}
+          importantForAccessibility={showLock ? 'no-hide-descendants' : 'auto'}
+          accessibilityElementsHidden={showLock}
+        >
+          <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }}>
+            <Stack.Protected guard={!onboarded}>
+              <Stack.Screen name="(onboarding)" />
+            </Stack.Protected>
+            <Stack.Protected guard={onboarded}>
+              <Stack.Screen name="(app)" />
+            </Stack.Protected>
+          </Stack>
+        </View>
+        {showLock && (
+          <View style={StyleSheet.absoluteFill} accessibilityViewIsModal>
+            <LockScreen />
+          </View>
+        )}
+        {covered && <PrivacyCover />}
+      </View>
     </ThemeProvider>
   );
 }

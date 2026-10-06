@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "reviewStatus": "borrador",
+  "note": "Solo se muestran entradas con verified: true. El equipo debe verificar cada dato con la fuente oficial, llenar verifiedAt y source, y cambiar verified a true. NO publicar datos supuestos.",
+  "entries": [
+    {
+      "id": "emergencias-911",
+      "name": "Número de emergencias 911",
+      "type": "emergencia",
+      "description": "Línea nacional de emergencias en México. Atiende situaciones de riesgo inmediato a la vida o la seguridad.",
+      "phone": "911",
+      "hours": "24 horas, todos los días",
+      "whatToExpect": "Te preguntarán qué está pasando y dónde estás. Habla con calma si puedes; si no puedes hablar, intenta mantener la llamada abierta.",
+      "verified": true,
+      "verifiedAt": "2026-10-05",
+      "source": "Número Único Armonizado de Emergencias 911 (Gobierno de México)",
+      "scope": "nacional"
+    },
+    {
+      "id": "policia-cibernetica-puebla",
+      "name": "Policía cibernética de Puebla",
+      "type": "policia",
+      "description": "PENDIENTE_DE_VERIFICAR",
+      "phone": "PENDIENTE_DE_VERIFICAR",
+      "url": "PENDIENTE_DE_VERIFICAR",
+      "hours": "PENDIENTE_DE_VERIFICAR",
+      "whatToExpect": "PENDIENTE_DE_VERIFICAR",
+      "verified": false,
+      "source": "PENDIENTE_DE_VERIFICAR",
+      "scope": "puebla"
+    },
+    {
+      "id": "fiscalia-puebla",
+      "name": "Fiscalía General del Estado de Puebla",
+      "type": "policia",
+      "description": "PENDIENTE_DE_VERIFICAR",
+      "phone": "PENDIENTE_DE_VERIFICAR",
+      "address": "PENDIENTE_DE_VERIFICAR",
+      "hours": "PENDIENTE_DE_VERIFICAR",
+      "whatToExpect": "PENDIENTE_DE_VERIFICAR",
+      "verified": false,
+      "source": "PENDIENTE_DE_VERIFICAR",
+      "scope": "puebla"
+    },
+    {
+      "id": "instituto-poblano-mujeres",
+      "name": "Instituto Poblano de las Mujeres",
+      "type": "mujeres",
+      "description": "PENDIENTE_DE_VERIFICAR",
+      "phone": "PENDIENTE_DE_VERIFICAR",
+      "url": "PENDIENTE_DE_VERIFICAR",
+      "address": "PENDIENTE_DE_VERIFICAR",
+      "hours": "PENDIENTE_DE_VERIFICAR",
+      "whatToExpect": "PENDIENTE_DE_VERIFICAR",
+      "verified": false,
+      "source": "PENDIENTE_DE_VERIFICAR",
+      "scope": "puebla"
+    },
+    {
+      "id": "linea-nacional-mujeres",
+      "name": "Línea nacional de atención a mujeres",
+      "type": "mujeres",
+      "description": "PENDIENTE_DE_VERIFICAR",
+      "phone": "PENDIENTE_DE_VERIFICAR",
+      "hours": "PENDIENTE_DE_VERIFICAR",
+      "whatToExpect": "PENDIENTE_DE_VERIFICAR",
+      "verified": false,
+      "source": "PENDIENTE_DE_VERIFICAR",
+      "scope": "nacional"
+    },
+    {
+      "id": "apoyo-psicologico",
+      "name": "Línea de apoyo psicológico",
+      "type": "psicologico",
+      "description": "PENDIENTE_DE_VERIFICAR",
+      "phone": "PENDIENTE_DE_VERIFICAR",
+      "hours": "PENDIENTE_DE_VERIFICAR",
+      "whatToExpect": "PENDIENTE_DE_VERIFICAR",
+      "verified": false,
+      "source": "PENDIENTE_DE_VERIFICAR",
+      "scope": "nacional"
+    },
+    {
+      "id": "asesoria-juridica",
+      "name": "Asesoría jurídica gratuita",
+      "type": "juridico",
+      "description": "PENDIENTE_DE_VERIFICAR",
+      "phone": "PENDIENTE_DE_VERIFICAR",
+      "hours": "PENDIENTE_DE_VERIFICAR",
+      "whatToExpect": "PENDIENTE_DE_VERIFICAR",
+      "verified": false,
+      "source": "PENDIENTE_DE_VERIFICAR",
+      "scope": "puebla"
+    },
+    {
+      "id": "uvp-genero",
+      "name": "Instancia de atención y género de la UVP",
+      "type": "uvp",
+      "description": "PENDIENTE_DE_VERIFICAR",
+      "email": "PENDIENTE_DE_VERIFICAR",
+      "phone": "PENDIENTE_DE_VERIFICAR",
+      "address": "PENDIENTE_DE_VERIFICAR",
+      "hours": "PENDIENTE_DE_VERIFICAR",
+      "whatToExpect": "PENDIENTE_DE_VERIFICAR",
+      "verified": false,
+      "source": "PENDIENTE_DE_VERIFICAR",
+      "scope": "uvp"
+    },
+    {
+      "id": "uvp-psicopedagogico",
+      "name": "Atención psicopedagógica UVP",
+      "type": "uvp",
+      "description": "PENDIENTE_DE_VERIFICAR",
+      "phone": "PENDIENTE_DE_VERIFICAR",
+      "address": "PENDIENTE_DE_VERIFICAR",
+      "hours": "PENDIENTE_DE_VERIFICAR",
+      "whatToExpect": "PENDIENTE_DE_VERIFICAR",
+      "verified": false,
+      "source": "PENDIENTE_DE_VERIFICAR",
+      "scope": "uvp"
+    }
+  ]
+}

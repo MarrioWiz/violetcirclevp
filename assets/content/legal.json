@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "reviewStatus": "borrador",
+  "privacy": {
+    "title": "Aviso de privacidad",
+    "updated": "2026-10-05",
+    "sections": [
+      {
+        "heading": "Qué guardamos en tu teléfono",
+        "body": "Tu PIN (como código cifrado, nunca el número), tu círculo de confianza, tu bitácora, tus archivos de evidencia, el avance de tus listas y tus ajustes. Todo lo sensible se guarda cifrado (AES-256) y la llave vive en el almacenamiento seguro de tu teléfono."
+      },
+      {
+        "heading": "Qué NO sale de tu teléfono",
+        "body": "Tus contactos, tu bitácora, tu evidencia, tus respuestas de \"¿Esto es violencia digital?\" y tu ubicación. Nada de eso se sube a ningún servidor."
+      },
+      {
+        "heading": "Qué se envía a internet",
+        "body": "La app descarga guías y el directorio verificado desde nuestro servidor (Firebase de Google). Para eso crea una sesión anónima: no tiene tu nombre, correo ni teléfono. Solo si tú activas las estadísticas anónimas, al terminar la orientación guiada se envía el tipo de situación, la plataforma y la semana del año, sin ningún dato que te identifique."
+      },
+      {
+        "heading": "Mensajes a tu círculo",
+        "body": "Cuando avisas a tu círculo, la app abre Mensajes o WhatsApp con el texto listo. Tú decides si lo envías. Esos mensajes quedan sujetos a la privacidad de esas apps."
+      },
+      {
+        "heading": "Sin rastreo",
+        "body": "No usamos publicidad, ni herramientas de análisis de terceros, ni vendemos datos."
+      },
+      {
+        "heading": "Cómo borrar todo",
+        "body": "En Ajustes → Borrar todos mis datos. Se elimina todo lo guardado en este teléfono y la sesión anónima. Si desinstalas la app, en iPhone también se borran los datos de la app."
+      },
+      {
+        "heading": "Quién es responsable",
+        "body": "VioletCircleVP es un proyecto académico de estudiantes de Ingeniería en Sistemas y Tecnologías de la Información de la Universidad del Valle de Puebla (UVP), grupo 7C."
+      }
+    ]
+  },
+  "about": {
+    "title": "Acerca de VioletCircleVP",
+    "body": [
+      "VioletCircleVP es una plataforma de acompañamiento y seguridad digital para mujeres universitarias de la UVP.",
+      "Violet es el color de la lucha contra la violencia hacia las mujeres; Circle es tu red cercana de apoyo; VP es la identidad del proyecto.",
+      "Proyecto integrador de la materia Problemática Social Contemporánea, 7.º semestre, grupo 7C, Ingeniería en Sistemas y Tecnologías de la Información, Universidad del Valle de Puebla."
+    ]
+  },
+  "howToSupport": {
+    "title": "Cómo acompañar",
+    "intro": "Si alguien te pidió apoyo por violencia digital, gracias por estar. Esto puede ayudarte:",
+    "sections": [
+      {
+        "heading": "Escucha sin juzgar",
+        "items": [
+          "Créele. Dile: \"Te creo\" y \"No es tu culpa\".",
+          "Deja que cuente lo que quiera, a su ritmo.",
+          "Pregunta qué necesita en lugar de suponerlo."
+        ]
+      },
+      {
+        "heading": "Evita decir",
+        "items": [
+          "\"¿Por qué mandaste esa foto?\" o \"¿Por qué no lo bloqueaste antes?\"",
+          "\"No es para tanto\" o \"Ignóralo\".",
+          "\"Tienes que denunciar ya\": la decisión es suya."
+        ]
+      },
+      {
+        "heading": "Ayuda con lo práctico",
+        "items": [
+          "Ayúdale a tomar capturas con fecha, hora y nombre de usuario visibles.",
+          "No reenvíes ni compartas el contenido, ni siquiera para pedir ayuda.",
+          "Acompáñale a reportar en la plataforma o a una instancia de atención si lo decide.",
+          "Si hay peligro inmediato, llamen al 911."
+        ]
+      },
+      {
+        "heading": "Cuídate también",
+        "items": ["Acompañar también cansa. Está bien pedir apoyo para ti."]
+      }
+    ]
+  }
+}
