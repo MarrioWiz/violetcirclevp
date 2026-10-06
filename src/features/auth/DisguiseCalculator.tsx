@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { getPinLength, verifyPin } from '@/services/crypto';
@@ -39,6 +39,17 @@ export function DisguiseCalculator() {
   const [op, setOp] = useState<Op | null>(null);
   const [fresh, setFresh] = useState(true);
   const [typed, setTyped] = useState('');
+
+  // En web (PWA) también se disfrazan el título de la pestaña y la URL.
+  useEffect(() => {
+    if (Platform.OS !== 'web' || typeof document === 'undefined') return;
+    const previous = document.title;
+    document.title = 'Calculadora';
+    window.history.replaceState(null, '', '/');
+    return () => {
+      document.title = previous;
+    };
+  }, []);
 
   const digit = (d: string) => {
     setTyped((t) => (t + d).slice(-6));

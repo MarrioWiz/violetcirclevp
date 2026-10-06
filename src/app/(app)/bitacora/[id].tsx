@@ -3,7 +3,7 @@ import { es } from 'date-fns/locale';
 import * as Linking from 'expo-linking';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Camera, FileDown, FileQuestion, FolderOpen, History, Image as ImageIcon, Pencil, Trash2 } from 'lucide-react-native';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Platform, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
@@ -38,7 +38,10 @@ function Field({ label, value }: { label: string; value?: string }) {
 export default function IncidentDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const incident = useIncidents((s) => s.incidents.find((i) => i.id === id));
-  const files = useIncidents((s) => s.files.filter((f) => f.incidentId === id));
+  // Seleccionar la lista completa y filtrar aparte: un selector que crea un arreglo
+  // nuevo en cada render provoca un ciclo infinito en Zustand v5.
+  const allFiles = useIncidents((s) => s.files);
+  const files = useMemo(() => allFiles.filter((f) => f.incidentId === id), [allFiles, id]);
   const addFile = useIncidents((s) => s.addFile);
   const remove = useIncidents((s) => s.remove);
   const [unlocked, setUnlocked] = useState(false);
