@@ -7,7 +7,6 @@ import { Platform, Pressable, StyleSheet, View } from 'react-native';
 import Animated, {
   Easing,
   cancelAnimation,
-  runOnJS,
   useAnimatedProps,
   useAnimatedStyle,
   useReducedMotion,
@@ -62,9 +61,38 @@ export function HoldToHelpOrb() {
     return () => cancelAnimation(breathe);
   }, [animate, breathe]);
 
+  // En el navegador, mantener presionado dispara el menú contextual / selección de texto y un
+  // mínimo movimiento del dedo se vuelve scroll: ambos cancelan el toque a medio camino.
+  const pressTarget = useRef<View>(null);
+  useEffect(() => {
+    if (Platform.OS !== 'web') return;
+    const el = pressTarget.current as unknown as HTMLElement | null;
+    if (!el) return;
+    const block = (e: Event) => e.preventDefault();
+    el.addEventListener('contextmenu', block);
+    el.addEventListener('selectstart', block);
+    el.addEventListener('dragstart', block);
+    return () => {
+      el.removeEventListener('contextmenu', block);
+      el.removeEventListener('selectstart', block);
+      el.removeEventListener('dragstart', block);
+    };
+  }, []);
+
+  // El envío lo decide un temporizador de JS (no el final de la animación), para que no dependa
+  // de que la animación termine en cada plataforma.
+  const holdTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const clearHoldTimer = () => {
+    if (holdTimer.current) clearTimeout(holdTimer.current);
+    holdTimer.current = null;
+  };
+  useEffect(() => clearHoldTimer, []);
+
   const fire = () => {
-    setHolding(false);
+    holdTimer.current = null;
+    cancelAnimation(progress);
     progress.value = 0;
+    setHolding(false);
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);
     setSosActive(true, 'hold');
   };
@@ -73,16 +101,19 @@ export function HoldToHelpOrb() {
     pressedAt.current = Date.now();
     setHolding(true);
     if (Platform.OS !== 'web') Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => undefined);
-    progress.value = withTiming(1, { duration: HOLD_MS, easing: Easing.linear }, (finished) => {
-      if (finished) runOnJS(fire)();
-    });
+    progress.value = withTiming(1, { duration: HOLD_MS, easing: Easing.linear });
+    clearHoldTimer();
+    holdTimer.current = setTimeout(fire, HOLD_MS);
   };
 
   const onPressOut = () => {
+    // Ya se envió: soltar después no debe abrir opciones ni reiniciar nada.
+    if (!holdTimer.current) return;
+    clearHoldTimer();
     const quickTap = Date.now() - pressedAt.current < TAP_MS;
     cancelAnimation(progress);
     progress.value = withTiming(0, { duration: 200 });
-    if (holding) setHolding(false);
+    setHolding(false);
     if (quickTap) router.push('/alerta');
   };
 
@@ -140,6 +171,8 @@ export function HoldToHelpOrb() {
           />
         </Svg>
         <Pressable
+          ref={pressTarget}
+          style={Platform.OS === 'web' ? styles.webPress : undefined}
           accessibilityRole="button"
           accessibilityLabel={S.home.helpNow}
           accessibilityHint={S.sos.holdHint}
@@ -201,4 +234,12 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   white: { color: palette.white },
+  // Solo web: sin scroll/zoom del navegador sobre el orbe, sin selección ni menú de iOS.
+  webPress: {
+    touchAction: 'none',
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
+    WebkitTouchCallout: 'none',
+    WebkitTapHighlightColor: 'transparent',
+  } as object,
 });
