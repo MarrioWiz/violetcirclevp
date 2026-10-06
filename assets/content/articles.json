@@ -1,0 +1,207 @@
+{
+  "version": 1,
+  "articles": [
+    {
+      "slug": "privacidad-en-redes",
+      "title": "Privacidad en redes sociales",
+      "summary": "Decide tú quién ve lo que compartes.",
+      "icon": "eye-off",
+      "minutes": 2,
+      "reviewStatus": "borrador",
+      "body": [
+        "Lo que publicas puede decir más de lo que imaginas: dónde estudias, a qué hora sales, con quién convives o dónde vives.",
+        "Revisar tu privacidad no significa tener miedo; significa elegir. Puedes tener un perfil público y aun así cuidar ciertos datos.",
+        "Una buena práctica es revisar tus ajustes cada pocos meses, porque las apps cambian sus opciones con frecuencia."
+      ],
+      "keyPoints": [
+        "Evita publicar tu ubicación en tiempo real; compártela después de irte.",
+        "Revisa quién puede ver tus historias, etiquetarte y escribirte.",
+        "Quita de tu perfil teléfono, horarios y lugares frecuentes."
+      ]
+    },
+    {
+      "slug": "contrasenas-seguras",
+      "title": "Contraseñas que te protegen",
+      "summary": "Una cuenta segura empieza por una buena contraseña y un segundo paso.",
+      "icon": "key-round",
+      "minutes": 2,
+      "reviewStatus": "borrador",
+      "body": [
+        "Si usas la misma contraseña en varios lugares y una se filtra, todas tus cuentas quedan expuestas.",
+        "Las frases largas (por ejemplo, cuatro palabras al azar) son más fuertes y fáciles de recordar que una palabra con símbolos.",
+        "La verificación en dos pasos agrega un código que solo llega a ti, así que aunque alguien sepa tu contraseña no podrá entrar."
+      ],
+      "keyPoints": [
+        "Una contraseña distinta por cuenta.",
+        "Activa la verificación en dos pasos, empezando por tu correo.",
+        "No compartas tus contraseñas, ni siquiera con tu pareja."
+      ]
+    },
+    {
+      "slug": "suplantacion-de-identidad",
+      "title": "Suplantación de identidad",
+      "summary": "Cuando alguien se hace pasar por ti en internet.",
+      "icon": "user-x",
+      "minutes": 2,
+      "reviewStatus": "borrador",
+      "body": [
+        "La suplantación ocurre cuando alguien crea una cuenta con tu nombre o tus fotos, o entra a tu cuenta para escribir como si fueras tú.",
+        "Las plataformas tienen una opción específica para reportar perfiles que se hacen pasar por otra persona. Mientras más personas lo reporten, más rápido suele atenderse.",
+        "Guarda evidencia antes de reportar, porque la cuenta puede desaparecer."
+      ],
+      "keyPoints": [
+        "Captura el perfil falso y copia su enlace.",
+        "Repórtalo como suplantación y pide a tus contactos que lo hagan.",
+        "Cambia tus contraseñas y activa la verificación en dos pasos."
+      ]
+    },
+    {
+      "slug": "ciberacoso",
+      "title": "Ciberacoso",
+      "summary": "Mensajes insistentes, burlas o humillaciones también son violencia.",
+      "icon": "message-circle",
+      "minutes": 2,
+      "reviewStatus": "borrador",
+      "body": [
+        "El ciberacoso es cuando alguien te molesta, insulta, humilla o persigue de forma insistente por medios digitales.",
+        "Según el MOCIBA 2024 del INEGI, el 22.2 % de las mujeres usuarias de internet de 12 años y más vivieron ciberacoso. No estás sola.",
+        "No tienes que aguantarlo ni esperar a que \"se canse\". Bloquear, reportar y pedir apoyo son decisiones válidas."
+      ],
+      "keyPoints": [
+        "No es tu culpa ni depende de cómo te ves o qué publicas.",
+        "Guarda evidencia, luego bloquea y reporta.",
+        "Cuéntaselo a alguien de tu círculo."
+      ]
+    },
+    {
+      "slug": "grooming",
+      "title": "Grooming",
+      "summary": "Cuando una persona adulta busca ganarse la confianza de una menor con fines sexuales.",
+      "icon": "shield-alert",
+      "minutes": 2,
+      "reviewStatus": "borrador",
+      "body": [
+        "El grooming suele empezar con atención, regalos o halagos, y poco a poco pide secretos, fotos o encuentros.",
+        "Aunque esta app está pensada para universitarias, es útil reconocerlo para cuidar a hermanas, primas o amigas menores de edad.",
+        "La responsabilidad siempre es de la persona adulta."
+      ],
+      "keyPoints": [
+        "Señales: pide secreto, aísla, insiste en fotos o en verse.",
+        "Una persona adulta de confianza debe saberlo cuanto antes.",
+        "Guardar evidencia y reportar la cuenta ayuda a proteger a otras."
+      ]
+    },
+    {
+      "slug": "sextorsion",
+      "title": "Sextorsión",
+      "summary": "Amenazas para obtener dinero o contenido íntimo.",
+      "icon": "file-warning",
+      "minutes": 2,
+      "reviewStatus": "borrador",
+      "body": [
+        "En la sextorsión alguien amenaza con publicar imágenes íntimas —reales o manipuladas— si no le das dinero o más contenido.",
+        "Pagar casi nunca detiene la extorsión: suele aumentar las peticiones.",
+        "Lo que te está pasando es un delito y la culpa es de quien extorsiona, no de quien confió."
+      ],
+      "keyPoints": [
+        "Deja de responder, sin avisar.",
+        "No pagues ni envíes más.",
+        "Guarda evidencia, reporta y busca apoyo."
+      ]
+    },
+    {
+      "slug": "doxing",
+      "title": "Doxing",
+      "summary": "Cuando exponen tus datos personales para intimidarte.",
+      "icon": "map-pin-off",
+      "minutes": 2,
+      "reviewStatus": "borrador",
+      "body": [
+        "El doxing es reunir y publicar datos personales de alguien —dirección, teléfono, escuela, familia— sin su permiso.",
+        "Su objetivo suele ser intimidar o facilitar que otras personas te molesten.",
+        "Muchas plataformas prohíben publicar información privada de otras personas y permiten reportarlo."
+      ],
+      "keyPoints": [
+        "Captura la publicación y copia el enlace.",
+        "Repórtala como información privada.",
+        "Si te sientes en riesgo, avisa a tu círculo y cambia rutinas por unos días."
+      ]
+    },
+    {
+      "slug": "difusion-contenido-intimo",
+      "title": "Contenido íntimo sin consentimiento",
+      "summary": "Compartir tus imágenes íntimas sin permiso es violencia digital.",
+      "icon": "image",
+      "minutes": 2,
+      "reviewStatus": "borrador",
+      "body": [
+        "Enviar una foto a alguien de confianza no le da permiso de compartirla. Quien la difunde es quien comete la violencia.",
+        "Si alguien te muestra o te reenvía contenido íntimo de otra persona, no lo compartas: eso también daña.",
+        "Existen rutas para pedir que se retire el contenido y para denunciar; el directorio te orienta."
+      ],
+      "keyPoints": [
+        "No es tu culpa.",
+        "No reenvíes el contenido para pedir ayuda: comparte solo enlaces o capturas mínimas.",
+        "Reporta en la plataforma y busca acompañamiento."
+      ]
+    },
+    {
+      "slug": "autocuidado-digital",
+      "title": "Autocuidado digital",
+      "summary": "Pequeños hábitos para que tu teléfono sea un lugar más tranquilo.",
+      "icon": "smartphone",
+      "minutes": 2,
+      "reviewStatus": "borrador",
+      "body": [
+        "Cuidarte en línea también es decidir cuánto tiempo, con quién y en qué espacios quieres estar.",
+        "Silenciar, archivar, dejar de seguir o tomar un descanso de una app no es huir: es poner límites.",
+        "Revisa de vez en cuando qué apps tienen acceso a tu ubicación, cámara y contactos."
+      ],
+      "keyPoints": [
+        "Usa silenciar y restringir sin culpa.",
+        "Revisa permisos de tus apps.",
+        "Date pausas de redes cuando lo necesites."
+      ]
+    },
+    {
+      "slug": "cuidado-emocional",
+      "title": "Cuidado emocional",
+      "summary": "Lo que pasa en línea también se siente en el cuerpo.",
+      "icon": "heart",
+      "minutes": 2,
+      "reviewStatus": "borrador",
+      "body": [
+        "Vivir violencia digital puede provocar miedo, enojo, vergüenza, ansiedad o ganas de aislarte. Todas son reacciones comprensibles.",
+        "Hablar con alguien de confianza ayuda a no cargar sola con lo que pasa.",
+        "Si sientes que te rebasa, buscar apoyo psicológico es una forma de cuidarte, no una señal de debilidad."
+      ],
+      "keyPoints": [
+        "Tus emociones son válidas.",
+        "Respira, haz una pausa y vuelve a tu ritmo.",
+        "Pedir apoyo profesional es cuidarte."
+      ]
+    }
+  ],
+  "audit": {
+    "title": "¿Qué tan protegida está tu vida digital?",
+    "intro": "Responde con calma. No es un examen: es una guía para saber por dónde empezar.",
+    "reviewStatus": "borrador",
+    "items": [
+      { "id": "a-2fa", "text": "Tengo activada la verificación en dos pasos en mi correo" },
+      { "id": "a-2fa-redes", "text": "Tengo verificación en dos pasos en mis redes principales" },
+      { "id": "a-unicas", "text": "Uso contraseñas distintas en mis cuentas importantes" },
+      { "id": "a-bloqueo", "text": "Mi teléfono tiene código o Face ID" },
+      { "id": "a-sesiones", "text": "Revisé las sesiones abiertas de mis cuentas este mes" },
+      { "id": "a-ubicacion", "text": "No comparto mi ubicación en tiempo real en publicaciones" },
+      { "id": "a-perfil", "text": "Mi perfil no muestra teléfono, dirección ni horarios" },
+      { "id": "a-mensajes", "text": "Controlo quién puede escribirme por mensaje directo" },
+      { "id": "a-respaldo", "text": "Sé cómo guardar evidencia si algo pasa" },
+      { "id": "a-circulo", "text": "Tengo al menos una persona de confianza a quien avisar" }
+    ],
+    "levels": [
+      { "min": 0, "title": "Buen comienzo", "body": "Ya diste el primer paso al revisarlo. Empieza por la verificación en dos pasos de tu correo: es la llave de todo lo demás." },
+      { "min": 4, "title": "Vas avanzando", "body": "Tienes bases importantes. Revisa los puntos pendientes uno a la vez, sin prisa." },
+      { "min": 8, "title": "Muy bien protegida", "body": "Tienes hábitos sólidos. Recuerda revisarlos cada pocos meses porque las apps cambian." }
+    ]
+  }
+}
