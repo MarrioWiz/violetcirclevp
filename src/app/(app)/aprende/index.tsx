@@ -10,6 +10,7 @@ import { IconBadge } from '@/components/IconBadge';
 import { iconFor } from '@/components/icons';
 import { ListRow, SectionTitle } from '@/components/Rows';
 import { Screen } from '@/components/Screen';
+import { FileCard } from '@/components/ui/FileCard';
 import { TextField } from '@/components/TextField';
 import { S, t } from '@/lib/strings.es';
 import { useChecklist } from '@/store/checklistStore';
@@ -22,23 +23,25 @@ function normalize(s: string) {
 }
 
 function ArticleCard({ a, fav }: { a: Article; fav: boolean }) {
-  const { colors } = useTheme();
+  const { accent } = useTheme();
   return (
-    <Card
+    <FileCard
+      name={a.slug}
+      meta={`${a.minutes} MIN`}
       onPress={() => router.push({ pathname: '/aprende/[slug]', params: { slug: a.slug } })}
-      accessibilityLabel={`${a.title}. ${a.summary}`}
+      accessibilityLabel={`${a.title}. ${a.summary}. ${t(S.learn.minutes, { n: a.minutes })}`}
     >
       <View style={{ flexDirection: 'row', gap: spacing.md, alignItems: 'center' }}>
         <IconBadge icon={iconFor(a.icon)} />
         <View style={{ flex: 1 }}>
           <AppText variant="subheading">{a.title}</AppText>
           <AppText variant="caption" tone="textMuted">
-            {a.summary} · {t(S.learn.minutes, { n: a.minutes })}
+            {a.summary}
           </AppText>
         </View>
-        {fav ? <Star size={18} color={colors.primary} fill={colors.primary} /> : null}
+        {fav ? <Star size={18} color={accent} fill={accent} /> : null}
       </View>
-    </Card>
+    </FileCard>
   );
 }
 

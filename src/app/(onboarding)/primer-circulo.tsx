@@ -12,7 +12,7 @@ import { OnboardingFrame } from '@/features/onboarding/OnboardingFrame';
 import { notify } from '@/lib/dialog';
 import { S } from '@/lib/strings.es';
 import { MAX_CONTACTS, useCircle } from '@/store/circleStore';
-import { spacing } from '@/theme';
+import { palette, spacing } from '@/theme';
 
 export default function CircleStep() {
   const contacts = useCircle((s) => s.contacts);
@@ -53,7 +53,7 @@ export default function CircleStep() {
       {contacts.map((c) => (
         <Card key={c.id} tone="soft">
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
-            <UserCheck size={20} color="#6D28D9" />
+            <UserCheck size={20} color={palette.violetLight} strokeWidth={1.75} />
             <AppText variant="bodyStrong">{c.name}</AppText>
           </View>
         </Card>

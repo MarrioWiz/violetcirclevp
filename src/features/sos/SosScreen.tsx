@@ -3,9 +3,10 @@ import { CheckCircle2, MessageCircle, Phone, X } from 'lucide-react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { BackHandler, Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Svg, { Circle } from 'react-native-svg';
+import Svg, { Circle, Defs, RadialGradient, Stop } from 'react-native-svg';
 
 import { AppText } from '@/components/AppText';
+import { Backdrop } from '@/components/ui/Backdrop';
 import { Button } from '@/components/Button';
 import { recipients } from '@/features/circle/message';
 import { openSmsComposer, openWhatsApp } from '@/features/circle/sendToCircle';
@@ -14,7 +15,7 @@ import { S, t } from '@/lib/strings.es';
 import { useCircle } from '@/store/circleStore';
 import { useIncidents } from '@/store/incidentsStore';
 import { useSession } from '@/store/sessionStore';
-import { MIN_TOUCH, spacing } from '@/theme';
+import { HAIRLINE, MIN_TOUCH, fonts, palette, radius, spacing } from '@/theme';
 
 import { buildSosMessage } from './message';
 import { getSosLocation, hasSmsPermission, sendSosSms, setShowWhenLocked, sosSupported } from './sosService';
@@ -157,6 +158,7 @@ export function SosScreen() {
 
   return (
     <SafeAreaView style={styles.root}>
+      <Backdrop accent={palette.violet} />
       <View style={styles.top}>
         {isTest ? (
           <AppText variant="label" style={[styles.white, { flex: 1, alignSelf: 'center' }]}>
@@ -170,7 +172,7 @@ export function SosScreen() {
           hitSlop={8}
           style={styles.closeBtn}
         >
-          <X size={24} color="#FFFFFF" />
+          <X size={24} color={palette.white} />
         </Pressable>
       </View>
 
@@ -189,19 +191,25 @@ export function SosScreen() {
               style={({ pressed }) => [styles.circleWrap, { transform: [{ scale: pressed ? 0.96 : 1 }] }]}
             >
               <Svg width={SIZE} height={SIZE} style={StyleSheet.absoluteFill}>
+                <Defs>
+                  <RadialGradient id="sosFill" cx="35%" cy="30%" rx="75%" ry="75%">
+                    <Stop offset="0" stopColor={palette.violetLight} />
+                    <Stop offset="1" stopColor={palette.violetDeep} />
+                  </RadialGradient>
+                </Defs>
                 <Circle
                   cx={SIZE / 2}
                   cy={SIZE / 2}
                   r={R}
-                  stroke="rgba(255,255,255,0.18)"
+                  stroke={palette.strokeStrong}
                   strokeWidth={STROKE}
-                  fill="#7C3AED"
+                  fill="url(#sosFill)"
                 />
                 <Circle
                   cx={SIZE / 2}
                   cy={SIZE / 2}
                   r={R}
-                  stroke="#FFFFFF"
+                  stroke={palette.white}
                   strokeWidth={STROKE}
                   strokeLinecap="round"
                   fill="none"
@@ -228,7 +236,7 @@ export function SosScreen() {
 
         {stage === 'sent' || stage === 'manual' ? (
           <>
-            <CheckCircle2 size={72} color="#FFFFFF" />
+            <CheckCircle2 size={72} color={palette.white} />
             <AppText
               variant="title"
               center
@@ -296,7 +304,7 @@ export function SosScreen() {
 }
 
 const styles = StyleSheet.create({
-  root: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, backgroundColor: '#2E1065' },
+  root: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, backgroundColor: palette.bg0 },
   top: { flexDirection: 'row', justifyContent: 'flex-end', padding: spacing.lg },
   closeBtn: {
     width: MIN_TOUCH,
@@ -304,13 +312,22 @@ const styles = StyleSheet.create({
     borderRadius: MIN_TOUCH / 2,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(255,255,255,0.12)',
+    backgroundColor: palette.glassStrong,
+    borderWidth: HAIRLINE,
+    borderColor: palette.strokeStrong,
   },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: spacing.lg, paddingHorizontal: spacing.xl },
   circleWrap: { width: SIZE, height: SIZE, alignItems: 'center', justifyContent: 'center', gap: spacing.xs },
-  seconds: { color: '#FFFFFF', fontFamily: 'PlusJakartaSans_800ExtraBold', fontSize: 72, lineHeight: 80 },
-  white: { color: '#FFFFFF' },
-  soft: { color: '#DDD6FE' },
+  seconds: { color: palette.white, fontFamily: fonts.display, fontSize: 76, lineHeight: 82, letterSpacing: -3 },
+  white: { color: palette.white },
+  soft: { color: palette.textMuted },
   bottom: { padding: spacing.xl, gap: spacing.sm },
-  preview: { backgroundColor: 'rgba(255,255,255,0.12)', borderRadius: 16, padding: spacing.lg, alignSelf: 'stretch' },
+  preview: {
+    backgroundColor: palette.glassStrong,
+    borderWidth: HAIRLINE,
+    borderColor: palette.strokeStrong,
+    borderRadius: radius.md,
+    padding: spacing.lg,
+    alignSelf: 'stretch',
+  },
 });

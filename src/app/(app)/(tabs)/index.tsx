@@ -15,15 +15,17 @@ import { Platform, StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { Card } from '@/components/Card';
+import { tabMeta } from '@/components/dock/tabs';
+import { SectionTitle } from '@/components/Rows';
+import { FileCard } from '@/components/ui/FileCard';
 import { EmergencyBanner } from '@/components/EmergencyBanner';
 import { IconBadge } from '@/components/IconBadge';
-import { Logo } from '@/components/Logo';
 import { ScopeNotice } from '@/components/ScopeNotice';
 import { HoldToHelpOrb } from '@/features/sos/HoldToHelpOrb';
 import { Screen } from '@/components/Screen';
 import { S } from '@/lib/strings.es';
 import { useCircle } from '@/store/circleStore';
-import { radius, spacing, useTheme } from '@/theme';
+import { spacing, useTheme } from '@/theme';
 
 interface Tile {
   key: keyof typeof S.home.tiles;
@@ -41,33 +43,31 @@ const TILES: Tile[] = [
 ];
 
 export default function Home() {
-  const { colors } = useTheme();
+  const { accent } = useTheme();
+  const meta = tabMeta('index');
   const circleCount = useCircle((s) => s.contacts.length);
   const greeting = useMemo(() => S.home.greeting[new Date().getDate() % S.home.greeting.length], []);
 
   return (
-    <Screen footer={<EmergencyBanner />}>
-      <View style={styles.header}>
-        <Logo size={44} />
-        <View style={{ flex: 1 }}>
-          <AppText variant="title" accessibilityRole="header">
-            {greeting}
-          </AppText>
-          <AppText tone="textMuted">{S.home.subtitle}</AppText>
-        </View>
-      </View>
-
-      {/* Llamado principal: tocar = opciones de ayuda (alerta rápida); mantener 2 s = SMS con ubicación. */}
+    <Screen
+      dock
+      title={meta.title}
+      subtitle={meta.subtitle}
+      eyebrow={`${greeting} · VioletCircleVP`}
+      footer={<EmergencyBanner />}
+    >
+      {/* Llamado principal: tocar = opciones de ayuda; mantener 2 s = SMS con ubicación. */}
       <HoldToHelpOrb />
 
       {Platform.OS === 'android' ? (
-        <Card
-          tone="soft"
-          style={{ marginTop: spacing.md }}
+        <FileCard
+          name="pedir-ayuda.rápido"
+          meta="CONFIGURAR"
           onPress={() => router.push('/ajustes/ayuda-rapida')}
           accessibilityLabel={`${S.sos.homeCard}. ${S.sos.homeCardBody}`}
+          style={{ marginTop: spacing.md }}
         >
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
+          <View style={styles.rowCenter}>
             <IconBadge icon={Siren} size={40} />
             <View style={{ flex: 1 }}>
               <AppText variant="subheading">{S.sos.homeCard}</AppText>
@@ -75,17 +75,15 @@ export default function Home() {
                 {S.sos.homeCardBody}
               </AppText>
             </View>
-            <ChevronRight size={18} color={colors.textMuted} />
+            <ChevronRight size={18} color={accent} strokeWidth={1.75} />
           </View>
-        </Card>
+        </FileCard>
       ) : null}
 
-      <AppText variant="label" tone="textMuted" style={{ marginTop: spacing.xxl, marginBottom: spacing.md }}>
-        {S.home.sections}
-      </AppText>
+      <SectionTitle>{S.home.sections}</SectionTitle>
 
       <View style={styles.grid}>
-        {TILES.map((tile) => {
+        {TILES.map((tile, i) => {
           const copy = S.home.tiles[tile.key];
           const body =
             tile.key === 'circle' && circleCount > 0
@@ -98,20 +96,24 @@ export default function Home() {
               accessibilityLabel={`${copy.title}. ${body}`}
               style={styles.tile}
             >
-              <IconBadge icon={tile.icon} />
-              <AppText variant="subheading" style={{ marginTop: spacing.md }}>
+              <View style={styles.tileTop}>
+                <IconBadge icon={tile.icon} />
+                <AppText variant="mono" tone="textFaint" accessibilityElementsHidden>
+                  {String(i + 1).padStart(2, '0')}
+                </AppText>
+              </View>
+              <AppText variant="subheading" style={{ marginTop: spacing.lg }}>
                 {copy.title}
               </AppText>
               <AppText variant="caption" tone="textMuted" style={{ marginTop: 2 }}>
                 {body}
               </AppText>
-              <ChevronRight size={18} color={colors.textMuted} style={styles.tileChevron} />
             </Card>
           );
         })}
       </View>
 
-      <View style={{ marginTop: spacing.xxl }}>
+      <View style={{ marginTop: spacing.x3 }}>
         <ScopeNotice />
       </View>
     </Screen>
@@ -119,28 +121,8 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-  header: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginBottom: spacing.xl },
-  hero: {
-    borderRadius: radius.xl,
-    padding: spacing.xl,
-    minHeight: 132,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.lg,
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    shadowOffset: { width: 0, height: 10 },
-    elevation: 6,
-  },
-  heroIcon: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: 'rgba(255,255,255,0.18)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  rowCenter: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
-  tile: { width: '47.5%', minHeight: 150, flexGrow: 1 },
-  tileChevron: { position: 'absolute', top: spacing.lg, right: spacing.lg },
+  tile: { width: '47.5%', minHeight: 156, flexGrow: 1 },
+  tileTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
 });

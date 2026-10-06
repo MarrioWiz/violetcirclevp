@@ -1,10 +1,15 @@
-import { Bot, RotateCcw } from 'lucide-react-native';
+import { RotateCcw } from 'lucide-react-native';
 import { useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppText } from '@/components/AppText';
+import { tabMeta } from '@/components/dock/tabs';
+import { useDockInset } from '@/components/dock/useDockInset';
+import { Backdrop } from '@/components/ui/Backdrop';
+import { ScreenHeader } from '@/components/ui/ScreenHeader';
+import { Sheen } from '@/components/ui/Sheen';
 import { QuickExitButton } from '@/components/QuickExitButton';
 import { bundled } from '@/features/content/repository';
 import { sendAnonymousStat } from '@/features/stats/sendStat';
@@ -18,7 +23,7 @@ import {
 } from '@/features/triage/engine';
 import { ResultView, UrgentBlock } from '@/features/triage/ResultView';
 import { S } from '@/lib/strings.es';
-import { MIN_TOUCH, radius, spacing, useTheme } from '@/theme';
+import { HAIRLINE, alpha, palette, radius, spacing, useTheme } from '@/theme';
 import type { TriageOption } from '@/types';
 
 interface Message {
@@ -39,7 +44,9 @@ function questionMessage(nodeId: string): Message {
 }
 
 export default function Triage() {
-  const { colors } = useTheme();
+  const { colors, accent } = useTheme();
+  const meta = tabMeta('orientacion');
+  const dockInset = useDockInset();
   const scrollRef = useRef<ScrollView>(null);
   const [step, setStep] = useState<TriageStep>({ nodeId: tree.start, context: {} });
   const [messages, setMessages] = useState<Message[]>(() => [
@@ -74,134 +81,154 @@ export default function Triage() {
   };
 
   return (
-    <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: colors.bg }}>
-      <View style={styles.header}>
-        <View style={{ flex: 1 }}>
-          <AppText variant="heading" accessibilityRole="header">
-            {S.triage.title}
-          </AppText>
-          <View style={styles.badgeRow}>
-            <Bot size={14} color={colors.primary} />
-            <AppText variant="caption" tone="primary" style={{ fontFamily: 'Inter_600SemiBold' }}>
-              {S.triage.assistantBadge}
+    <View style={{ flex: 1 }}>
+      <Backdrop />
+      <SafeAreaView edges={['top']} style={{ flex: 1 }}>
+        <View style={styles.topBar}>
+          {messages.length > 2 ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={S.triage.restart}
+              onPress={restart}
+              style={({ pressed }) => [styles.iconBtn, { opacity: pressed ? 0.7 : 1 }]}
+            >
+              <RotateCcw size={18} color={colors.text} strokeWidth={1.75} />
+            </Pressable>
+          ) : (
+            <View />
+          )}
+          <QuickExitButton />
+        </View>
+
+        <ScrollView
+          ref={scrollRef}
+          contentContainerStyle={[styles.content, { paddingBottom: dockInset }]}
+          showsVerticalScrollIndicator={false}
+        >
+          <ScreenHeader eyebrow={S.triage.assistantBadge} title={meta.title} subtitle={meta.subtitle} />
+
+          <View style={styles.note}>
+            <AppText variant="caption" tone="textMuted">
+              {S.triage.assistantNote}
             </AppText>
           </View>
-        </View>
-        {messages.length > 2 && (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={S.triage.restart}
-            onPress={restart}
-            style={[styles.iconBtn, { backgroundColor: colors.surfaceAlt }]}
-          >
-            <RotateCcw size={18} color={colors.text} />
-          </Pressable>
-        )}
-        <QuickExitButton compact />
-      </View>
 
-      <ScrollView ref={scrollRef} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={[styles.note, { backgroundColor: colors.surfaceAlt }]}>
-          <AppText variant="caption" tone="textMuted" center>
-            {S.triage.assistantNote}
-          </AppText>
-        </View>
-
-        {messages.map((m) => (
-          <Animated.View
-            key={m.id}
-            entering={FadeInDown.duration(260)}
-            style={[
-              styles.bubble,
-              m.from === 'bot'
-                ? {
-                    alignSelf: 'flex-start',
-                    backgroundColor: colors.surface,
-                    borderColor: colors.border,
-                    borderBottomLeftRadius: 6,
-                  }
-                : {
-                    alignSelf: 'flex-end',
-                    backgroundColor: colors.primary,
-                    borderColor: colors.primary,
-                    borderBottomRightRadius: 6,
-                  },
-            ]}
-          >
-            <AppText style={m.from === 'me' ? { color: colors.onPrimary } : undefined}>{m.text}</AppText>
-            {m.help ? (
-              <AppText variant="caption" tone="textMuted" style={{ marginTop: spacing.xs }}>
-                {m.help}
-              </AppText>
-            ) : null}
-          </Animated.View>
-        ))}
-
-        {resolved ? (
-          <Animated.View entering={FadeInDown.duration(300)} style={{ marginTop: spacing.lg }}>
-            <ResultView resolved={resolved} />
-          </Animated.View>
-        ) : !isResultNode(node) ? (
-          <View style={{ gap: spacing.sm, marginTop: spacing.md }}>
-            {node.options.map((o) => (
-              <Pressable
-                key={o.label}
-                accessibilityRole="button"
-                accessibilityLabel={o.label}
-                onPress={() => choose(o)}
-                style={({ pressed }) => [
-                  styles.option,
-                  { borderColor: colors.primary, backgroundColor: pressed ? colors.primarySoft : colors.surface },
+          {messages.map((m, idx) => {
+            const bot = m.from === 'bot';
+            return (
+              <Animated.View
+                key={m.id}
+                entering={FadeInDown.duration(260)}
+                style={[
+                  styles.bubble,
+                  bot
+                    ? styles.botBubble
+                    : {
+                        alignSelf: 'flex-end',
+                        backgroundColor: alpha(accent, 0.16),
+                        borderColor: alpha(accent, 0.4),
+                        borderBottomRightRadius: radius.xs,
+                      },
                 ]}
               >
-                <AppText variant="bodyStrong" tone="primary">
-                  {o.label}
-                </AppText>
-              </Pressable>
-            ))}
-          </View>
-        ) : null}
+                {bot && <Sheen />}
+                {bot && idx === 0 && (
+                  <AppText variant="label" style={{ color: accent, fontSize: 10, marginBottom: spacing.xs }}>
+                    {S.triage.assistantBadge}
+                  </AppText>
+                )}
+                <AppText>{m.text}</AppText>
+                {m.help ? (
+                  <AppText variant="caption" tone="textMuted" style={{ marginTop: spacing.xs }}>
+                    {m.help}
+                  </AppText>
+                ) : null}
+              </Animated.View>
+            );
+          })}
 
-        {!resolved && step.context.unsure === 'si' && node.id === 'q_platform' ? (
-          <View style={{ marginTop: spacing.lg }}>
-            <UrgentBlock />
-          </View>
-        ) : null}
-      </ScrollView>
-    </SafeAreaView>
+          {resolved ? (
+            <Animated.View entering={FadeInDown.duration(300)} style={{ marginTop: spacing.lg }}>
+              <ResultView resolved={resolved} />
+            </Animated.View>
+          ) : !isResultNode(node) ? (
+            <View style={{ gap: spacing.sm, marginTop: spacing.md }}>
+              {node.options.map((o) => (
+                <Pressable
+                  key={o.label}
+                  accessibilityRole="button"
+                  accessibilityLabel={o.label}
+                  onPress={() => choose(o)}
+                  style={({ pressed }) => [
+                    styles.option,
+                    pressed && { backgroundColor: alpha(accent, 0.14), borderColor: alpha(accent, 0.5) },
+                  ]}
+                >
+                  <AppText variant="bodyStrong">{o.label}</AppText>
+                </Pressable>
+              ))}
+            </View>
+          ) : null}
+
+          {!resolved && step.context.unsure === 'si' && node.id === 'q_platform' ? (
+            <View style={{ marginTop: spacing.lg }}>
+              <UrgentBlock />
+            </View>
+          ) : null}
+        </ScrollView>
+      </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
+  topBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.sm,
+    justifyContent: 'space-between',
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.sm,
-    paddingBottom: spacing.md,
+    paddingBottom: spacing.sm,
   },
-  badgeRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 2 },
   iconBtn: {
-    width: MIN_TOUCH - 4,
-    height: MIN_TOUCH - 4,
-    borderRadius: 22,
+    width: 40,
+    height: 40,
+    borderRadius: radius.pill,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: palette.glassStrong,
+    borderWidth: HAIRLINE,
+    borderColor: palette.strokeStrong,
   },
-  content: { paddingHorizontal: spacing.xl, paddingBottom: spacing.xxxl * 2, gap: spacing.sm },
-  note: { borderRadius: radius.md, padding: spacing.md, marginBottom: spacing.sm },
+  content: { paddingHorizontal: spacing.xl, paddingTop: spacing.md, gap: spacing.sm },
+  note: {
+    borderRadius: radius.md,
+    padding: spacing.md,
+    marginBottom: spacing.sm,
+    borderWidth: HAIRLINE,
+    borderColor: palette.stroke,
+    borderStyle: 'dashed',
+  },
   bubble: {
     maxWidth: '88%',
     borderRadius: radius.lg,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: HAIRLINE,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
+    overflow: 'hidden',
+  },
+  botBubble: {
+    alignSelf: 'flex-start',
+    backgroundColor: palette.glass,
+    borderColor: palette.stroke,
+    borderBottomLeftRadius: radius.xs,
   },
   option: {
-    minHeight: MIN_TOUCH + 4,
-    borderRadius: radius.md,
-    borderWidth: 1.5,
+    minHeight: 56,
+    borderRadius: radius.lg,
+    borderWidth: HAIRLINE,
+    borderColor: palette.strokeStrong,
+    backgroundColor: palette.glassStrong,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
     justifyContent: 'center',

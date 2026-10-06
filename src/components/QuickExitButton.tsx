@@ -1,16 +1,15 @@
 import * as Haptics from 'expo-haptics';
-import { EyeOff } from 'lucide-react-native';
+import { LogOut } from 'lucide-react-native';
 import { Platform, Pressable, StyleSheet } from 'react-native';
 
 import { S } from '@/lib/strings.es';
 import { useSession } from '@/store/sessionStore';
-import { MIN_TOUCH, radius, spacing, useTheme } from '@/theme';
+import { HAIRLINE, palette, radius, spacing } from '@/theme';
 
 import { AppText } from './AppText';
 
-/** Un toque: oculta la app tras una calculadora y borra el historial de navegación. */
+/** Píldora de vidrio, siempre arriba a la derecha. Un toque: oculta la app tras una calculadora. */
 export function QuickExitButton({ compact }: { compact?: boolean }) {
-  const { colors } = useTheme();
   const quickExit = useSession((s) => s.quickExit);
   return (
     <Pressable
@@ -23,14 +22,11 @@ export function QuickExitButton({ compact }: { compact?: boolean }) {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(() => undefined);
         void quickExit();
       }}
-      style={({ pressed }) => [
-        styles.pill,
-        { backgroundColor: colors.surfaceAlt, borderColor: colors.border, opacity: pressed ? 0.7 : 1 },
-      ]}
+      style={({ pressed }) => [styles.pill, compact && styles.compact, { opacity: pressed ? 0.7 : 1 }]}
     >
-      <EyeOff size={18} color={colors.text} strokeWidth={2} />
+      <LogOut size={16} color={palette.text} strokeWidth={1.9} />
       {!compact && (
-        <AppText variant="caption" style={{ fontFamily: 'Inter_600SemiBold' }}>
+        <AppText variant="label" style={{ color: palette.text, letterSpacing: 1 }}>
           {S.quickExit.label}
         </AppText>
       )}
@@ -40,14 +36,17 @@ export function QuickExitButton({ compact }: { compact?: boolean }) {
 
 const styles = StyleSheet.create({
   pill: {
-    minHeight: MIN_TOUCH - 4,
-    minWidth: MIN_TOUCH - 4,
+    minHeight: 40,
+    minWidth: 40,
     paddingHorizontal: spacing.md,
     borderRadius: radius.pill,
-    borderWidth: StyleSheet.hairlineWidth,
+    backgroundColor: palette.glassStrong,
+    borderWidth: HAIRLINE,
+    borderColor: palette.strokeStrong,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 6,
+    gap: spacing.sm,
   },
+  compact: { paddingHorizontal: 0, width: 40 },
 });

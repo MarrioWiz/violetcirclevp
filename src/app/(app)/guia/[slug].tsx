@@ -16,7 +16,7 @@ import { useContent } from '@/store/contentStore';
 import { radius, spacing, useTheme } from '@/theme';
 
 export default function GuideDetail() {
-  const { colors } = useTheme();
+  const { colors, accent } = useTheme();
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const guide = useContent((s) => s.guides.find((g) => g.slug === slug));
   const done = useChecklist((s) => s.done);
@@ -52,9 +52,9 @@ export default function GuideDetail() {
         accessible
         accessibilityLabel={`Avance: ${t(S.guides.progress, { done: completed, total: items.length })}`}
       >
-        <View style={{ height: 8, borderRadius: radius.pill, backgroundColor: colors.border, overflow: 'hidden' }}>
+        <View style={{ height: 6, borderRadius: radius.pill, backgroundColor: colors.border, overflow: 'hidden' }}>
           <View
-            style={{ height: 8, width: `${pct * 100}%`, backgroundColor: colors.primary, borderRadius: radius.pill }}
+            style={{ height: 6, width: `${pct * 100}%`, backgroundColor: accent, borderRadius: radius.pill }}
           />
         </View>
         <AppText variant="caption" tone="textMuted">

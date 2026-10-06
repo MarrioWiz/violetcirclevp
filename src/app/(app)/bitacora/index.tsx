@@ -3,24 +3,24 @@ import { es } from 'date-fns/locale';
 import { router } from 'expo-router';
 import { FileDown, Lock, NotebookPen, Paperclip, Plus, Search, Siren } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
-import { Card } from '@/components/Card';
 import { EmptyState } from '@/components/EmptyState';
 import { Chip } from '@/components/Rows';
 import { Screen } from '@/components/Screen';
+import { FileCard } from '@/components/ui/FileCard';
 import { TextField } from '@/components/TextField';
 import { PLATFORM_LABEL } from '@/features/evidence/pdfHtml';
 import { PLATFORM_VALUES } from '@/features/evidence/schema';
 import { S } from '@/lib/strings.es';
 import { useIncidents } from '@/store/incidentsStore';
-import { spacing, useTheme } from '@/theme';
+import { HAIRLINE, alpha, palette, spacing, useTheme } from '@/theme';
 import type { Platform } from '@/types';
 
 export default function JournalIndex() {
-  const { colors } = useTheme();
+  const { colors, accent } = useTheme();
   const incidents = useIncidents((s) => s.incidents);
   const files = useIncidents((s) => s.files);
   const [q, setQ] = useState('');
@@ -81,43 +81,51 @@ export default function JournalIndex() {
             ))}
           </ScrollView>
 
-          <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
+          <View style={{ marginTop: spacing.xl }}>
             {list.length === 0 ? (
               <EmptyState icon={Search} title={S.journal.noResults} />
             ) : (
-              list.map((i) => {
+              list.map((i, idx) => {
                 const count = files.filter((f) => f.incidentId === i.id).length;
                 const when = format(new Date(i.occurredAt), 'd MMM yyyy · HH:mm', { locale: es });
+                const last = idx === list.length - 1;
                 return (
-                  <Card
-                    key={i.id}
-                    onPress={() => router.push({ pathname: '/bitacora/[id]', params: { id: i.id } })}
-                    accessibilityLabel={`${i.title}. ${when}. ${PLATFORM_LABEL[i.platform]}${i.locked ? '. Protegida' : ''}`}
-                  >
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
-                      {i.isAlertLog ? <Siren size={16} color={colors.primary} /> : null}
-                      <AppText variant="caption" tone="textMuted" style={{ flex: 1 }}>
-                        {when} · {PLATFORM_LABEL[i.platform]}
-                      </AppText>
-                      {i.locked ? <Lock size={16} color={colors.textMuted} /> : null}
+                  // Línea de tiempo: línea hairline vertical con puntos del acento.
+                  <View key={i.id} style={styles.tlRow}>
+                    <View style={styles.tlRail}>
+                      <View style={[styles.tlDot, { backgroundColor: accent, borderColor: alpha(accent, 0.35) }]} />
+                      {!last && <View style={styles.tlLine} />}
                     </View>
-                    <AppText variant="subheading" style={{ marginTop: spacing.xs }}>
-                      {i.title}
-                    </AppText>
-                    {!i.locked && (
-                      <AppText variant="caption" tone="textMuted" numberOfLines={2} style={{ marginTop: 2 }}>
-                        {i.description}
-                      </AppText>
-                    )}
-                    {count > 0 && (
-                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: spacing.sm }}>
-                        <Paperclip size={14} color={colors.primary} />
-                        <AppText variant="caption" tone="primary">
-                          {count} {count === 1 ? 'archivo' : 'archivos'}
-                        </AppText>
-                      </View>
-                    )}
-                  </Card>
+                    <View style={{ flex: 1, paddingBottom: spacing.lg }}>
+                      <FileCard
+                        name={PLATFORM_LABEL[i.platform].toLowerCase()}
+                        meta={when.toUpperCase()}
+                        onPress={() => router.push({ pathname: '/bitacora/[id]', params: { id: i.id } })}
+                        accessibilityLabel={`${i.title}. ${when}. ${PLATFORM_LABEL[i.platform]}${i.locked ? '. Protegida' : ''}`}
+                      >
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
+                          {i.isAlertLog ? <Siren size={16} color={accent} strokeWidth={1.75} /> : null}
+                          <AppText variant="subheading" style={{ flex: 1 }}>
+                            {i.title}
+                          </AppText>
+                          {i.locked ? <Lock size={16} color={colors.textMuted} strokeWidth={1.75} /> : null}
+                        </View>
+                        {!i.locked && (
+                          <AppText variant="caption" tone="textMuted" numberOfLines={2}>
+                            {i.description}
+                          </AppText>
+                        )}
+                        {count > 0 && (
+                          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: spacing.sm }}>
+                            <Paperclip size={14} color={accent} strokeWidth={1.75} />
+                            <AppText variant="mono" accent>
+                              {count} {count === 1 ? 'ARCHIVO' : 'ARCHIVOS'}
+                            </AppText>
+                          </View>
+                        )}
+                      </FileCard>
+                    </View>
+                  </View>
                 );
               })
             )}
@@ -127,3 +135,10 @@ export default function JournalIndex() {
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  tlRow: { flexDirection: 'row', gap: spacing.md },
+  tlRail: { width: 14, alignItems: 'center', paddingTop: 18 },
+  tlDot: { width: 10, height: 10, borderRadius: 5, borderWidth: 3 },
+  tlLine: { flex: 1, width: HAIRLINE, backgroundColor: palette.strokeStrong, marginTop: 4 },
+});

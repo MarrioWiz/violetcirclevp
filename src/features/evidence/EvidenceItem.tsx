@@ -11,7 +11,7 @@ import { confirmDialog, notify } from '@/lib/dialog';
 import { S } from '@/lib/strings.es';
 import { deleteEvidenceFile, evidenceDataUri, shareOriginal, verifyEvidence } from '@/services/evidenceFiles';
 import { useIncidents } from '@/store/incidentsStore';
-import { MIN_TOUCH, radius, spacing, useTheme } from '@/theme';
+import { MIN_TOUCH, fonts, radius, spacing, useTheme } from '@/theme';
 import type { EvidenceFile } from '@/types';
 
 function Action({
@@ -43,7 +43,7 @@ function Action({
       })}
     >
       <Icon size={16} color={danger ? colors.danger : colors.primary} />
-      <AppText variant="caption" tone={danger ? 'danger' : 'primary'} style={{ fontFamily: 'Inter_600SemiBold' }}>
+      <AppText variant="caption" tone={danger ? 'danger' : 'primary'} style={{ fontFamily: fonts.semi }}>
         {label}
       </AppText>
     </Pressable>
@@ -104,7 +104,7 @@ export function EvidenceItem({ file }: { file: EvidenceFile }) {
           <AppText variant="caption" tone="textMuted">
             {format(new Date(file.addedAt), 'd MMM yyyy, HH:mm', { locale: es })} · {(file.size / 1024).toFixed(0)} KB
           </AppText>
-          <AppText variant="caption" tone="textMuted" selectable style={{ fontFamily: 'Courier', fontSize: 10 }}>
+          <AppText variant="caption" tone="textMuted" selectable style={{ fontFamily: fonts.mono, fontSize: 10 }}>
             SHA-256: {file.sha256}
           </AppText>
         </View>

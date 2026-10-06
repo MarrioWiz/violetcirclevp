@@ -3,16 +3,18 @@ import { BookHeart, HeartHandshake, Info, ListChecks, NotebookPen, Settings, Shi
 
 import { Card } from '@/components/Card';
 import { Divider, ListRow, SectionTitle } from '@/components/Rows';
+import { tabMeta } from '@/components/dock/tabs';
 import { Screen } from '@/components/Screen';
 import { S } from '@/lib/strings.es';
 import { useIncidents } from '@/store/incidentsStore';
 import { spacing } from '@/theme';
 
 export default function More() {
+  const meta = tabMeta('mas');
   const count = useIncidents((s) => s.incidents.length);
   const card = { paddingHorizontal: spacing.lg };
   return (
-    <Screen title={S.more.title}>
+    <Screen dock title={meta.title} subtitle={meta.subtitle}>
       <Card padded={false} style={card}>
         <ListRow
           icon={NotebookPen}

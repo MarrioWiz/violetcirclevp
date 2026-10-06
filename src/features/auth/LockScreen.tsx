@@ -4,18 +4,18 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppText } from '@/components/AppText';
 import { Logo } from '@/components/Logo';
+import { Backdrop } from '@/components/ui/Backdrop';
 import { PinDots, PinPad } from '@/components/PinPad';
 import { S, t } from '@/lib/strings.es';
 import { authenticateBiometric, getBiometricInfo } from '@/services/biometrics';
 import { getPinLength, verifyPin } from '@/services/crypto';
 import { MAX_ATTEMPTS, useSession } from '@/store/sessionStore';
 import { useSettings } from '@/store/settingsStore';
-import { spacing, useTheme } from '@/theme';
+import { spacing } from '@/theme';
 
 import { useWipeAllData } from '../settings/useWipeAllData';
 
 export function LockScreen() {
-  const { colors } = useTheme();
   const unlock = useSession((s) => s.unlock);
   const registerFailure = useSession((s) => s.registerFailure);
   const failedAttempts = useSession((s) => s.failedAttempts);
@@ -75,46 +75,52 @@ export function LockScreen() {
   const seconds = Math.max(0, Math.ceil((lockoutUntil - now) / 1000));
 
   return (
-    <SafeAreaView style={[StyleSheet.absoluteFill, { backgroundColor: colors.bg }]}>
-      <View style={styles.wrap}>
-        <View style={{ alignItems: 'center', gap: spacing.md }}>
-          <Logo size={64} />
-          <AppText variant="title" center accessibilityRole="header">
-            {S.lock.title}
-          </AppText>
-          <View style={{ minHeight: 40, justifyContent: 'center' }} accessibilityLiveRegion="polite">
-            {lockedOut ? (
-              <AppText tone="warning" center>
-                {t(S.lock.lockedOut, { s: seconds })}
-              </AppText>
-            ) : error ? (
-              <AppText tone="danger" center>
-                {S.lock.wrong}
-                {remaining <= 2 ? ` ${t(S.lock.attemptsLeft, { n: remaining })}` : ''}
-              </AppText>
-            ) : null}
+    <View style={StyleSheet.absoluteFill}>
+      <Backdrop />
+      <SafeAreaView style={StyleSheet.absoluteFill}>
+        <View style={styles.wrap}>
+          <View style={{ alignItems: 'center', gap: spacing.md }}>
+            <Logo size={72} />
+            <AppText variant="label" tone="textMuted">
+              VioletCircleVP
+            </AppText>
+            <AppText variant="hero" center accessibilityRole="header">
+              {S.lock.title}
+            </AppText>
+            <View style={{ minHeight: 40, justifyContent: 'center' }} accessibilityLiveRegion="polite">
+              {lockedOut ? (
+                <AppText tone="warning" center>
+                  {t(S.lock.lockedOut, { s: seconds })}
+                </AppText>
+              ) : error ? (
+                <AppText tone="danger" center>
+                  {S.lock.wrong}
+                  {remaining <= 2 ? ` ${t(S.lock.attemptsLeft, { n: remaining })}` : ''}
+                </AppText>
+              ) : null}
+            </View>
           </View>
+          <PinDots length={length} filled={pin.length} error={error} />
+          <PinPad
+            value={pin}
+            length={length}
+            onChange={(v) => void onChange(v)}
+            disabled={lockedOut}
+            onBiometric={bioLabel ? () => void tryBiometric() : undefined}
+            biometricLabel={bioLabel ? t(S.lock.useBiometrics, { method: bioLabel }) : undefined}
+          />
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => void wipe({ fromLock: true })}
+            style={{ alignSelf: 'center', padding: spacing.md, minHeight: 48, justifyContent: 'center' }}
+          >
+            <AppText variant="caption" tone="textMuted">
+              {S.lock.forgot}
+            </AppText>
+          </Pressable>
         </View>
-        <PinDots length={length} filled={pin.length} error={error} />
-        <PinPad
-          value={pin}
-          length={length}
-          onChange={(v) => void onChange(v)}
-          disabled={lockedOut}
-          onBiometric={bioLabel ? () => void tryBiometric() : undefined}
-          biometricLabel={bioLabel ? t(S.lock.useBiometrics, { method: bioLabel }) : undefined}
-        />
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => void wipe({ fromLock: true })}
-          style={{ alignSelf: 'center', padding: spacing.md, minHeight: 48, justifyContent: 'center' }}
-        >
-          <AppText variant="caption" tone="textMuted">
-            {S.lock.forgot}
-          </AppText>
-        </Pressable>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </View>
   );
 }
 

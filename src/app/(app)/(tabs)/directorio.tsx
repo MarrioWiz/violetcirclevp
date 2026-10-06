@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { BadgeCheck, ChevronRight, Clock, Phone, ShieldQuestion, WifiOff } from 'lucide-react-native';
+import { ChevronRight, Clock, Phone, ShieldQuestion, WifiOff } from 'lucide-react-native';
 import { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 
@@ -7,15 +7,19 @@ import { AppText } from '@/components/AppText';
 import { Card } from '@/components/Card';
 import { EmergencyBanner } from '@/components/EmergencyBanner';
 import { Chip, ListRow, SectionTitle } from '@/components/Rows';
+import { tabMeta } from '@/components/dock/tabs';
 import { Screen } from '@/components/Screen';
+import { FileCard } from '@/components/ui/FileCard';
+import { VerifiedBadge } from '@/components/ui/VerifiedBadge';
 import { iconFor } from '@/components/icons';
 import { DIRECTORY_TYPES, pendingCount, visibleEntries } from '@/features/directory/filter';
 import { S } from '@/lib/strings.es';
 import { useContent } from '@/store/contentStore';
-import { spacing, useTheme } from '@/theme';
+import { palette, spacing, useTheme } from '@/theme';
 import type { DirectoryType } from '@/types';
 
 export default function DirectoryTab() {
+  const meta = tabMeta('directorio');
   const { colors } = useTheme();
   const entries = useContent((s) => s.directory);
   const guides = useContent((s) => s.guides);
@@ -27,7 +31,13 @@ export default function DirectoryTab() {
   const platformGuides = guides.filter((g) => g.category === 'plataforma');
 
   return (
-    <Screen title={S.directory.title} subtitle={S.directory.subtitle} footer={<EmergencyBanner />}>
+    <Screen
+      dock
+      title={meta.title}
+      subtitle={meta.subtitle}
+      eyebrow="Directorio verificado"
+      footer={<EmergencyBanner />}
+    >
       {offline && (
         <Card tone="warning" style={{ marginBottom: spacing.md }}>
           <View style={{ flexDirection: 'row', gap: spacing.sm, alignItems: 'center' }}>
@@ -60,51 +70,48 @@ export default function DirectoryTab() {
               </AppText>
             </Card>
           ) : (
-            visible.map((e) => (
-              <Card
-                key={e.id}
-                onPress={() => router.push({ pathname: '/directorio/[id]', params: { id: e.id } })}
-                accessibilityLabel={`${e.name}. ${S.directory.types[e.type]}. ${e.description}`}
-                tone={e.type === 'emergencia' ? 'danger' : 'surface'}
-              >
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
-                  <View style={{ flex: 1, gap: 2 }}>
-                    <AppText variant="label" tone={e.type === 'emergencia' ? 'danger' : 'primary'}>
-                      {S.directory.types[e.type]}
-                    </AppText>
-                    <AppText variant="subheading">{e.name}</AppText>
-                    <AppText variant="caption" tone="textMuted" numberOfLines={2}>
-                      {e.description}
-                    </AppText>
-                    <View style={{ flexDirection: 'row', gap: spacing.md, marginTop: spacing.xs, flexWrap: 'wrap' }}>
-                      {e.phone ? (
-                        <View style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}>
-                          <Phone size={14} color={colors.textMuted} />
-                          <AppText variant="caption" tone="textMuted">
-                            {e.phone}
-                          </AppText>
-                        </View>
-                      ) : null}
-                      {e.hours ? (
-                        <View style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}>
-                          <Clock size={14} color={colors.textMuted} />
-                          <AppText variant="caption" tone="textMuted">
-                            {e.hours}
-                          </AppText>
-                        </View>
-                      ) : null}
-                      <View style={{ flexDirection: 'row', gap: 4, alignItems: 'center' }}>
-                        <BadgeCheck size={14} color={colors.success} />
-                        <AppText variant="caption" tone="success">
-                          Verificado
+            visible.map((e) => {
+              const emergency = e.type === 'emergencia';
+              return (
+                <FileCard
+                  key={e.id}
+                  name={S.directory.types[e.type].toLowerCase()}
+                  meta={e.scope.toUpperCase()}
+                  accent={emergency ? palette.danger : undefined}
+                  onPress={() => router.push({ pathname: '/directorio/[id]', params: { id: e.id } })}
+                  accessibilityLabel={`${e.name}. ${S.directory.types[e.type]}. ${e.description}`}
+                >
+                  <AppText variant="heading">{e.name}</AppText>
+                  <AppText variant="caption" tone="textMuted" numberOfLines={2}>
+                    {e.description}
+                  </AppText>
+                  <View style={{ flexDirection: 'row', gap: spacing.lg, marginTop: spacing.sm, flexWrap: 'wrap' }}>
+                    {e.phone ? (
+                      <View style={{ flexDirection: 'row', gap: 6, alignItems: 'center' }}>
+                        <Phone size={14} color={emergency ? palette.danger : colors.textMuted} />
+                        <AppText variant="mono" tone={emergency ? 'danger' : 'textMuted'}>
+                          {e.phone}
                         </AppText>
                       </View>
-                    </View>
+                    ) : null}
+                    {e.hours ? (
+                      <View style={{ flexDirection: 'row', gap: 6, alignItems: 'center' }}>
+                        <Clock size={14} color={colors.textMuted} />
+                        <AppText variant="caption" tone="textMuted">
+                          {e.hours}
+                        </AppText>
+                      </View>
+                    ) : null}
                   </View>
-                  <ChevronRight size={20} color={colors.textMuted} />
-                </View>
-              </Card>
-            ))
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: spacing.md }}>
+                    <View style={{ flex: 1 }}>
+                      <VerifiedBadge date={e.verifiedAt} />
+                    </View>
+                    <ChevronRight size={18} color={colors.textMuted} strokeWidth={1.75} />
+                  </View>
+                </FileCard>
+              );
+            })
           )}
         </View>
       )}

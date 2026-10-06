@@ -4,7 +4,7 @@ import { es } from 'date-fns/locale';
 import { Calendar, Clock } from 'lucide-react-native';
 import { Platform, Pressable, View } from 'react-native';
 
-import { MIN_TOUCH, radius, spacing, useTheme } from '@/theme';
+import { HAIRLINE, MIN_TOUCH, palette, radius, spacing, useTheme } from '@/theme';
 
 import { AppText } from './AppText';
 
@@ -73,7 +73,7 @@ export function DateTimeField({ label, value, onChange }: Props) {
 }
 
 function PickerButton({ mode, value, onPress }: { mode: 'date' | 'time'; value: Date; onPress: () => void }) {
-  const { colors } = useTheme();
+  const { accent } = useTheme();
   const Icon = mode === 'date' ? Calendar : Clock;
   const text = mode === 'date' ? format(value, "d 'de' MMM yyyy", { locale: es }) : format(value, 'HH:mm');
   return (
@@ -88,13 +88,13 @@ function PickerButton({ mode, value, onPress }: { mode: 'date' | 'time'; value: 
         gap: spacing.sm,
         minHeight: MIN_TOUCH,
         paddingHorizontal: spacing.lg,
-        borderRadius: radius.md,
-        borderWidth: 1.5,
-        borderColor: colors.border,
-        backgroundColor: colors.surface,
+        borderRadius: radius.pill,
+        borderWidth: HAIRLINE,
+        borderColor: palette.stroke,
+        backgroundColor: palette.glass,
       }}
     >
-      <Icon size={18} color={colors.primary} />
+      <Icon size={18} color={accent} strokeWidth={1.75} />
       <AppText>{text}</AppText>
     </Pressable>
   );

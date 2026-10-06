@@ -1,10 +1,12 @@
 import { router } from 'expo-router';
-import { Ban, BookOpen, CheckCircle2, LifeBuoy, Phone, ShieldCheck, Users } from 'lucide-react-native';
+import { BookOpen, LifeBuoy, Phone, ShieldCheck, Users } from 'lucide-react-native';
 import { View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
+import { SectionTitle } from '@/components/Rows';
+import { FileCard } from '@/components/ui/FileCard';
 import { call911 } from '@/features/emergency/call';
 import { S, t } from '@/lib/strings.es';
 import { spacing, useTheme } from '@/theme';
@@ -38,12 +40,14 @@ export function UrgentBlock() {
   );
 }
 
-function BulletList({ items, icon: Icon, color }: { items: string[]; icon: typeof CheckCircle2; color: string }) {
+function NumberedList({ items, color }: { items: string[]; color: string }) {
   return (
     <View style={{ gap: spacing.md }}>
-      {items.map((it) => (
+      {items.map((it, i) => (
         <View key={it} style={{ flexDirection: 'row', gap: spacing.md }}>
-          <Icon size={20} color={color} style={{ marginTop: 2 }} />
+          <AppText variant="mono" style={{ color, marginTop: 3 }} accessibilityElementsHidden>
+            {String(i + 1).padStart(2, '0')}
+          </AppText>
           <AppText style={{ flex: 1 }}>{it}</AppText>
         </View>
       ))}
@@ -59,42 +63,40 @@ export function ResultView({ resolved }: { resolved: ResolvedResult }) {
     <View style={{ gap: spacing.lg }}>
       {result.urgent && <UrgentBlock />}
 
-      <Card>
+      <FileCard name="resultado.orientación" meta={result.kind.toUpperCase()}>
         <AppText variant="caption" tone="textMuted">
           {S.triage.resultLead}
         </AppText>
-        <AppText variant="title" tone="primary" accessibilityRole="header" style={{ marginTop: spacing.xs }}>
+        <AppText variant="title" accent accessibilityRole="header">
           {result.title}
         </AppText>
         <AppText style={{ marginTop: spacing.sm }}>{result.explanation}</AppText>
-        <AppText variant="bodyStrong" tone="primary" style={{ marginTop: spacing.md }}>
+        <AppText variant="bodyStrong" accent style={{ marginTop: spacing.md }}>
           {S.triage.notYourFault}
         </AppText>
-      </Card>
+      </FileCard>
 
       {extras.map((e) => (
-        <Card key={e} tone="soft">
-          <AppText tone="primaryDark">{e}</AppText>
+        <Card key={e} tone="accent">
+          <AppText>{e}</AppText>
         </Card>
       ))}
 
-      <Card>
+      <FileCard name="qué-puedes-hacer.ahora" accent={colors.success}>
         <AppText variant="heading" accessibilityRole="header" style={{ marginBottom: spacing.md }}>
           {S.triage.doNow}
         </AppText>
-        <BulletList items={result.doNow} icon={CheckCircle2} color={colors.success} />
-      </Card>
+        <NumberedList items={result.doNow} color={colors.success} />
+      </FileCard>
 
-      <Card>
+      <FileCard name="mejor-evitar" accent={colors.warning}>
         <AppText variant="heading" accessibilityRole="header" style={{ marginBottom: spacing.md }}>
           {S.triage.dontDo}
         </AppText>
-        <BulletList items={result.dontDo} icon={Ban} color={colors.warning} />
-      </Card>
+        <NumberedList items={result.dontDo} color={colors.warning} />
+      </FileCard>
 
-      <AppText variant="label" tone="textMuted">
-        {S.triage.next}
-      </AppText>
+      <SectionTitle>{S.triage.next}</SectionTitle>
       <View style={{ gap: spacing.sm }}>
         <Button
           label={S.triage.goEvidence}

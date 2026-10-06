@@ -7,22 +7,15 @@ import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { EmptyState } from '@/components/EmptyState';
 import { ListRow, SectionTitle } from '@/components/Rows';
+import { tabMeta } from '@/components/dock/tabs';
 import { Screen } from '@/components/Screen';
+import { Avatar } from '@/components/ui/Avatar';
 import { callNumber } from '@/features/emergency/call';
 import { confirmDialog } from '@/lib/dialog';
 import { S, t } from '@/lib/strings.es';
 import { MAX_CONTACTS, useCircle } from '@/store/circleStore';
-import { MIN_TOUCH, spacing, useTheme } from '@/theme';
+import { HAIRLINE, MIN_TOUCH, alpha, fonts, palette, spacing, useTheme } from '@/theme';
 import type { CircleContact } from '@/types';
-
-function initials(name: string) {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((p) => p[0]?.toUpperCase())
-    .join('');
-}
 
 function IconAction({
   icon: Icon,
@@ -35,7 +28,7 @@ function IconAction({
   onPress: () => void;
   danger?: boolean;
 }) {
-  const { colors } = useTheme();
+  const { colors, accent } = useTheme();
   return (
     <Pressable
       accessibilityRole="button"
@@ -48,36 +41,23 @@ function IconAction({
         borderRadius: MIN_TOUCH / 2,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: danger ? colors.dangerSoft : colors.primarySoft,
+        backgroundColor: danger ? colors.dangerSoft : palette.glassStrong,
+        borderWidth: HAIRLINE,
+        borderColor: danger ? alpha(palette.danger, 0.3) : palette.stroke,
         opacity: pressed ? 0.7 : 1,
       })}
     >
-      <Icon size={20} color={danger ? colors.danger : colors.primary} />
+      <Icon size={19} color={danger ? colors.danger : accent} strokeWidth={1.75} />
     </Pressable>
   );
 }
 
 function ContactCard({ c }: { c: CircleContact }) {
-  const { colors } = useTheme();
   const remove = useCircle((s) => s.remove);
   return (
     <Card>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
-        <View
-          style={{
-            width: 48,
-            height: 48,
-            borderRadius: 24,
-            backgroundColor: colors.accent,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          importantForAccessibility="no"
-        >
-          <AppText variant="subheading" style={{ color: '#FFFFFF' }}>
-            {initials(c.name)}
-          </AppText>
-        </View>
+        <Avatar name={c.name} />
         <View style={{ flex: 1 }}>
           <AppText variant="bodyStrong">{c.name}</AppText>
           <AppText variant="caption" tone="textMuted">
@@ -118,15 +98,16 @@ function ContactCard({ c }: { c: CircleContact }) {
 }
 
 export default function CircleTab() {
+  const meta = tabMeta('circulo');
   const { colors } = useTheme();
   const contacts = useCircle((s) => s.contacts);
   const full = contacts.length >= MAX_CONTACTS;
 
   return (
-    <Screen title={S.circle.title} subtitle={S.circle.subtitle}>
+    <Screen dock title={meta.title} subtitle={meta.subtitle}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.lg }}>
         <Lock size={16} color={colors.success} />
-        <AppText variant="caption" tone="success" style={{ fontFamily: 'Inter_600SemiBold' }}>
+        <AppText variant="caption" tone="success" style={{ fontFamily: fonts.semi }}>
           {S.circle.localOnly}
         </AppText>
       </View>

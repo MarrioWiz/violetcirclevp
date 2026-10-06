@@ -1,68 +1,85 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { Phone } from 'lucide-react-native';
 import { StyleSheet, View } from 'react-native';
+import Svg, { Circle, Defs, RadialGradient, Stop } from 'react-native-svg';
 
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
-import { Card } from '@/components/Card';
+import { EmergencyBanner } from '@/components/EmergencyBanner';
 import { Logo } from '@/components/Logo';
+import { FileCard } from '@/components/ui/FileCard';
 import { OnboardingFrame } from '@/features/onboarding/OnboardingFrame';
 import { S } from '@/lib/strings.es';
-import { radius, spacing, useTheme } from '@/theme';
+import { palette, spacing, useTheme } from '@/theme';
+
+const GLOW = 260;
 
 export default function Welcome() {
-  const { colors, scheme } = useTheme();
+  const { accent } = useTheme();
   return (
     <OnboardingFrame
       step={1}
       canGoBack={false}
       footer={<Button label={S.common.continue} size="lg" onPress={() => router.push('/consentimiento')} />}
     >
-      <LinearGradient colors={scheme === 'dark' ? ['#2B2145', '#1E1830'] : ['#EDE9FE', '#FFFFFF']} style={styles.hero}>
-        <Logo size={96} />
-        <AppText variant="label" tone="primary" style={{ marginTop: spacing.lg }}>
-          {S.appName}
-        </AppText>
-        <AppText variant="hero" center accessibilityRole="header" style={{ marginTop: spacing.sm }}>
+      <View style={styles.hero}>
+        <Svg width={GLOW} height={GLOW} style={styles.glow} pointerEvents="none">
+          <Defs>
+            <RadialGradient id="welcome" cx="50%" cy="50%" rx="50%" ry="50%">
+              <Stop offset="0" stopColor={palette.violet} stopOpacity={0.5} />
+              <Stop offset="1" stopColor={palette.violet} stopOpacity={0} />
+            </RadialGradient>
+          </Defs>
+          <Circle cx={GLOW / 2} cy={GLOW / 2} r={GLOW / 2} fill="url(#welcome)" />
+        </Svg>
+        <Logo size={120} />
+      </View>
+
+      <View style={{ gap: spacing.sm }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
+          <View style={[styles.dot, { backgroundColor: accent }]} />
+          <AppText variant="label" tone="textMuted">
+            {S.appName}
+          </AppText>
+        </View>
+        <AppText
+          variant="display"
+          accessibilityRole="header"
+          adjustsFontSizeToFit
+          numberOfLines={3}
+          minimumFontScale={0.6}
+        >
           {S.onboarding.welcomeTitle}
         </AppText>
-      </LinearGradient>
+        <AppText variant="subtitle" tone="textMuted">
+          {S.onboarding.welcomeBody}
+        </AppText>
+        <AppText variant="bodyStrong" accent>
+          {S.onboarding.welcomeNotYourFault}
+        </AppText>
+      </View>
 
-      <AppText tone="textMuted">{S.onboarding.welcomeBody}</AppText>
-      <AppText variant="bodyStrong" tone="primary">
-        {S.onboarding.welcomeNotYourFault}
-      </AppText>
-
-      <Card>
+      <FileCard name="alcance.txt" meta="LEER">
         <AppText variant="subheading" style={{ marginBottom: spacing.sm }}>
           {S.scope.title}
         </AppText>
         <View style={{ gap: spacing.sm }}>
           {S.scope.points.map((p) => (
             <View key={p} style={{ flexDirection: 'row', gap: spacing.sm }}>
-              <View style={[styles.dot, { backgroundColor: colors.accent }]} />
-              <AppText variant="body" style={{ flex: 1 }}>
-                {p}
-              </AppText>
+              <View style={[styles.bullet, { backgroundColor: accent }]} />
+              <AppText style={{ flex: 1 }}>{p}</AppText>
             </View>
           ))}
         </View>
-      </Card>
+      </FileCard>
 
-      <Card tone="danger">
-        <View style={{ flexDirection: 'row', gap: spacing.md, alignItems: 'center' }}>
-          <Phone size={20} color={colors.danger} />
-          <AppText variant="bodyStrong" tone="danger" style={{ flex: 1 }}>
-            {S.emergency.banner}.
-          </AppText>
-        </View>
-      </Card>
+      <EmergencyBanner />
     </OnboardingFrame>
   );
 }
 
 const styles = StyleSheet.create({
-  hero: { borderRadius: radius.xl, padding: spacing.xxl, alignItems: 'center' },
-  dot: { width: 8, height: 8, borderRadius: 4, marginTop: 8 },
+  hero: { height: 200, alignItems: 'center', justifyContent: 'center' },
+  glow: { position: 'absolute', left: '50%', marginLeft: -GLOW / 2, top: 100 - GLOW / 2 },
+  dot: { width: 8, height: 8, borderRadius: 4 },
+  bullet: { width: 6, height: 6, borderRadius: 3, marginTop: 9 },
 });

@@ -1,10 +1,10 @@
 {
   "name": "violetcirclevp",
   "main": "expo-router/entry",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.2",
-    "@expo-google-fonts/plus-jakarta-sans": "^0.4.2",
+    "@expo-google-fonts/jetbrains-mono": "^0.4.1",
     "@expo/ui": "~57.0.21",
     "@hookform/resolvers": "^5.9.1",
     "@react-native-async-storage/async-storage": "2.2.0",
@@ -93,6 +93,7 @@
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/.expo/"
-    ]
+    ],
+    "resolver": "react-native-worklets/jest/resolver.js"
   }
 }

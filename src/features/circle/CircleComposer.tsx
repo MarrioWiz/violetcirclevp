@@ -13,7 +13,7 @@ import { bundled } from '@/features/content/repository';
 import { notify } from '@/lib/dialog';
 import { S } from '@/lib/strings.es';
 import { useCircle } from '@/store/circleStore';
-import { MIN_TOUCH, radius, spacing, useTheme } from '@/theme';
+import { HAIRLINE, MIN_TOUCH, alpha, palette, radius, spacing, useTheme } from '@/theme';
 
 import { buildAlertMessage, recipients } from './message';
 import { copyText, getApproxLocation, openSmsComposer, openWhatsApp } from './sendToCircle';
@@ -26,7 +26,7 @@ interface Props {
 }
 
 export function CircleComposer({ initialTemplateId = 'pedir-apoyo', onOpened, preselectId }: Props) {
-  const { colors } = useTheme();
+  const { colors, accent } = useTheme();
   const contacts = useCircle((s) => s.contacts);
   const templates = bundled.templates;
   const [selected, setSelected] = useState<string[]>(() => (preselectId ? [preselectId] : contacts.map((c) => c.id)));
@@ -108,10 +108,10 @@ export function CircleComposer({ initialTemplateId = 'pedir-apoyo', onOpened, pr
                   gap: spacing.md,
                   minHeight: MIN_TOUCH + 8,
                   paddingHorizontal: spacing.lg,
-                  borderRadius: radius.md,
-                  borderWidth: 1.5,
-                  borderColor: on ? colors.primary : colors.border,
-                  backgroundColor: on ? colors.primarySoft : colors.surface,
+                  borderRadius: radius.lg,
+                  borderWidth: HAIRLINE,
+                  borderColor: on ? alpha(accent, 0.5) : palette.stroke,
+                  backgroundColor: on ? alpha(accent, 0.14) : palette.glass,
                   opacity: pressed ? 0.85 : 1,
                 })}
               >
@@ -119,15 +119,15 @@ export function CircleComposer({ initialTemplateId = 'pedir-apoyo', onOpened, pr
                   style={{
                     width: 24,
                     height: 24,
-                    borderRadius: 12,
-                    backgroundColor: on ? colors.primary : 'transparent',
-                    borderWidth: 2,
-                    borderColor: on ? colors.primary : colors.border,
+                    borderRadius: radius.pill,
+                    backgroundColor: on ? accent : palette.glass,
+                    borderWidth: HAIRLINE,
+                    borderColor: on ? alpha(accent, 0.6) : palette.strokeStrong,
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}
                 >
-                  {on ? <Check size={14} color={colors.onPrimary} strokeWidth={3} /> : null}
+                  {on ? <Check size={14} color={palette.bg0} strokeWidth={3} /> : null}
                 </View>
                 <View style={{ flex: 1 }}>
                   <AppText variant="bodyStrong">{c.name}</AppText>

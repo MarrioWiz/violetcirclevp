@@ -8,13 +8,13 @@ import { EmptyState } from '@/components/EmptyState';
 import { IconBadge } from '@/components/IconBadge';
 import { iconFor } from '@/components/icons';
 import { Screen } from '@/components/Screen';
-import { S, t } from '@/lib/strings.es';
+import { S } from '@/lib/strings.es';
 import { useChecklist } from '@/store/checklistStore';
 import { useContent } from '@/store/contentStore';
-import { MIN_TOUCH, spacing, useTheme } from '@/theme';
+import { HAIRLINE, MIN_TOUCH, palette, radius, spacing, useTheme } from '@/theme';
 
 export default function ArticleDetail() {
-  const { colors } = useTheme();
+  const { colors, accent } = useTheme();
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const article = useContent((s) => s.articles.find((a) => a.slug === slug));
   const isFav = useChecklist((s) => s.favorites.includes(slug ?? ''));
@@ -42,11 +42,13 @@ export default function ArticleDetail() {
             height: MIN_TOUCH - 4,
             alignItems: 'center',
             justifyContent: 'center',
-            borderRadius: 22,
-            backgroundColor: colors.surfaceAlt,
+            borderRadius: radius.pill,
+            backgroundColor: palette.glassStrong,
+            borderWidth: HAIRLINE,
+            borderColor: palette.strokeStrong,
           }}
         >
-          <Star size={20} color={colors.primary} fill={isFav ? colors.primary : 'transparent'} />
+          <Star size={20} color={accent} fill={isFav ? accent : 'transparent'} strokeWidth={1.75} />
         </Pressable>
       }
     >
@@ -54,8 +56,8 @@ export default function ArticleDetail() {
       <AppText variant="title" accessibilityRole="header" style={{ marginTop: spacing.lg }}>
         {article.title}
       </AppText>
-      <AppText variant="caption" tone="textMuted" style={{ marginTop: spacing.xs }}>
-        {t(S.learn.minutes, { n: article.minutes })}
+      <AppText variant="mono" tone="textMuted" style={{ marginTop: spacing.xs }}>
+        {`${article.minutes} MIN`}
         {article.reviewStatus === 'borrador' ? ` · ${S.common.draftBadge}` : ''}
       </AppText>
 

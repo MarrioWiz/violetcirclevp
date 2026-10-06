@@ -1,23 +1,26 @@
 import type { LucideIcon } from 'lucide-react-native';
 import { View } from 'react-native';
 
-import { useTheme } from '@/theme';
+import { HAIRLINE, alpha, palette, radius, useTheme } from '@/theme';
 
 interface Props {
   icon: LucideIcon;
   size?: number;
-  tone?: 'primary' | 'danger' | 'success' | 'warning' | 'onPrimary';
+  tone?: 'primary' | 'accent' | 'danger' | 'success' | 'warning' | 'onPrimary';
+  /** Contenedor redondeado (md) en vez de círculo. */
+  square?: boolean;
 }
 
-/** Ícono lineal dentro de un círculo suave. */
-export function IconBadge({ icon: Icon, size = 44, tone = 'primary' }: Props) {
-  const { colors } = useTheme();
-  const map = {
-    primary: { bg: colors.primarySoft, fg: colors.primary },
-    danger: { bg: colors.dangerSoft, fg: colors.danger },
-    success: { bg: colors.successSoft, fg: colors.success },
-    warning: { bg: colors.warningSoft, fg: colors.warning },
-    onPrimary: { bg: 'rgba(255,255,255,0.18)', fg: '#FFFFFF' },
+/** Ícono lineal dentro de un contenedor de vidrio tintado. */
+export function IconBadge({ icon: Icon, size = 44, tone = 'accent', square = true }: Props) {
+  const { colors, accent } = useTheme();
+  const fg = {
+    primary: colors.primary,
+    accent,
+    danger: colors.danger,
+    success: colors.success,
+    warning: colors.warning,
+    onPrimary: palette.white,
   }[tone];
   return (
     <View
@@ -26,13 +29,15 @@ export function IconBadge({ icon: Icon, size = 44, tone = 'primary' }: Props) {
       style={{
         width: size,
         height: size,
-        borderRadius: size / 2,
-        backgroundColor: map.bg,
+        borderRadius: square ? Math.min(radius.md, size / 2.6) : size / 2,
+        backgroundColor: tone === 'onPrimary' ? palette.glassStrong : alpha(fg, 0.12),
+        borderWidth: HAIRLINE,
+        borderColor: tone === 'onPrimary' ? palette.strokeStrong : alpha(fg, 0.22),
         alignItems: 'center',
         justifyContent: 'center',
       }}
     >
-      <Icon size={size * 0.5} color={map.fg} strokeWidth={1.8} />
+      <Icon size={size * 0.48} color={fg} strokeWidth={1.75} />
     </View>
   );
 }

@@ -1,18 +1,25 @@
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
-import { radius, spacing, useTheme } from '@/theme';
+import { HAIRLINE, alpha, palette, radius, spacing, useTheme } from '@/theme';
+
+import { Sheen } from './ui/Sheen';
 
 interface Props {
   children: ReactNode;
   onPress?: () => void;
   style?: StyleProp<ViewStyle>;
-  tone?: 'surface' | 'soft' | 'danger' | 'success' | 'warning';
+  /**
+   * surface = vidrio (GlassCard default) · strong = vidrio más denso · accent = teñido con el acento ·
+   * soft = teñido violeta · danger/success/warning = estados.
+   */
+  tone?: 'surface' | 'strong' | 'accent' | 'soft' | 'danger' | 'success' | 'warning';
   accessibilityLabel?: string;
   accessibilityHint?: string;
   padded?: boolean;
 }
 
+/** Tarjeta de vidrio: relleno translúcido, borde hairline y brillo superior de 1 px. */
 export function Card({
   children,
   onPress,
@@ -22,48 +29,40 @@ export function Card({
   accessibilityHint,
   padded = true,
 }: Props) {
-  const { colors, scheme } = useTheme();
-  const bg = {
-    surface: colors.surface,
-    soft: colors.primarySoft,
-    danger: colors.dangerSoft,
-    success: colors.successSoft,
-    warning: colors.warningSoft,
+  const { colors, accent } = useTheme();
+  const look = {
+    surface: { bg: palette.glass, border: palette.stroke, sheen: undefined },
+    strong: { bg: palette.glassStrong, border: palette.strokeStrong, sheen: undefined },
+    accent: { bg: alpha(accent, 0.08), border: alpha(accent, 0.25), sheen: accent },
+    soft: { bg: colors.primarySoft, border: alpha(palette.violet, 0.25), sheen: palette.violet },
+    danger: { bg: colors.dangerSoft, border: alpha(palette.danger, 0.35), sheen: palette.danger },
+    success: { bg: colors.successSoft, border: alpha(palette.success, 0.25), sheen: palette.success },
+    warning: { bg: colors.warningSoft, border: alpha(palette.warning, 0.25), sheen: palette.warning },
   }[tone];
-  const shadow =
-    tone === 'surface'
-      ? {
-          shadowColor: colors.shadow,
-          shadowOpacity: scheme === 'dark' ? 0.35 : 0.07,
-          shadowRadius: 18,
-          shadowOffset: { width: 0, height: 6 },
-          elevation: 2,
-        }
-      : null;
-  const base = [
-    styles.card,
-    { backgroundColor: bg, borderColor: tone === 'surface' ? colors.border : 'transparent' },
-    padded && styles.padded,
-    shadow,
-    style,
-  ];
+  const base = [styles.card, { backgroundColor: look.bg, borderColor: look.border }, padded && styles.padded, style];
+  const content = (
+    <>
+      <Sheen color={look.sheen} />
+      {children}
+    </>
+  );
 
-  if (!onPress) return <View style={base}>{children}</View>;
+  if (!onPress) return <View style={base}>{content}</View>;
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
       onPress={onPress}
-      style={({ pressed }) => [base, { opacity: pressed ? 0.9 : 1, transform: [{ scale: pressed ? 0.985 : 1 }] }]}
+      style={({ pressed }) => [base, { opacity: pressed ? 0.92 : 1, transform: [{ scale: pressed ? 0.985 : 1 }] }]}
     >
-      {children}
+      {content}
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  card: { borderRadius: radius.lg, borderWidth: StyleSheet.hairlineWidth },
+  card: { borderRadius: radius.lg, borderWidth: HAIRLINE, overflow: 'hidden' },
   padded: { padding: spacing.lg },
 });
 

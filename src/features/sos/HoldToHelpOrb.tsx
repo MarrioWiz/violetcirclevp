@@ -15,18 +15,19 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
-import Svg, { Circle } from 'react-native-svg';
+import Svg, { Circle, Defs, RadialGradient, Stop } from 'react-native-svg';
 
 import { AppText } from '@/components/AppText';
 import { S } from '@/lib/strings.es';
 import { useSession } from '@/store/sessionStore';
-import { spacing } from '@/theme';
+import { HAIRLINE, alpha, gradients, palette, spacing } from '@/theme';
 
 const HOLD_MS = 2000;
 /** Si suelta antes de esto, cuenta como toque (abrir opciones), no como intento de envío. */
 const TAP_MS = 250;
-const ORB = 176;
-const RING = ORB + 28;
+const ORB = 168;
+const RING = ORB + 32;
+const GLOW = ORB * 1.9;
 const STROKE = 6;
 const R = (RING - STROKE) / 2;
 const CIRC = 2 * Math.PI * R;
@@ -99,6 +100,17 @@ export function HoldToHelpOrb() {
   return (
     <View style={styles.wrap}>
       <View style={styles.stage}>
+        {/* Resplandor radial detrás del orbe */}
+        <Svg width={GLOW} height={GLOW} style={styles.glow} pointerEvents="none">
+          <Defs>
+            <RadialGradient id="orbGlow" cx="50%" cy="50%" rx="50%" ry="50%">
+              <Stop offset="0" stopColor={palette.violet} stopOpacity={0.45} />
+              <Stop offset="0.55" stopColor={palette.violet} stopOpacity={0.12} />
+              <Stop offset="1" stopColor={palette.violet} stopOpacity={0} />
+            </RadialGradient>
+          </Defs>
+          <Circle cx={GLOW / 2} cy={GLOW / 2} r={GLOW / 2} fill="url(#orbGlow)" />
+        </Svg>
         {animate && (
           <>
             <Animated.View style={[styles.breath, ringA]} pointerEvents="none" />
@@ -106,12 +118,19 @@ export function HoldToHelpOrb() {
           </>
         )}
         <Svg width={RING} height={RING} style={StyleSheet.absoluteFill} pointerEvents="none">
-          <Circle cx={RING / 2} cy={RING / 2} r={R} stroke="rgba(167,139,250,0.22)" strokeWidth={STROKE} fill="none" />
+          <Circle
+            cx={RING / 2}
+            cy={RING / 2}
+            r={R}
+            stroke={alpha(palette.violetLight, 0.18)}
+            strokeWidth={STROKE}
+            fill="none"
+          />
           <AnimatedCircle
             cx={RING / 2}
             cy={RING / 2}
             r={R}
-            stroke="#F5F0FF"
+            stroke={palette.text}
             strokeWidth={STROKE}
             strokeLinecap="round"
             fill="none"
@@ -136,13 +155,14 @@ export function HoldToHelpOrb() {
           onPressOut={onPressOut}
         >
           <Animated.View style={orbScale}>
-            <LinearGradient
-              colors={['#A78BFA', '#7C3AED', '#C026D3']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.orb}
-            >
-              <HandHeart size={40} color="#FFFFFF" strokeWidth={1.8} />
+            <LinearGradient colors={gradients.orb} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.orb}>
+              <LinearGradient
+                colors={[palette.beadShine, 'transparent']}
+                start={{ x: 0.2, y: 0 }}
+                end={{ x: 0.6, y: 0.7 }}
+                style={StyleSheet.absoluteFill}
+              />
+              <HandHeart size={36} color={palette.white} strokeWidth={1.75} />
               <AppText variant="heading" center style={styles.white}>
                 {holding ? S.sos.holding : S.sos.title}
               </AppText>
@@ -158,14 +178,16 @@ export function HoldToHelpOrb() {
 }
 
 const styles = StyleSheet.create({
-  wrap: { alignItems: 'center', marginVertical: spacing.lg },
+  wrap: { alignItems: 'center', marginTop: spacing.sm, marginBottom: spacing.lg },
   stage: { width: RING, height: RING, alignItems: 'center', justifyContent: 'center' },
+  glow: { position: 'absolute', left: (RING - GLOW) / 2, top: (RING - GLOW) / 2 },
   breath: {
     position: 'absolute',
     width: ORB,
     height: ORB,
     borderRadius: ORB / 2,
-    backgroundColor: '#8B5CF6',
+    borderWidth: HAIRLINE,
+    borderColor: palette.violetLight,
   },
   orb: {
     width: ORB,
@@ -174,8 +196,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: spacing.xs,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.3)',
+    borderWidth: HAIRLINE,
+    borderColor: palette.beadRim,
+    overflow: 'hidden',
   },
-  white: { color: '#FFFFFF' },
+  white: { color: palette.white },
 });

@@ -32,7 +32,7 @@ import { isDiscreetIconOn, setDiscreetIcon, supportsDiscreetIcon } from '@/servi
 import { cancelAllReminders, scheduleSelfCareReminder } from '@/services/notifications';
 import { useSettings } from '@/store/settingsStore';
 import { spacing } from '@/theme';
-import type { AutoLock, TextScale, ThemePreference } from '@/types';
+import type { AutoLock, TextScale } from '@/types';
 
 /** Correo del equipo para comentarios. PENDIENTE: el equipo debe definirlo. */
 const FEEDBACK_EMAIL = '';
@@ -137,18 +137,6 @@ export default function SettingsScreen() {
 
       <SectionTitle>{S.settings.appearance}</SectionTitle>
       <Card style={{ gap: spacing.lg }}>
-        <View style={{ gap: spacing.sm }}>
-          <AppText variant="bodyStrong">{S.settings.theme}</AppText>
-          <Segmented<ThemePreference>
-            label={S.settings.theme}
-            value={s.theme}
-            onChange={(v) => void s.update({ theme: v })}
-            options={(['system', 'light', 'dark'] as ThemePreference[]).map((v) => ({
-              value: v,
-              label: S.settings.themeOptions[v],
-            }))}
-          />
-        </View>
         <View style={{ gap: spacing.sm }}>
           <AppText variant="bodyStrong">{S.settings.textSize}</AppText>
           <Segmented<'1' | '1.15' | '1.3'>

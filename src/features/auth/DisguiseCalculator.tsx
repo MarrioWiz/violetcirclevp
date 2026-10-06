@@ -4,6 +4,7 @@ import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { getPinLength, verifyPin } from '@/services/crypto';
+import { disguise } from '@/theme';
 import { useSession } from '@/store/sessionStore';
 
 type Op = '+' | '−' | '×' | '÷';
@@ -153,7 +154,7 @@ export function DisguiseCalculator() {
                   styles.key,
                   k.wide && styles.wide,
                   {
-                    backgroundColor: k.kind === 'op' ? '#FF9F0A' : k.kind === 'fn' ? '#A5A5A5' : '#333333',
+                    backgroundColor: k.kind === 'op' ? disguise.op : k.kind === 'fn' ? disguise.fn : disguise.num,
                     opacity: pressed ? 0.7 : 1,
                   },
                 ]}
@@ -161,7 +162,7 @@ export function DisguiseCalculator() {
                 <Text
                   style={[
                     styles.keyText,
-                    k.kind === 'fn' && { color: '#000' },
+                    k.kind === 'fn' && { color: disguise.fnText },
                     k.wide && { alignSelf: 'flex-start', paddingLeft: 30 },
                   ]}
                 >
@@ -178,12 +179,12 @@ export function DisguiseCalculator() {
 
 const KEY = 78;
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: '#000000', justifyContent: 'flex-end', paddingBottom: 24 },
+  root: { flex: 1, backgroundColor: disguise.bg, justifyContent: 'flex-end', paddingBottom: 24 },
   displayWrap: { paddingHorizontal: 24, paddingBottom: 12 },
-  display: { color: '#FFFFFF', fontSize: 84, fontWeight: '300', textAlign: 'right' },
+  display: { color: disguise.text, fontSize: 84, fontWeight: '300', textAlign: 'right' },
   pad: { gap: 14, paddingHorizontal: 16 },
   row: { flexDirection: 'row', justifyContent: 'space-between' },
   key: { width: KEY, height: KEY, borderRadius: KEY / 2, alignItems: 'center', justifyContent: 'center' },
   wide: { width: KEY * 2 + 14 },
-  keyText: { color: '#FFFFFF', fontSize: 34, fontWeight: '400' },
+  keyText: { color: disguise.text, fontSize: 34, fontWeight: '400' },
 });

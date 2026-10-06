@@ -1,19 +1,27 @@
-import { useColorScheme } from 'react-native';
+import { create } from 'zustand';
 
 import { useSettings } from '@/store/settingsStore';
 
-import { palettes, type ColorScheme, type Palette } from './colors';
+import { accents, palettes, type AccentKey, type ColorScheme, type Palette } from './colors';
+
+/** Acento de la sección activa (lo fija el dock al cambiar de pestaña). */
+export const useAccentStore = create<{ key: AccentKey; setKey: (k: AccentKey) => void }>((set) => ({
+  key: 'inicio',
+  setKey: (key) => set({ key }),
+}));
 
 export interface Theme {
   scheme: ColorScheme;
   colors: Palette;
   textScale: number;
+  /** Color de acento de la sección actual. */
+  accent: string;
+  accentKey: AccentKey;
 }
 
+/** Un solo tema (oscuro). Ver docs/DISENO.md. */
 export function useTheme(): Theme {
-  const system = useColorScheme();
-  const pref = useSettings((s) => s.theme);
   const textScale = useSettings((s) => s.textScale);
-  const scheme: ColorScheme = pref === 'system' ? (system === 'dark' ? 'dark' : 'light') : pref;
-  return { scheme, colors: palettes[scheme], textScale };
+  const accentKey = useAccentStore((s) => s.key);
+  return { scheme: 'dark', colors: palettes.dark, textScale, accent: accents[accentKey], accentKey };
 }

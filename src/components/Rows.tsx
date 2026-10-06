@@ -1,17 +1,21 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { Check, ChevronRight, type LucideIcon } from 'lucide-react-native';
-import type { ReactNode } from 'react';
-import { Pressable, StyleSheet, Switch, View } from 'react-native';
+import { useEffect, type ReactNode } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
+import Animated, { useAnimatedStyle, useReducedMotion, useSharedValue, withTiming } from 'react-native-reanimated';
 
-import { MIN_TOUCH, radius, spacing, useTheme } from '@/theme';
+import { HAIRLINE, MIN_TOUCH, alpha, fonts, palette, radius, spacing, useTheme } from '@/theme';
 
 import { AppText } from './AppText';
 import { IconBadge } from './IconBadge';
+
+// ── Fila de lista ─────────────────────────────────────────────────────────
 
 interface ListRowProps {
   title: string;
   body?: string;
   icon?: LucideIcon;
-  iconTone?: 'primary' | 'danger' | 'success' | 'warning';
+  iconTone?: 'primary' | 'accent' | 'danger' | 'success' | 'warning';
   onPress?: () => void;
   right?: ReactNode;
   destructive?: boolean;
@@ -22,7 +26,7 @@ export function ListRow({ title, body, icon, iconTone, onPress, right, destructi
   const { colors } = useTheme();
   const content = (
     <>
-      {icon ? <IconBadge icon={icon} size={40} tone={destructive ? 'danger' : iconTone} /> : null}
+      {icon ? <IconBadge icon={icon} size={40} tone={destructive ? 'danger' : (iconTone ?? 'accent')} /> : null}
       <View style={styles.flex}>
         <AppText variant="bodyStrong" tone={destructive ? 'danger' : 'text'}>
           {title}
@@ -33,7 +37,7 @@ export function ListRow({ title, body, icon, iconTone, onPress, right, destructi
           </AppText>
         ) : null}
       </View>
-      {right ?? (onPress ? <ChevronRight size={20} color={colors.textMuted} /> : null)}
+      {right ?? (onPress ? <ChevronRight size={18} color={colors.textMuted} strokeWidth={1.75} /> : null)}
     </>
   );
   if (!onPress) return <View style={styles.row}>{content}</View>;
@@ -46,6 +50,57 @@ export function ListRow({ title, body, icon, iconTone, onPress, right, destructi
       style={({ pressed }) => [styles.row, { opacity: pressed ? 0.7 : 1 }]}
     >
       {content}
+    </Pressable>
+  );
+}
+
+// ── Interruptor de vidrio ────────────────────────────────────────────────
+
+const TRACK_W = 52;
+const TRACK_H = 32;
+const THUMB = 24;
+
+export function GlassSwitch({
+  value,
+  onChange,
+  disabled,
+  label,
+  hint,
+}: {
+  value: boolean;
+  onChange: (v: boolean) => void;
+  disabled?: boolean;
+  label: string;
+  hint?: string;
+}) {
+  const { accent } = useTheme();
+  const reduceMotion = useReducedMotion();
+  const pos = useSharedValue(value ? 1 : 0);
+  useEffect(() => {
+    pos.value = reduceMotion ? (value ? 1 : 0) : withTiming(value ? 1 : 0, { duration: 180 });
+  }, [value, reduceMotion, pos]);
+  const thumb = useAnimatedStyle(() => ({ transform: [{ translateX: 4 + pos.value * (TRACK_W - THUMB - 8) }] }));
+  const fill = useAnimatedStyle(() => ({ opacity: pos.value }));
+  return (
+    <Pressable
+      accessibilityRole="switch"
+      accessibilityLabel={label}
+      accessibilityHint={hint}
+      accessibilityState={{ checked: value, disabled: !!disabled }}
+      disabled={disabled}
+      hitSlop={8}
+      onPress={() => onChange(!value)}
+      style={[styles.track, { opacity: disabled ? 0.4 : 1 }]}
+    >
+      <Animated.View style={[StyleSheet.absoluteFill, fill]}>
+        <LinearGradient
+          colors={[alpha(accent, 0.95), alpha(accent, 0.6)]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[StyleSheet.absoluteFill, { borderRadius: radius.pill }]}
+        />
+      </Animated.View>
+      <Animated.View style={[styles.thumb, thumb]} />
     </Pressable>
   );
 }
@@ -65,7 +120,6 @@ export function ToggleRow({
   disabled?: boolean;
   icon?: LucideIcon;
 }) {
-  const { colors } = useTheme();
   return (
     <View style={styles.row}>
       {icon ? <IconBadge icon={icon} size={40} /> : null}
@@ -77,19 +131,12 @@ export function ToggleRow({
           </AppText>
         ) : null}
       </View>
-      <Switch
-        accessibilityLabel={title}
-        accessibilityHint={body}
-        value={value}
-        onValueChange={onChange}
-        disabled={disabled}
-        trackColor={{ true: colors.primary, false: colors.border }}
-        thumbColor="#FFFFFF"
-        ios_backgroundColor={colors.border}
-      />
+      <GlassSwitch label={title} hint={body} value={value} onChange={onChange} disabled={disabled} />
     </View>
   );
 }
+
+// ── Casilla ──────────────────────────────────────────────────────────────
 
 export function CheckRow({
   label,
@@ -102,7 +149,7 @@ export function CheckRow({
   checked: boolean;
   onToggle: () => void;
 }) {
-  const { colors } = useTheme();
+  const { accent } = useTheme();
   return (
     <Pressable
       accessibilityRole="checkbox"
@@ -115,12 +162,12 @@ export function CheckRow({
         style={[
           styles.box,
           {
-            borderColor: checked ? colors.primary : colors.border,
-            backgroundColor: checked ? colors.primary : 'transparent',
+            borderColor: checked ? alpha(accent, 0.6) : palette.strokeStrong,
+            backgroundColor: checked ? alpha(accent, 0.9) : palette.glass,
           },
         ]}
       >
-        {checked ? <Check size={16} color={colors.onPrimary} strokeWidth={3} /> : null}
+        {checked ? <Check size={15} color={palette.bg0} strokeWidth={3} /> : null}
       </View>
       <View style={styles.flex}>
         <AppText
@@ -140,54 +187,60 @@ export function CheckRow({
   );
 }
 
+// ── Separadores y títulos ────────────────────────────────────────────────
+
 export function Divider() {
-  const { colors } = useTheme();
+  return <View style={{ height: HAIRLINE, backgroundColor: palette.stroke, marginVertical: spacing.xs }} />;
+}
+
+/** Título de sección: punto del acento + mono en mayúsculas. */
+export function SectionTitle({ children }: { children: string }) {
+  const { accent } = useTheme();
   return (
-    <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: colors.border, marginVertical: spacing.xs }} />
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: spacing.sm,
+        marginTop: spacing.x3,
+        marginBottom: spacing.md,
+      }}
+    >
+      <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: accent }} />
+      <AppText variant="label" tone="textMuted" accessibilityRole="header">
+        {children}
+      </AppText>
+    </View>
   );
 }
 
-export function SectionTitle({ children }: { children: string }) {
-  return (
-    <AppText
-      variant="label"
-      tone="textMuted"
-      accessibilityRole="header"
-      style={{ marginTop: spacing.xl, marginBottom: spacing.sm }}
-    >
-      {children}
-    </AppText>
-  );
-}
+// ── Chips y selector segmentado ──────────────────────────────────────────
 
 export function Chip({ label, selected, onPress }: { label: string; selected: boolean; onPress: () => void }) {
-  const { colors } = useTheme();
+  const { accent, colors } = useTheme();
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ selected }}
       accessibilityLabel={label}
       onPress={onPress}
+      hitSlop={6}
       style={({ pressed }) => [
         styles.chip,
         {
-          backgroundColor: selected ? colors.primary : colors.surface,
-          borderColor: selected ? colors.primary : colors.border,
+          backgroundColor: selected ? alpha(accent, 0.18) : palette.glass,
+          borderColor: selected ? alpha(accent, 0.5) : palette.stroke,
           opacity: pressed ? 0.8 : 1,
         },
       ]}
     >
-      <AppText
-        variant="caption"
-        style={{ fontFamily: 'Inter_600SemiBold', color: selected ? colors.onPrimary : colors.text }}
-      >
+      <AppText variant="caption" style={{ fontFamily: fonts.semi, color: selected ? accent : colors.text }}>
         {label}
       </AppText>
     </Pressable>
   );
 }
 
-/** Selector segmentado (p. ej. tema claro/oscuro). */
 export function Segmented<T extends string>({
   options,
   value,
@@ -199,13 +252,9 @@ export function Segmented<T extends string>({
   onChange: (v: T) => void;
   label: string;
 }) {
-  const { colors } = useTheme();
+  const { accent, colors } = useTheme();
   return (
-    <View
-      accessibilityRole="radiogroup"
-      accessibilityLabel={label}
-      style={[styles.segment, { backgroundColor: colors.surfaceAlt }]}
-    >
+    <View accessibilityRole="radiogroup" accessibilityLabel={label} style={styles.segment}>
       {options.map((o) => {
         const selected = o.value === value;
         return (
@@ -217,19 +266,10 @@ export function Segmented<T extends string>({
             onPress={() => onChange(o.value)}
             style={[
               styles.segmentItem,
-              selected && {
-                backgroundColor: colors.surface,
-                shadowColor: colors.shadow,
-                shadowOpacity: 0.1,
-                shadowRadius: 6,
-                elevation: 1,
-              },
+              selected && { backgroundColor: alpha(accent, 0.16), borderColor: alpha(accent, 0.4) },
             ]}
           >
-            <AppText
-              variant="caption"
-              style={{ fontFamily: 'Inter_600SemiBold', color: selected ? colors.primary : colors.textMuted }}
-            >
+            <AppText variant="caption" style={{ fontFamily: fonts.semi, color: selected ? accent : colors.textMuted }}>
               {o.label}
             </AppText>
           </Pressable>
@@ -256,29 +296,56 @@ const styles = StyleSheet.create({
     minHeight: MIN_TOUCH,
   },
   box: {
-    width: 26,
-    height: 26,
-    borderRadius: 8,
-    borderWidth: 2,
+    width: 24,
+    height: 24,
+    borderRadius: radius.xs,
+    borderWidth: HAIRLINE,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 1,
   },
+  track: {
+    width: TRACK_W,
+    height: TRACK_H,
+    borderRadius: radius.pill,
+    backgroundColor: palette.glassStrong,
+    borderWidth: HAIRLINE,
+    borderColor: palette.strokeStrong,
+    justifyContent: 'center',
+    overflow: 'hidden',
+  },
+  thumb: {
+    position: 'absolute',
+    width: THUMB,
+    height: THUMB,
+    borderRadius: THUMB / 2,
+    backgroundColor: palette.text,
+  },
   chip: {
-    minHeight: 40,
+    minHeight: 36,
     paddingHorizontal: spacing.lg,
     borderRadius: radius.pill,
-    borderWidth: 1,
+    borderWidth: HAIRLINE,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  segment: { flexDirection: 'row', borderRadius: radius.md, padding: 4, gap: 4 },
+  segment: {
+    flexDirection: 'row',
+    borderRadius: radius.pill,
+    padding: 4,
+    gap: 4,
+    backgroundColor: palette.glass,
+    borderWidth: HAIRLINE,
+    borderColor: palette.stroke,
+  },
   segmentItem: {
     flex: 1,
     minHeight: MIN_TOUCH - 4,
-    borderRadius: radius.sm + 2,
+    borderRadius: radius.pill,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: spacing.xs,
+    borderWidth: HAIRLINE,
+    borderColor: 'transparent',
   },
 });
