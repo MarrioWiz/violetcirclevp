@@ -1,0 +1,46 @@
+plugins {
+    id 'com.android.application'
+}
+
+// Misma llave que la app principal (keystore/ fuera del repo, ver docs/ANDROID.md).
+def keystoreProps = new Properties()
+def keystoreFile = rootProject.file('../keystore/keystore.properties')
+if (keystoreFile.exists()) keystoreFile.withInputStream { keystoreProps.load(it) }
+
+android {
+    namespace 'mx.uvp.violetcirclevp.ayuda'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'mx.uvp.violetcirclevp.ayuda'
+        minSdk 24
+        targetSdk 36
+        versionCode 1
+        versionName '1.0.0'
+    }
+
+    signingConfigs {
+        release {
+            if (keystoreFile.exists()) {
+                storeFile rootProject.file("../keystore/${keystoreProps['storeFile']}")
+                storePassword keystoreProps['storePassword']
+                keyAlias keystoreProps['keyAlias']
+                keyPassword keystoreProps['keyPassword']
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}

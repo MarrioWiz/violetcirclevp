@@ -63,3 +63,22 @@ adb install -r android\app\build\outputs\apk\release\app-release.apk
 | Notificaciones | Recordatorio de autocuidado | Si lo activa |
 
 Bloqueados a propósito: ubicación precisa, ubicación en segundo plano, micrófono, escribir contactos y ventanas superpuestas.
+
+## Mini app "Pedir ayuda" (`companion/`)
+
+El botón lateral de Samsung (doble pulsación → Abrir app) y Quick Tap de Pixel listan **apps**, no
+accesos: siempre abren la actividad principal y nunca muestran la entrada `SosLauncherActivity`.
+Samsung además no deja cambiar ese ajuste por ADB (`function_key_config_doublepress_*` rechaza
+escrituras del shell).
+
+Por eso existe `companion/`: una app aparte (`mx.uvp.violetcirclevp.ayuda`, ~180 KB, **sin
+permisos**, Play Protect no la bloquea) cuya única actividad abre `violetcirclevp://sos` en
+VioletCircleVP y se cierra. Se asigna como app del botón lateral / Quick Tap.
+
+```bash
+cd companion
+JAVA_HOME="/c/Program Files/Android/Android Studio/jbr" ./gradlew assembleRelease
+# → app/build/outputs/apk/release/app-release.apk  (firmada con la misma llave de keystore/)
+```
+
+No abrirla para probar sin un contacto avisado: dispara la alerta real (10 s para cancelar).
