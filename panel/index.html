@@ -168,7 +168,7 @@
     $('refresh').onclick = load;
 
     onAuthStateChanged(auth, (user) => {
-      $('logout').hidden = !user;
+      $('logout').hidden = !user || user.isAnonymous;
       if (user && !user.isAnonymous) load();
       else show('login');
     });
