@@ -3,16 +3,19 @@ import { Platform } from 'react-native';
 
 import { notify } from '@/lib/dialog';
 import { S } from '@/lib/strings.es';
+import { markExternalNavigation } from '@/store/sessionStore';
 
 /** Abre el selector nativo de contactos. Solo lee nombre y teléfono del contacto elegido. */
 export async function pickContact(): Promise<{ name: string; phone: string } | null> {
   if (Platform.OS === 'web') return null;
   try {
+    markExternalNavigation();
     const perm = await requestPermissionsAsync();
     if (!perm.granted) {
       notify(S.circle.contactsDenied);
       return null;
     }
+    markExternalNavigation();
     const contact = await Contact.presentPicker();
     if (!contact) return null;
     const [name, phones] = await Promise.all([contact.getFullName(), contact.getPhones()]);

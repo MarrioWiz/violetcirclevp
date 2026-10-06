@@ -18,16 +18,16 @@ import { spacing, useTheme } from '@/theme';
 import type { Article } from '@/types';
 
 function normalize(s: string) {
-  return s
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '');
+  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 }
 
 function ArticleCard({ a, fav }: { a: Article; fav: boolean }) {
   const { colors } = useTheme();
   return (
-    <Card onPress={() => router.push({ pathname: '/aprende/[slug]', params: { slug: a.slug } })} accessibilityLabel={`${a.title}. ${a.summary}`}>
+    <Card
+      onPress={() => router.push({ pathname: '/aprende/[slug]', params: { slug: a.slug } })}
+      accessibilityLabel={`${a.title}. ${a.summary}`}
+    >
       <View style={{ flexDirection: 'row', gap: spacing.md, alignItems: 'center' }}>
         <IconBadge icon={iconFor(a.icon)} />
         <View style={{ flex: 1 }}>
@@ -50,7 +50,9 @@ export default function LearnIndex() {
   const filtered = useMemo(() => {
     const n = normalize(q.trim());
     if (!n) return articles;
-    return articles.filter((a) => normalize(`${a.title} ${a.summary} ${a.body.join(' ')} ${a.keyPoints.join(' ')}`).includes(n));
+    return articles.filter((a) =>
+      normalize(`${a.title} ${a.summary} ${a.body.join(' ')} ${a.keyPoints.join(' ')}`).includes(n),
+    );
   }, [articles, q]);
   const favs = articles.filter((a) => favorites.includes(a.slug));
 
@@ -60,7 +62,12 @@ export default function LearnIndex() {
 
       {!q && (
         <Card padded={false} style={{ paddingHorizontal: spacing.lg, marginTop: spacing.lg }}>
-          <ListRow icon={ClipboardCheck} title={S.learn.audit} body={S.learn.auditBody} onPress={() => router.push('/aprende/autoevaluacion')} />
+          <ListRow
+            icon={ClipboardCheck}
+            title={S.learn.audit}
+            body={S.learn.auditBody}
+            onPress={() => router.push('/aprende/autoevaluacion')}
+          />
         </Card>
       )}
 

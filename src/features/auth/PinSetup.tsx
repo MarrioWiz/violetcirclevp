@@ -65,10 +65,13 @@ export function PinSetup({ onDone, busy }: { onDone: (pin: string) => void; busy
         ) : null}
       </View>
       <PinDots length={dots} filled={value.length} error={!!error} />
+      {/* Arriba del teclado y con espacio reservado: en pantallas chicas abajo quedaba fuera de vista. */}
+      <View style={{ minHeight: 56, justifyContent: 'center', marginBottom: spacing.sm }}>
+        {stage === 'create' && value.length >= 4 && value.length < MAX ? (
+          <Button label={S.onboarding.pinUse} onPress={() => submitFirst(value)} variant="secondary" />
+        ) : null}
+      </View>
       <PinPad value={value} length={stage === 'create' ? MAX : first.length} onChange={onChange} disabled={busy} />
-      {stage === 'create' && value.length >= 4 && value.length < MAX ? (
-        <Button label={S.onboarding.pinUse} onPress={() => submitFirst(value)} variant="secondary" style={{ marginTop: spacing.md }} />
-      ) : null}
     </View>
   );
 }

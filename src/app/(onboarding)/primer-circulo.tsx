@@ -76,7 +76,11 @@ export default function CircleStep() {
           />
         </Card>
       ) : contacts.length < Math.min(3, MAX_CONTACTS) ? (
-        <Button label={contacts.length ? S.circle.add : S.onboarding.circleAdd} variant="outline" onPress={() => setAdding(true)} />
+        <Button
+          label={contacts.length ? S.circle.add : S.onboarding.circleAdd}
+          variant="outline"
+          onPress={() => setAdding(true)}
+        />
       ) : null}
     </OnboardingFrame>
   );

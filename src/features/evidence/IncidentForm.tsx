@@ -49,7 +49,9 @@ export function IncidentForm({ defaults, submitLabel, onSubmit }: Props) {
       <Controller
         control={control}
         name="occurredAt"
-        render={({ field }) => <DateTimeField label={S.journal.fields.occurredAt} value={field.value} onChange={field.onChange} />}
+        render={({ field }) => (
+          <DateTimeField label={S.journal.fields.occurredAt} value={field.value} onChange={field.onChange} />
+        )}
       />
 
       <Controller
@@ -60,7 +62,12 @@ export function IncidentForm({ defaults, submitLabel, onSubmit }: Props) {
             <AppText variant="bodyStrong">{S.journal.fields.platform}</AppText>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
               {PLATFORM_VALUES.map((p) => (
-                <Chip key={p} label={PLATFORM_LABEL[p]} selected={field.value === p} onPress={() => field.onChange(p)} />
+                <Chip
+                  key={p}
+                  label={PLATFORM_LABEL[p]}
+                  selected={field.value === p}
+                  onPress={() => field.onChange(p)}
+                />
               ))}
             </View>
           </View>
@@ -75,7 +82,12 @@ export function IncidentForm({ defaults, submitLabel, onSubmit }: Props) {
             <AppText variant="bodyStrong">{S.journal.fields.type}</AppText>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
               {KIND_VALUES.map((k) => (
-                <Chip key={k} label={KIND_LABEL[k]} selected={field.value === k} onPress={() => field.onChange(field.value === k ? undefined : k)} />
+                <Chip
+                  key={k}
+                  label={KIND_LABEL[k]}
+                  selected={field.value === k}
+                  onPress={() => field.onChange(field.value === k ? undefined : k)}
+                />
               ))}
             </View>
           </View>
@@ -140,7 +152,12 @@ export function IncidentForm({ defaults, submitLabel, onSubmit }: Props) {
             <AppText variant="bodyStrong">{S.journal.fields.mood}</AppText>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
               {S.journal.moods.map((m, i) => (
-                <Chip key={m} label={m} selected={field.value === i + 1} onPress={() => field.onChange(field.value === i + 1 ? undefined : i + 1)} />
+                <Chip
+                  key={m}
+                  label={m}
+                  selected={field.value === i + 1}
+                  onPress={() => field.onChange(field.value === i + 1 ? undefined : i + 1)}
+                />
               ))}
             </View>
           </View>
@@ -151,7 +168,13 @@ export function IncidentForm({ defaults, submitLabel, onSubmit }: Props) {
         control={control}
         name="notes"
         render={({ field }) => (
-          <TextField label={S.journal.fields.notes} value={field.value ?? ''} onChangeText={field.onChange} multiline style={{ minHeight: 80 }} />
+          <TextField
+            label={S.journal.fields.notes}
+            value={field.value ?? ''}
+            onChangeText={field.onChange}
+            multiline
+            style={{ minHeight: 80 }}
+          />
         )}
       />
 
@@ -160,7 +183,13 @@ export function IncidentForm({ defaults, submitLabel, onSubmit }: Props) {
         name="locked"
         render={({ field }) => (
           <Card padded={false} style={{ paddingHorizontal: spacing.lg }}>
-            <ToggleRow icon={Lock} title={S.journal.fields.locked} body={S.journal.fields.lockedBody} value={field.value} onChange={field.onChange} />
+            <ToggleRow
+              icon={Lock}
+              title={S.journal.fields.locked}
+              body={S.journal.fields.lockedBody}
+              value={field.value}
+              onChange={field.onChange}
+            />
           </Card>
         )}
       />

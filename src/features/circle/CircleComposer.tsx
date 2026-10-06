@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { Check, Copy, MapPin, MessageCircle, MessageSquareText } from 'lucide-react-native';
 import { useMemo, useState } from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
@@ -37,7 +37,10 @@ export function CircleComposer({ initialTemplateId = 'pedir-apoyo', onOpened, pr
   const [locating, setLocating] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const finalText = useMemo(() => buildAlertMessage(text, withLocation ? location : null), [text, withLocation, location]);
+  const finalText = useMemo(
+    () => buildAlertMessage(text, withLocation ? location : null),
+    [text, withLocation, location],
+  );
 
   if (contacts.length === 0) {
     return (
@@ -78,98 +81,114 @@ export function CircleComposer({ initialTemplateId = 'pedir-apoyo', onOpened, pr
     if (await openWhatsApp(finalText, phone)) onOpened?.('whatsapp');
   };
 
+  // El contenido se desplaza y los botones de envío quedan fijos abajo: así "Abrir Mensajes"
+  // siempre está a la vista (3er toque de la alerta) aunque la pantalla sea chica.
   return (
-    <View>
-      <SectionTitle>{S.alert.who}</SectionTitle>
-      <View style={{ gap: spacing.sm }}>
-        {contacts.map((c) => {
-          const on = selected.includes(c.id);
-          return (
-            <Pressable
-              key={c.id}
-              accessibilityRole="checkbox"
-              accessibilityState={{ checked: on }}
-              accessibilityLabel={c.name}
-              onPress={() => setSelected((s) => (on ? s.filter((x) => x !== c.id) : [...s, c.id]))}
-              style={({ pressed }) => ({
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: spacing.md,
-                minHeight: MIN_TOUCH + 8,
-                paddingHorizontal: spacing.lg,
-                borderRadius: radius.md,
-                borderWidth: 1.5,
-                borderColor: on ? colors.primary : colors.border,
-                backgroundColor: on ? colors.primarySoft : colors.surface,
-                opacity: pressed ? 0.85 : 1,
-              })}
-            >
-              <View
-                style={{
-                  width: 24,
-                  height: 24,
-                  borderRadius: 12,
-                  backgroundColor: on ? colors.primary : 'transparent',
-                  borderWidth: 2,
-                  borderColor: on ? colors.primary : colors.border,
+    <View style={{ flex: 1 }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingBottom: spacing.xl }}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <SectionTitle>{S.alert.who}</SectionTitle>
+        <View style={{ gap: spacing.sm }}>
+          {contacts.map((c) => {
+            const on = selected.includes(c.id);
+            return (
+              <Pressable
+                key={c.id}
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked: on }}
+                accessibilityLabel={c.name}
+                onPress={() => setSelected((s) => (on ? s.filter((x) => x !== c.id) : [...s, c.id]))}
+                style={({ pressed }) => ({
+                  flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+                  gap: spacing.md,
+                  minHeight: MIN_TOUCH + 8,
+                  paddingHorizontal: spacing.lg,
+                  borderRadius: radius.md,
+                  borderWidth: 1.5,
+                  borderColor: on ? colors.primary : colors.border,
+                  backgroundColor: on ? colors.primarySoft : colors.surface,
+                  opacity: pressed ? 0.85 : 1,
+                })}
               >
-                {on ? <Check size={14} color={colors.onPrimary} strokeWidth={3} /> : null}
-              </View>
-              <View style={{ flex: 1 }}>
-                <AppText variant="bodyStrong">{c.name}</AppText>
-                {c.role ? (
-                  <AppText variant="caption" tone="textMuted">
-                    {S.circle.roles[c.role]}
-                  </AppText>
-                ) : null}
-              </View>
-            </Pressable>
-          );
-        })}
-      </View>
+                <View
+                  style={{
+                    width: 24,
+                    height: 24,
+                    borderRadius: 12,
+                    backgroundColor: on ? colors.primary : 'transparent',
+                    borderWidth: 2,
+                    borderColor: on ? colors.primary : colors.border,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {on ? <Check size={14} color={colors.onPrimary} strokeWidth={3} /> : null}
+                </View>
+                <View style={{ flex: 1 }}>
+                  <AppText variant="bodyStrong">{c.name}</AppText>
+                  {c.role ? (
+                    <AppText variant="caption" tone="textMuted">
+                      {S.circle.roles[c.role]}
+                    </AppText>
+                  ) : null}
+                </View>
+              </Pressable>
+            );
+          })}
+        </View>
 
-      <SectionTitle>{S.alert.templates}</SectionTitle>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
-        {templates.map((t) => (
-          <Chip
-            key={t.id}
-            label={t.title}
-            selected={templateId === t.id}
-            onPress={() => {
-              setTemplateId(t.id);
-              setText(t.body);
-            }}
+        <SectionTitle>{S.alert.templates}</SectionTitle>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
+          {templates.map((t) => (
+            <Chip
+              key={t.id}
+              label={t.title}
+              selected={templateId === t.id}
+              onPress={() => {
+                setTemplateId(t.id);
+                setText(t.body);
+              }}
+            />
+          ))}
+        </View>
+
+        <View style={{ marginTop: spacing.lg }}>
+          <TextField label={S.alert.message} value={text} onChangeText={setText} multiline maxLength={500} />
+        </View>
+
+        <Card style={{ marginTop: spacing.lg }}>
+          <ToggleRow
+            icon={MapPin}
+            title={S.alert.location}
+            body={locating ? S.common.loading : S.alert.locationHint}
+            value={withLocation}
+            onChange={(v) => void toggleLocation(v)}
           />
-        ))}
-      </View>
+        </Card>
 
-      <View style={{ marginTop: spacing.lg }}>
-        <TextField label={S.alert.message} value={text} onChangeText={setText} multiline maxLength={500} />
-      </View>
-
-      <Card style={{ marginTop: spacing.lg }}>
-        <ToggleRow
-          icon={MapPin}
-          title={S.alert.location}
-          body={locating ? S.common.loading : S.alert.locationHint}
-          value={withLocation}
-          onChange={(v) => void toggleLocation(v)}
-        />
-      </Card>
-
-      <View style={{ gap: spacing.sm, marginTop: spacing.xl }}>
-        <Button label={S.alert.sendSms} icon={MessageSquareText} size="lg" onPress={() => void sendSms()} />
-        <Button label={S.alert.sendWhatsApp} icon={MessageCircle} variant="secondary" onPress={() => void sendWhatsApp()} />
         <Button
           label={copied ? S.alert.copied : S.alert.copy}
           icon={copied ? Check : Copy}
           variant="ghost"
+          style={{ marginTop: spacing.md }}
           onPress={() => {
             void copyText(finalText).then(() => setCopied(true));
           }}
+        />
+      </ScrollView>
+
+      <View style={[styles.actions, { borderTopColor: colors.border, backgroundColor: colors.bg }]}>
+        <Button label={S.alert.sendSms} icon={MessageSquareText} size="lg" onPress={() => void sendSms()} />
+        <Button
+          label={S.alert.sendWhatsApp}
+          icon={MessageCircle}
+          variant="secondary"
+          onPress={() => void sendWhatsApp()}
         />
         <AppText variant="caption" tone="textMuted" center>
           {S.alert.manualNote}
@@ -178,3 +197,14 @@ export function CircleComposer({ initialTemplateId = 'pedir-apoyo', onOpened, pr
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  actions: {
+    gap: spacing.sm,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.sm,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    marginHorizontal: -spacing.xl,
+    paddingHorizontal: spacing.xl,
+  },
+});

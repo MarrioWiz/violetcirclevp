@@ -19,10 +19,7 @@ export default function Welcome() {
       canGoBack={false}
       footer={<Button label={S.common.continue} size="lg" onPress={() => router.push('/consentimiento')} />}
     >
-      <LinearGradient
-        colors={scheme === 'dark' ? ['#2B2145', '#1E1830'] : ['#EDE9FE', '#FFFFFF']}
-        style={styles.hero}
-      >
+      <LinearGradient colors={scheme === 'dark' ? ['#2B2145', '#1E1830'] : ['#EDE9FE', '#FFFFFF']} style={styles.hero}>
         <Logo size={96} />
         <AppText variant="label" tone="primary" style={{ marginTop: spacing.lg }}>
           {S.appName}

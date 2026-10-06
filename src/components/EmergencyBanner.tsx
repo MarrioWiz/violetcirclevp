@@ -16,10 +16,7 @@ export function EmergencyBanner() {
       accessibilityLabel={S.emergency.banner}
       accessibilityHint="Abre la confirmación para llamar al 911"
       onPress={call911}
-      style={({ pressed }) => [
-        styles.bar,
-        { backgroundColor: colors.dangerSoft, opacity: pressed ? 0.8 : 1 },
-      ]}
+      style={({ pressed }) => [styles.bar, { backgroundColor: colors.dangerSoft, opacity: pressed ? 0.8 : 1 }]}
     >
       <Phone size={16} color={colors.danger} strokeWidth={2.2} />
       <AppText variant="caption" tone="danger" style={{ fontFamily: 'Inter_600SemiBold', flexShrink: 1 }}>

@@ -13,7 +13,15 @@ interface Props {
   padded?: boolean;
 }
 
-export function Card({ children, onPress, style, tone = 'surface', accessibilityLabel, accessibilityHint, padded = true }: Props) {
+export function Card({
+  children,
+  onPress,
+  style,
+  tone = 'surface',
+  accessibilityLabel,
+  accessibilityHint,
+  padded = true,
+}: Props) {
   const { colors, scheme } = useTheme();
   const bg = {
     surface: colors.surface,

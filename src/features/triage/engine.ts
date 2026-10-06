@@ -1,11 +1,4 @@
-import type {
-  TriageNode,
-  TriageOption,
-  TriageQuestionNode,
-  TriageResult,
-  TriageResultNode,
-  TriageTree,
-} from '@/types';
+import type { TriageNode, TriageOption, TriageQuestionNode, TriageResult, TriageResultNode, TriageTree } from '@/types';
 
 export type TriageContext = Record<string, string>;
 

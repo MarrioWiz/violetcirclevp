@@ -152,10 +152,19 @@ export function DisguiseCalculator() {
                 style={({ pressed }) => [
                   styles.key,
                   k.wide && styles.wide,
-                  { backgroundColor: k.kind === 'op' ? '#FF9F0A' : k.kind === 'fn' ? '#A5A5A5' : '#333333', opacity: pressed ? 0.7 : 1 },
+                  {
+                    backgroundColor: k.kind === 'op' ? '#FF9F0A' : k.kind === 'fn' ? '#A5A5A5' : '#333333',
+                    opacity: pressed ? 0.7 : 1,
+                  },
                 ]}
               >
-                <Text style={[styles.keyText, k.kind === 'fn' && { color: '#000' }, k.wide && { alignSelf: 'flex-start', paddingLeft: 30 }]}>
+                <Text
+                  style={[
+                    styles.keyText,
+                    k.kind === 'fn' && { color: '#000' },
+                    k.wide && { alignSelf: 'flex-start', paddingLeft: 30 },
+                  ]}
+                >
                   {k.label}
                 </Text>
               </Pressable>

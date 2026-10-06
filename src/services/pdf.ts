@@ -4,6 +4,7 @@ import * as Sharing from 'expo-sharing';
 
 import { buildIncidentReportHtml, type PdfEvidence } from '@/features/evidence/pdfHtml';
 import type { EvidenceFile, Incident } from '@/types';
+import { markExternalNavigation } from '@/store/sessionStore';
 
 import { evidenceDataUri } from './evidenceFiles';
 
@@ -27,6 +28,7 @@ export async function buildReportHtml(incidents: Incident[], files: EvidenceFile
 
 /** Vista previa del sistema (iOS muestra el PDF antes de imprimir o compartir). */
 export async function previewReport(html: string): Promise<void> {
+  markExternalNavigation();
   await Print.printAsync({ html });
 }
 
@@ -34,7 +36,12 @@ export async function previewReport(html: string): Promise<void> {
 export async function shareReport(html: string): Promise<void> {
   const { uri } = await Print.printToFileAsync({ html });
   try {
-    await Sharing.shareAsync(uri, { mimeType: 'application/pdf', UTI: 'com.adobe.pdf', dialogTitle: 'Compartir bitácora' });
+    markExternalNavigation();
+    await Sharing.shareAsync(uri, {
+      mimeType: 'application/pdf',
+      UTI: 'com.adobe.pdf',
+      dialogTitle: 'Compartir bitácora',
+    });
   } finally {
     try {
       const f = new File(uri);

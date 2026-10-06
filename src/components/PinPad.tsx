@@ -58,7 +58,7 @@ export function PinPad({ value, length, onChange, onBiometric, biometricLabel, d
     <View style={styles.grid}>
       {KEYS.map((k) => {
         if (k === 'bio' && !onBiometric) return <View key={k} style={styles.key} />;
-        const label = k === 'del' ? 'Borrar' : k === 'bio' ? biometricLabel ?? 'Biometría' : k;
+        const label = k === 'del' ? 'Borrar' : k === 'bio' ? (biometricLabel ?? 'Biometría') : k;
         return (
           <Pressable
             key={k}
@@ -68,7 +68,12 @@ export function PinPad({ value, length, onChange, onBiometric, biometricLabel, d
             onPress={() => press(k)}
             style={({ pressed }) => [
               styles.key,
-              k !== 'del' && k !== 'bio' && { backgroundColor: pressed ? colors.primarySoft : colors.surface, borderColor: colors.border, borderWidth: StyleSheet.hairlineWidth },
+              k !== 'del' &&
+                k !== 'bio' && {
+                  backgroundColor: pressed ? colors.primarySoft : colors.surface,
+                  borderColor: colors.border,
+                  borderWidth: StyleSheet.hairlineWidth,
+                },
               { opacity: disabled ? 0.4 : 1 },
             ]}
           >

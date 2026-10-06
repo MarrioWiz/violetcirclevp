@@ -17,7 +17,9 @@ const contacts: CircleContact[] = [
 
 describe('mensajes del círculo', () => {
   it('sin ubicación, el mensaje es el texto tal cual (recortado)', () => {
-    expect(buildAlertMessage('  Necesito apoyo. ¿Puedes hablar conmigo?  ')).toBe('Necesito apoyo. ¿Puedes hablar conmigo?');
+    expect(buildAlertMessage('  Necesito apoyo. ¿Puedes hablar conmigo?  ')).toBe(
+      'Necesito apoyo. ¿Puedes hablar conmigo?',
+    );
   });
 
   it('con ubicación agrega un enlace de mapas aproximado (3 decimales)', () => {

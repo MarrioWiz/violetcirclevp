@@ -1,6 +1,9 @@
 import { decryptJson, encryptJson } from './crypto';
 import { storage } from './storage';
 
+/** Prefijo de los respaldos de datos que no se pudieron descifrar (siguen cifrados). */
+export const UNREADABLE_PREFIX = 'enc-unreadable.';
+
 /**
  * Guarda colecciones sensibles (círculo, bitácora, avances) cifradas con AES-GCM.
  * En AsyncStorage solo queda texto cifrado; la llave vive en SecureStore.
@@ -12,7 +15,10 @@ export const encryptedStorage = {
     try {
       return await decryptJson<T>(raw);
     } catch {
-      // Llave distinta o dato dañado: no se registra nada con contenido.
+      // Si no se puede descifrar, NO se pierde: se respalda tal cual (cifrado) antes de que
+      // la siguiente escritura reemplace la colección. Nunca se registra su contenido.
+      await storage.set(`${UNREADABLE_PREFIX}${key}.${Date.now()}`, raw);
+      await storage.remove('enc.' + key);
       return fallback;
     }
   },

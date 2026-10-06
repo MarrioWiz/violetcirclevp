@@ -24,7 +24,17 @@ function initials(name: string) {
     .join('');
 }
 
-function IconAction({ icon: Icon, label, onPress, danger }: { icon: typeof Phone; label: string; onPress: () => void; danger?: boolean }) {
+function IconAction({
+  icon: Icon,
+  label,
+  onPress,
+  danger,
+}: {
+  icon: typeof Phone;
+  label: string;
+  onPress: () => void;
+  danger?: boolean;
+}) {
   const { colors } = useTheme();
   return (
     <Pressable
@@ -54,7 +64,14 @@ function ContactCard({ c }: { c: CircleContact }) {
     <Card>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
         <View
-          style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center' }}
+          style={{
+            width: 48,
+            height: 48,
+            borderRadius: 24,
+            backgroundColor: colors.accent,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
           importantForAccessibility="no"
         >
           <AppText variant="subheading" style={{ color: '#FFFFFF' }}>
@@ -135,14 +152,24 @@ export default function CircleTab() {
               {S.circle.full}
             </AppText>
           ) : (
-            <Button label={S.circle.add} icon={UserPlus} variant="outline" onPress={() => router.push('/circulo/nuevo')} />
+            <Button
+              label={S.circle.add}
+              icon={UserPlus}
+              variant="outline"
+              onPress={() => router.push('/circulo/nuevo')}
+            />
           )}
         </View>
       )}
 
       <SectionTitle>{S.circle.howToSupport}</SectionTitle>
       <Card padded={false} style={{ paddingHorizontal: spacing.lg }}>
-        <ListRow icon={HeartHandshake} title={S.circle.howToSupport} body={S.circle.howToSupportBody} onPress={() => router.push('/circulo/acompanar')} />
+        <ListRow
+          icon={HeartHandshake}
+          title={S.circle.howToSupport}
+          body={S.circle.howToSupportBody}
+          onPress={() => router.push('/circulo/acompanar')}
+        />
       </Card>
     </Screen>
   );

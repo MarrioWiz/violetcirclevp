@@ -21,7 +21,12 @@ export default function More() {
           onPress={() => router.push('/bitacora')}
         />
         <Divider />
-        <ListRow icon={BookHeart} title={S.more.learn} body={S.more.learnBody} onPress={() => router.push('/aprende')} />
+        <ListRow
+          icon={BookHeart}
+          title={S.more.learn}
+          body={S.more.learnBody}
+          onPress={() => router.push('/aprende')}
+        />
         <Divider />
         <ListRow icon={ListChecks} title={S.more.firstSteps} onPress={() => router.push('/guia')} />
         <Divider />
@@ -30,11 +35,24 @@ export default function More() {
 
       <SectionTitle>{S.settings.title}</SectionTitle>
       <Card padded={false} style={card}>
-        <ListRow icon={Settings} title={S.more.settings} body={S.more.settingsBody} onPress={() => router.push('/ajustes')} />
+        <ListRow
+          icon={Settings}
+          title={S.more.settings}
+          body={S.more.settingsBody}
+          onPress={() => router.push('/ajustes')}
+        />
         <Divider />
-        <ListRow icon={ShieldCheck} title={S.more.privacy} onPress={() => router.push({ pathname: '/info/[doc]', params: { doc: 'privacidad' } })} />
+        <ListRow
+          icon={ShieldCheck}
+          title={S.more.privacy}
+          onPress={() => router.push({ pathname: '/info/[doc]', params: { doc: 'privacidad' } })}
+        />
         <Divider />
-        <ListRow icon={Info} title={S.more.about} onPress={() => router.push({ pathname: '/info/[doc]', params: { doc: 'acerca' } })} />
+        <ListRow
+          icon={Info}
+          title={S.more.about}
+          onPress={() => router.push({ pathname: '/info/[doc]', params: { doc: 'acerca' } })}
+        />
       </Card>
     </Screen>
   );

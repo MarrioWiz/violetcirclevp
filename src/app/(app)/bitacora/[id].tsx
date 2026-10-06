@@ -1,8 +1,16 @@
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import * as Linking from 'expo-linking';
 import { router, useLocalSearchParams } from 'expo-router';
-import { Camera, FileDown, FileQuestion, FolderOpen, History, Image as ImageIcon, Pencil, Trash2 } from 'lucide-react-native';
+import {
+  Camera,
+  FileDown,
+  FileQuestion,
+  FolderOpen,
+  History,
+  Image as ImageIcon,
+  Pencil,
+  Trash2,
+} from 'lucide-react-native';
 import { useMemo, useState } from 'react';
 import { Platform, View } from 'react-native';
 
@@ -10,6 +18,7 @@ import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { EmptyState } from '@/components/EmptyState';
+import { openExternalUrl } from '@/lib/external';
 import { SectionTitle } from '@/components/Rows';
 import { Screen } from '@/components/Screen';
 import { PinGate } from '@/features/auth/PinGate';
@@ -70,7 +79,14 @@ export default function IncidentDetail() {
     setAttaching(null);
     if (!res) return;
     if (res.ok) await addFile(res.file);
-    else notify(res.reason === 'too-big' ? S.journal.tooBig : res.reason === 'denied' ? S.journal.photosDenied : S.errors.generic);
+    else
+      notify(
+        res.reason === 'too-big'
+          ? S.journal.tooBig
+          : res.reason === 'denied'
+            ? S.journal.photosDenied
+            : S.errors.generic,
+      );
   };
 
   const onDelete = async () => {
@@ -132,7 +148,7 @@ export default function IncidentDetail() {
               {S.journal.fields.links}
             </AppText>
             {incident.links.map((l) => (
-              <AppText key={l} tone="primary" onPress={() => void Linking.openURL(l).catch(() => undefined)} selectable>
+              <AppText key={l} tone="primary" onPress={() => openExternalUrl(l)} selectable>
                 {l}
               </AppText>
             ))}
@@ -146,9 +162,30 @@ export default function IncidentDetail() {
       ) : (
         <>
           <View style={{ flexDirection: 'row', gap: spacing.sm }}>
-            <Button label={S.journal.addPhoto} icon={ImageIcon} variant="outline" style={{ flex: 1 }} loading={attaching === 'photos'} onPress={() => void attach('photos')} />
-            <Button label={S.journal.addCamera} icon={Camera} variant="outline" style={{ flex: 1 }} loading={attaching === 'camera'} onPress={() => void attach('camera')} />
-            <Button label={S.journal.addFile} icon={FolderOpen} variant="outline" style={{ flex: 1 }} loading={attaching === 'files'} onPress={() => void attach('files')} />
+            <Button
+              label={S.journal.addPhoto}
+              icon={ImageIcon}
+              variant="outline"
+              style={{ flex: 1 }}
+              loading={attaching === 'photos'}
+              onPress={() => void attach('photos')}
+            />
+            <Button
+              label={S.journal.addCamera}
+              icon={Camera}
+              variant="outline"
+              style={{ flex: 1 }}
+              loading={attaching === 'camera'}
+              onPress={() => void attach('camera')}
+            />
+            <Button
+              label={S.journal.addFile}
+              icon={FolderOpen}
+              variant="outline"
+              style={{ flex: 1 }}
+              loading={attaching === 'files'}
+              onPress={() => void attach('files')}
+            />
           </View>
           <AppText variant="caption" tone="textMuted" style={{ marginTop: spacing.sm }}>
             {S.journal.evidenceNote}
@@ -199,7 +236,13 @@ export default function IncidentDetail() {
         {S.journal.created}: {fmt(incident.createdAt)} · {S.journal.updated}: {fmt(incident.updatedAt)}
       </AppText>
 
-      <Button label={S.common.delete} icon={Trash2} variant="ghost" onPress={() => void onDelete()} style={{ marginTop: spacing.lg }} />
+      <Button
+        label={S.common.delete}
+        icon={Trash2}
+        variant="ghost"
+        onPress={() => void onDelete()}
+        style={{ marginTop: spacing.lg }}
+      />
     </Screen>
   );
 }

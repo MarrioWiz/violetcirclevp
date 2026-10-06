@@ -55,7 +55,12 @@ export default function IncidentEditor() {
   };
 
   return (
-    <Screen nav="back" title={existing ? S.journal.edit : S.journal.new} subtitle={S.journal.subtitle} edges={['top', 'bottom']}>
+    <Screen
+      nav="back"
+      title={existing ? S.journal.edit : S.journal.new}
+      subtitle={S.journal.subtitle}
+      edges={['top', 'bottom']}
+    >
       <IncidentForm defaults={defaults} submitLabel={S.common.save} onSubmit={onSubmit} />
     </Screen>
   );

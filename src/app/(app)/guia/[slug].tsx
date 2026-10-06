@@ -53,7 +53,9 @@ export default function GuideDetail() {
         accessibilityLabel={`Avance: ${t(S.guides.progress, { done: completed, total: items.length })}`}
       >
         <View style={{ height: 8, borderRadius: radius.pill, backgroundColor: colors.border, overflow: 'hidden' }}>
-          <View style={{ height: 8, width: `${pct * 100}%`, backgroundColor: colors.primary, borderRadius: radius.pill }} />
+          <View
+            style={{ height: 8, width: `${pct * 100}%`, backgroundColor: colors.primary, borderRadius: radius.pill }}
+          />
         </View>
         <AppText variant="caption" tone="textMuted">
           {t(S.guides.progress, { done: completed, total: items.length })}
@@ -103,7 +105,12 @@ export default function GuideDetail() {
       </AppText>
 
       {completed > 0 && (
-        <Button label={S.guides.reset} variant="ghost" onPress={() => void resetGuide(guide.slug)} style={{ marginTop: spacing.md }} />
+        <Button
+          label={S.guides.reset}
+          variant="ghost"
+          onPress={() => void resetGuide(guide.slug)}
+          style={{ marginTop: spacing.md }}
+        />
       )}
     </Screen>
   );

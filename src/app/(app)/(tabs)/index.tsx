@@ -90,7 +90,10 @@ export default function Home() {
       <View style={styles.grid}>
         {TILES.map((tile) => {
           const copy = S.home.tiles[tile.key];
-          const body = tile.key === 'circle' && circleCount > 0 ? `${circleCount} ${circleCount === 1 ? 'persona' : 'personas'}` : copy.body;
+          const body =
+            tile.key === 'circle' && circleCount > 0
+              ? `${circleCount} ${circleCount === 1 ? 'persona' : 'personas'}`
+              : copy.body;
           return (
             <Card
               key={tile.key}

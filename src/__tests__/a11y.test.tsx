@@ -5,8 +5,10 @@ import { EmergencyBanner } from '@/components/EmergencyBanner';
 import { CheckRow, ToggleRow } from '@/components/Rows';
 import { S } from '@/lib/strings.es';
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-jest.mock('@react-native-async-storage/async-storage', () => require('@react-native-async-storage/async-storage/jest/async-storage-mock'));
+jest.mock('@react-native-async-storage/async-storage', () =>
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
+);
 jest.mock('lucide-react-native', () => new Proxy({}, { get: () => () => null }));
 
 describe('accesibilidad de componentes', () => {

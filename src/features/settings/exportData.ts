@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 
 import { confirmDialog, notify } from '@/lib/dialog';
 import { S } from '@/lib/strings.es';
+import { markExternalNavigation } from '@/store/sessionStore';
 import { useCircle } from '@/store/circleStore';
 import { useIncidents } from '@/store/incidentsStore';
 import { useSettings } from '@/store/settingsStore';
@@ -19,7 +20,8 @@ export async function exportMyData(): Promise<void> {
   }
   const ok = await confirmDialog({
     title: S.settings.exportData,
-    message: 'El archivo incluye tu círculo y tu bitácora sin cifrar. Compártelo solo con personas o lugares de confianza.',
+    message:
+      'El archivo incluye tu círculo y tu bitácora sin cifrar. Compártelo solo con personas o lugares de confianza.',
     confirmLabel: S.common.continue,
   });
   if (!ok) return;
@@ -37,7 +39,12 @@ export async function exportMyData(): Promise<void> {
   const file = new File(Paths.cache, `mis-datos-${Date.now()}.json`);
   try {
     file.write(JSON.stringify(payload, null, 2));
-    await Sharing.shareAsync(file.uri, { mimeType: 'application/json', dialogTitle: S.settings.exportData, UTI: 'public.json' });
+    markExternalNavigation();
+    await Sharing.shareAsync(file.uri, {
+      mimeType: 'application/json',
+      dialogTitle: S.settings.exportData,
+      UTI: 'public.json',
+    });
   } catch {
     notify(S.errors.generic);
   } finally {

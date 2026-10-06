@@ -1,15 +1,7 @@
 export type Platform = 'whatsapp' | 'instagram' | 'tiktok' | 'facebook' | 'otra';
 
 export type ViolenceKind =
-  | 'riesgo'
-  | 'ciberacoso'
-  | 'sextorsion'
-  | 'doxing'
-  | 'suplantacion'
-  | 'difusion'
-  | 'grooming'
-  | 'amenazas'
-  | 'otro';
+  'riesgo' | 'ciberacoso' | 'sextorsion' | 'doxing' | 'suplantacion' | 'difusion' | 'grooming' | 'amenazas' | 'otro';
 
 export type ReviewStatus = 'borrador' | 'revisado' | 'publicado';
 
@@ -127,14 +119,7 @@ export interface Article {
   reviewStatus: ReviewStatus;
 }
 
-export type DirectoryType =
-  | 'emergencia'
-  | 'policia'
-  | 'mujeres'
-  | 'psicologico'
-  | 'juridico'
-  | 'uvp'
-  | 'plataformas';
+export type DirectoryType = 'emergencia' | 'policia' | 'mujeres' | 'psicologico' | 'juridico' | 'uvp' | 'plataformas';
 
 export interface DirectoryEntry {
   id: string;

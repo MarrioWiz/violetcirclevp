@@ -5,6 +5,7 @@ import * as SMS from 'expo-sms';
 
 import { notify } from '@/lib/dialog';
 import { S } from '@/lib/strings.es';
+import { markExternalNavigation } from '@/store/sessionStore';
 
 import { whatsappUrl } from './message';
 
@@ -18,6 +19,7 @@ export async function openSmsComposer(phones: string[], text: string): Promise<b
       notify(S.alert.smsUnavailable);
       return false;
     }
+    markExternalNavigation();
     await SMS.sendSMSAsync(phones, text);
     return true;
   } catch {
@@ -28,6 +30,7 @@ export async function openSmsComposer(phones: string[], text: string): Promise<b
 
 export async function openWhatsApp(text: string, phone?: string): Promise<boolean> {
   try {
+    markExternalNavigation();
     await Linking.openURL(whatsappUrl(text, phone));
     return true;
   } catch {
@@ -43,6 +46,7 @@ export async function copyText(text: string): Promise<void> {
 /** Ubicación aproximada, solo bajo demanda. No se guarda. */
 export async function getApproxLocation(): Promise<{ lat: number; lng: number } | 'denied' | null> {
   try {
+    markExternalNavigation(); // el diálogo de permiso pausa la app en Android
     const perm = await Location.requestForegroundPermissionsAsync();
     if (!perm.granted) return 'denied';
     const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });

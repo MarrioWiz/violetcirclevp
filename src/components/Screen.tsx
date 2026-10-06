@@ -46,10 +46,7 @@ export function Screen({
           accessibilityLabel={nav === 'close' ? 'Cerrar' : 'Regresar'}
           hitSlop={8}
           onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
-          style={({ pressed }) => [
-            styles.navBtn,
-            { backgroundColor: colors.surfaceAlt, opacity: pressed ? 0.7 : 1 },
-          ]}
+          style={({ pressed }) => [styles.navBtn, { backgroundColor: colors.surfaceAlt, opacity: pressed ? 0.7 : 1 }]}
         >
           <NavIcon size={22} color={colors.text} strokeWidth={2} />
         </Pressable>

@@ -30,7 +30,11 @@ export default function SelfAudit() {
         {AUDIT.items.map((item, i) => (
           <View key={item.id}>
             {i > 0 && <Divider />}
-            <CheckRow label={item.text} checked={!!done[checklistKey(SLUG, item.id)]} onToggle={() => void toggle(SLUG, item.id)} />
+            <CheckRow
+              label={item.text}
+              checked={!!done[checklistKey(SLUG, item.id)]}
+              onToggle={() => void toggle(SLUG, item.id)}
+            />
           </View>
         ))}
       </Card>

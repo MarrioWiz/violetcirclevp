@@ -50,9 +50,7 @@ export const useChecklist = create<ChecklistState>((set, get) => {
       await persist({ favorites: favs.includes(slug) ? favs.filter((s) => s !== slug) : [...favs, slug] });
     },
     resetGuide: async (guideSlug) => {
-      const done = Object.fromEntries(
-        Object.entries(get().done).filter(([k]) => !k.startsWith(guideSlug + ':')),
-      );
+      const done = Object.fromEntries(Object.entries(get().done).filter(([k]) => !k.startsWith(guideSlug + ':')));
       await persist({ done });
     },
     reset: () => set({ done: {}, favorites: [], hydrated: true }),

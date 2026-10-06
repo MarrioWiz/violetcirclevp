@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { ChevronLeft } from 'lucide-react-native';
 import type { ReactNode } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { MIN_TOUCH, spacing, useTheme } from '@/theme';
@@ -45,10 +45,17 @@ export function OnboardingFrame({ step, children, footer, canGoBack = true }: Pr
         </View>
         <View style={styles.back} />
       </View>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
-        {children}
-      </ScrollView>
-      <View style={styles.footer}>{footer}</View>
+      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <ScrollView
+          style={styles.flex}
+          contentContainerStyle={styles.content}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          {children}
+        </ScrollView>
+        <View style={styles.footer}>{footer}</View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -62,7 +69,13 @@ const styles = StyleSheet.create({
     paddingTop: spacing.sm,
     gap: spacing.lg,
   },
-  back: { width: MIN_TOUCH - 4, height: MIN_TOUCH - 4, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
+  back: {
+    width: MIN_TOUCH - 4,
+    height: MIN_TOUCH - 4,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   progress: { flex: 1, flexDirection: 'row', gap: 6 },
   bar: { height: 6, borderRadius: 3 },
   content: { paddingHorizontal: spacing.xl, paddingTop: spacing.xxl, paddingBottom: spacing.xxl, gap: spacing.lg },

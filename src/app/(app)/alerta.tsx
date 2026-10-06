@@ -29,7 +29,12 @@ function Option({
   tone?: 'primary' | 'danger';
 }) {
   return (
-    <Card onPress={onPress} accessibilityLabel={`${title}. ${body}`} tone={tone === 'danger' ? 'danger' : 'surface'} style={{ minHeight: 96, justifyContent: 'center' }}>
+    <Card
+      onPress={onPress}
+      accessibilityLabel={`${title}. ${body}`}
+      tone={tone === 'danger' ? 'danger' : 'surface'}
+      style={{ minHeight: 96, justifyContent: 'center' }}
+    >
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.lg }}>
         <IconBadge icon={icon} size={52} tone={tone} />
         <View style={{ flex: 1 }}>
@@ -62,10 +67,13 @@ export default function QuickAlert() {
 
   if (stage === 'compose') {
     return (
-      <Screen nav="close" title={S.alert.composeTitle} edges={['top', 'bottom']}>
+      <Screen nav="close" title={S.alert.composeTitle} edges={['top', 'bottom']} scroll={false}>
         <CircleComposer
           preselectId={to}
-          onOpened={(ch) => !to && log(ch === 'sms' ? 'Abrí Mensajes para avisar a mi círculo.' : 'Abrí WhatsApp para avisar a mi círculo.')}
+          onOpened={(ch) =>
+            !to &&
+            log(ch === 'sms' ? 'Abrí Mensajes para avisar a mi círculo.' : 'Abrí WhatsApp para avisar a mi círculo.')
+          }
         />
       </Screen>
     );
@@ -96,7 +104,12 @@ export default function QuickAlert() {
       </AppText>
 
       <View style={{ gap: spacing.md }}>
-        <Option icon={Users} title={S.alert.notifyCircle} body={S.alert.notifyCircleBody} onPress={() => setStage('compose')} />
+        <Option
+          icon={Users}
+          title={S.alert.notifyCircle}
+          body={S.alert.notifyCircleBody}
+          onPress={() => setStage('compose')}
+        />
         <Option
           icon={Phone}
           tone="danger"

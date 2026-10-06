@@ -1,5 +1,6 @@
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
+import { markExternalNavigation } from '@/store/sessionStore';
 
 // Notificaciones discretas: título genérico, sin revelar la app ni el tema.
 const DISCREET = { title: 'Recordatorio', body: 'Tómate un momento para ti hoy.' };
@@ -17,6 +18,7 @@ export async function requestNotificationPermission(): Promise<boolean> {
   if (Platform.OS === 'web') return false;
   const current = await Notifications.getPermissionsAsync();
   if (current.granted) return true;
+  markExternalNavigation();
   const res = await Notifications.requestPermissionsAsync({
     ios: { allowAlert: true, allowSound: false, allowBadge: false },
   });

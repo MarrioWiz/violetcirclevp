@@ -32,10 +32,7 @@ export const useCircle = create<CircleState>((set, get) => {
     add: async (c) => {
       const current = get().contacts;
       if (current.length >= MAX_CONTACTS) throw new Error('circle-full');
-      await persist([
-        ...current,
-        { ...c, id: Crypto.randomUUID(), createdAt: new Date().toISOString() },
-      ]);
+      await persist([...current, { ...c, id: Crypto.randomUUID(), createdAt: new Date().toISOString() }]);
     },
     update: async (id, patch) => {
       await persist(get().contacts.map((c) => (c.id === id ? { ...c, ...patch } : c)));

@@ -1,5 +1,13 @@
 import triageJson from '@/assets/content/triage.json';
-import { answer, getQuestion, isResultNode, getNode, resolveResult, validateTree, type TriageStep } from '@/features/triage/engine';
+import {
+  answer,
+  getQuestion,
+  isResultNode,
+  getNode,
+  resolveResult,
+  validateTree,
+  type TriageStep,
+} from '@/features/triage/engine';
 import type { TriageTree } from '@/types';
 
 const tree = triageJson as unknown as TriageTree;
@@ -65,7 +73,10 @@ describe('árbol "¿Esto es violencia digital?"', () => {
   it('detecta árboles mal formados', () => {
     const broken: TriageTree = {
       ...tree,
-      nodes: [{ id: 'a', question: '¿?', options: [{ label: 'x', next: 'nope' }] }, { id: 'orphan', result: 'otro' }],
+      nodes: [
+        { id: 'a', question: '¿?', options: [{ label: 'x', next: 'nope' }] },
+        { id: 'orphan', result: 'otro' },
+      ],
       start: 'a',
     };
     const errors = validateTree(broken);

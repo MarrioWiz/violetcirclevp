@@ -14,7 +14,17 @@ import { useIncidents } from '@/store/incidentsStore';
 import { MIN_TOUCH, radius, spacing, useTheme } from '@/theme';
 import type { EvidenceFile } from '@/types';
 
-function Action({ icon: Icon, label, onPress, danger }: { icon: typeof Share2; label: string; onPress: () => void; danger?: boolean }) {
+function Action({
+  icon: Icon,
+  label,
+  onPress,
+  danger,
+}: {
+  icon: typeof Share2;
+  label: string;
+  onPress: () => void;
+  danger?: boolean;
+}) {
   const { colors } = useTheme();
   return (
     <Pressable
@@ -62,11 +72,24 @@ export function EvidenceItem({ file }: { file: EvidenceFile }) {
     <Card>
       <View style={{ flexDirection: 'row', gap: spacing.md }}>
         <View
-          style={{ width: 72, height: 96, borderRadius: radius.sm, backgroundColor: colors.surfaceAlt, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' }}
+          style={{
+            width: 72,
+            height: 96,
+            borderRadius: radius.sm,
+            backgroundColor: colors.surfaceAlt,
+            overflow: 'hidden',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
         >
           {isImage ? (
             thumb ? (
-              <Image source={{ uri: thumb }} style={{ width: 72, height: 96 }} contentFit="cover" accessibilityLabel={file.name} />
+              <Image
+                source={{ uri: thumb }}
+                style={{ width: 72, height: 96 }}
+                contentFit="cover"
+                accessibilityLabel={file.name}
+              />
             ) : (
               <ActivityIndicator color={colors.primary} />
             )
@@ -79,7 +102,7 @@ export function EvidenceItem({ file }: { file: EvidenceFile }) {
             {file.name}
           </AppText>
           <AppText variant="caption" tone="textMuted">
-            {format(new Date(file.addedAt), "d MMM yyyy, HH:mm", { locale: es })} · {(file.size / 1024).toFixed(0)} KB
+            {format(new Date(file.addedAt), 'd MMM yyyy, HH:mm', { locale: es })} · {(file.size / 1024).toFixed(0)} KB
           </AppText>
           <AppText variant="caption" tone="textMuted" selectable style={{ fontFamily: 'Courier', fontSize: 10 }}>
             SHA-256: {file.sha256}
@@ -96,13 +119,21 @@ export function EvidenceItem({ file }: { file: EvidenceFile }) {
               .catch(() => notify(S.journal.verifyFail));
           }}
         />
-        <Action icon={Share2} label={S.journal.shareOriginal} onPress={() => void shareOriginal(file).catch(() => notify(S.errors.generic))} />
+        <Action
+          icon={Share2}
+          label={S.journal.shareOriginal}
+          onPress={() => void shareOriginal(file).catch(() => notify(S.errors.generic))}
+        />
         <Action
           icon={Trash2}
           danger
           label={S.journal.deleteFile}
           onPress={async () => {
-            const ok = await confirmDialog({ title: S.journal.deleteFileTitle, confirmLabel: S.common.delete, destructive: true });
+            const ok = await confirmDialog({
+              title: S.journal.deleteFileTitle,
+              confirmLabel: S.common.delete,
+              destructive: true,
+            });
             if (!ok) return;
             const removed = await removeFile(file.id);
             if (removed) deleteEvidenceFile(removed);

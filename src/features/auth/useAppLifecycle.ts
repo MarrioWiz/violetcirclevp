@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { AppState, type AppStateStatus } from 'react-native';
+import { AppState, Platform, type AppStateStatus } from 'react-native';
 
 import { useSession } from '@/store/sessionStore';
 import { useSettings } from '@/store/settingsStore';
@@ -18,10 +18,14 @@ export function useAppLifecycle(): void {
       const settings = useSettings.getState();
       if (!settings.onboarded) return;
 
+      // ¿La propia app abrió otra (cámara, Mensajes, compartir) hace poco? Entonces no es un abandono.
+      const external = Date.now() < session.externalUntil;
+
       if (state === 'active') {
         const since = session.backgroundedAt;
-        if (since !== null && Date.now() - since >= AUTOLOCK_MS[settings.autolock]) session.lock();
+        if (since !== null && !external && Date.now() - since >= AUTOLOCK_MS[settings.autolock]) session.lock();
         session.setBackgroundedAt(null);
+        useSession.setState({ externalUntil: 0 });
         session.setCovered(false);
         return;
       }
@@ -30,10 +34,23 @@ export function useAppLifecycle(): void {
       if (settings.hidePreview) session.setCovered(true);
       if (state === 'background' && session.backgroundedAt === null) {
         session.setBackgroundedAt(Date.now());
-        if (settings.autolock === 'immediate') session.lock();
+        if (settings.autolock === 'immediate' && !external) session.lock();
       }
     };
     const sub = AppState.addEventListener('change', onChange);
-    return () => sub.remove();
+
+    // Android: si la app vuelve al frente sin que llegue un 'change' a 'active' (p. ej. al tocar el
+    // ícono con la app ya abierta), el evento 'focus' evita que la capa de privacidad se quede puesta.
+    const onFocus = () => {
+      if (AppState.currentState !== 'active') return;
+      if (useSession.getState().backgroundedAt !== null) onChange('active');
+      else useSession.getState().setCovered(false);
+    };
+    const focusSub = Platform.OS === 'android' ? AppState.addEventListener('focus', onFocus) : null;
+
+    return () => {
+      sub.remove();
+      focusSub?.remove();
+    };
   }, []);
 }

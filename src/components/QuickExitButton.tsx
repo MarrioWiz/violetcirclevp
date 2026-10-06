@@ -19,7 +19,8 @@ export function QuickExitButton({ compact }: { compact?: boolean }) {
       accessibilityHint={S.quickExit.a11y}
       hitSlop={8}
       onPress={() => {
-        if (Platform.OS !== 'web') Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(() => undefined);
+        if (Platform.OS !== 'web')
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(() => undefined);
         void quickExit();
       }}
       style={({ pressed }) => [

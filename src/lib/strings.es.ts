@@ -48,7 +48,10 @@ export const S = {
     welcomeNotYourFault: 'No es tu culpa. Tú decides qué hacer y a qué ritmo.',
     privacyTitle: 'Tu privacidad primero',
     privacyPoints: [
-      { title: 'Lo tuyo se queda en tu teléfono', body: 'Tu bitácora, evidencia y contactos se guardan cifrados solo en este dispositivo.' },
+      {
+        title: 'Lo tuyo se queda en tu teléfono',
+        body: 'Tu bitácora, evidencia y contactos se guardan cifrados solo en este dispositivo.',
+      },
       { title: 'No pedimos tu nombre', body: 'No necesitas cuenta, correo ni datos personales para usar la app.' },
       { title: 'Sin rastreo', body: 'No usamos publicidad ni herramientas de análisis de terceros.' },
       { title: 'Tú tienes el control', body: 'Puedes borrar todos tus datos cuando quieras desde Ajustes.' },
@@ -258,8 +261,7 @@ export const S = {
     hidePreviewBody: 'Tapa la app en el selector de apps y bloquea capturas de pantalla dentro de la app.',
     discreetIcon: 'Ícono discreto',
     discreetIconBody: 'Cambia el ícono y el nombre de la app por "Calculadora".',
-    discreetIconAndroidNote:
-      'En Android la app se cerrará para aplicar el cambio. Búscala después como "Calculadora".',
+    discreetIconAndroidNote: 'En Android la app se cerrará para aplicar el cambio. Búscala después como "Calculadora".',
     discreetIconUnavailable: 'No disponible en este dispositivo.',
     appearance: 'Apariencia',
     theme: 'Tema',
@@ -298,7 +300,8 @@ export const S = {
     search: 'Buscar en mi bitácora',
     allPlatforms: 'Todas',
     emptyTitle: 'Tu bitácora está vacía',
-    emptyBody: 'Aquí puedes anotar lo que pasa, con fecha, plataforma y capturas. Te servirá si decides pedir ayuda o denunciar.',
+    emptyBody:
+      'Aquí puedes anotar lo que pasa, con fecha, plataforma y capturas. Te servirá si decides pedir ayuda o denunciar.',
     noResults: 'No hay entradas con esos filtros.',
     exportPdf: 'Exportar PDF',
     fields: {
@@ -330,7 +333,8 @@ export const S = {
     addPhoto: 'Fotos',
     addCamera: 'Cámara',
     addFile: 'Archivos',
-    evidenceNote: 'Los archivos se guardan cifrados en esta app. Calculamos su huella SHA-256 para demostrar que no se modificaron.',
+    evidenceNote:
+      'Los archivos se guardan cifrados en esta app. Calculamos su huella SHA-256 para demostrar que no se modificaron.',
     tooBig: 'El archivo es muy grande (máximo 15 MB).',
     photosDenied: 'Sin permiso para ver tus fotos o cámara. Puedes activarlo en Configuración.',
     verify: 'Comprobar integridad',

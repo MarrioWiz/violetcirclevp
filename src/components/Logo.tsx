@@ -19,7 +19,13 @@ export function Logo({ size = 72, mono }: { size?: number; mono?: boolean }) {
           <Stop offset="1" stopColor={mono ? '#EDE9FE' : '#4C1D95'} />
         </LinearGradient>
       </Defs>
-      <Path d="M93.94 26.06 A48 48 0 0 1 47.58 106.36" stroke={ring} strokeWidth={6} strokeLinecap="round" fill="none" />
+      <Path
+        d="M93.94 26.06 A48 48 0 0 1 47.58 106.36"
+        stroke={ring}
+        strokeWidth={6}
+        strokeLinecap="round"
+        fill="none"
+      />
       <Path d="M26.06 93.94 A48 48 0 0 1 72.42 13.64" stroke={ring} strokeWidth={6} strokeLinecap="round" fill="none" />
       <Circle cx={84} cy={18.43} r={6.5} fill={mono ? '#FFFFFF' : colors.accent} />
       <Circle cx={36} cy={101.57} r={6.5} fill={mono ? '#FFFFFF' : colors.accent} />

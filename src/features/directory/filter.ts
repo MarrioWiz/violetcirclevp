@@ -29,7 +29,9 @@ export function visibleEntries(entries: DirectoryEntry[], type?: DirectoryType |
   return entries
     .filter(isPublishable)
     .filter((e) => !type || type === 'all' || e.type === type)
-    .sort((a, b) => DIRECTORY_TYPES.indexOf(a.type) - DIRECTORY_TYPES.indexOf(b.type) || a.name.localeCompare(b.name, 'es'));
+    .sort(
+      (a, b) => DIRECTORY_TYPES.indexOf(a.type) - DIRECTORY_TYPES.indexOf(b.type) || a.name.localeCompare(b.name, 'es'),
+    );
 }
 
 export function pendingCount(entries: DirectoryEntry[]): number {

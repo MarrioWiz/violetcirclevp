@@ -1,4 +1,3 @@
-import * as Linking from 'expo-linking';
 import { useLocalSearchParams } from 'expo-router';
 import { BadgeCheck, Clock, Globe, Mail, MapPin, Phone, ShieldQuestion } from 'lucide-react-native';
 import { View } from 'react-native';
@@ -8,6 +7,7 @@ import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { EmptyState } from '@/components/EmptyState';
 import { ListRow } from '@/components/Rows';
+import { openExternalUrl } from '@/lib/external';
 import { Screen } from '@/components/Screen';
 import { isPublishable } from '@/features/directory/filter';
 import { call911, callNumber } from '@/features/emergency/call';
@@ -64,15 +64,22 @@ export default function DirectoryDetail() {
       <Card padded={false} style={{ marginTop: spacing.lg, paddingHorizontal: spacing.lg }}>
         {entry.hours ? <ListRow icon={Clock} title={S.directory.hours} body={entry.hours} /> : null}
         {entry.email ? (
-          <ListRow icon={Mail} title={S.directory.email} body={entry.email} onPress={() => void Linking.openURL(`mailto:${entry.email}`)} />
+          <ListRow
+            icon={Mail}
+            title={S.directory.email}
+            body={entry.email}
+            onPress={() => openExternalUrl(`mailto:${entry.email}`)}
+          />
         ) : null}
-        {entry.url ? <ListRow icon={Globe} title={S.directory.web} body={entry.url} onPress={() => void Linking.openURL(entry.url!)} /> : null}
+        {entry.url ? (
+          <ListRow icon={Globe} title={S.directory.web} body={entry.url} onPress={() => openExternalUrl(entry.url!)} />
+        ) : null}
         {entry.address ? (
           <ListRow
             icon={MapPin}
             title={S.directory.address}
             body={entry.address}
-            onPress={() => void Linking.openURL(`https://maps.google.com/?q=${encodeURIComponent(entry.address!)}`)}
+            onPress={() => openExternalUrl(`https://maps.google.com/?q=${encodeURIComponent(entry.address!)}`)}
           />
         ) : null}
       </Card>

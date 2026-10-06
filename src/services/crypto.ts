@@ -1,6 +1,6 @@
 import * as Crypto from 'expo-crypto';
 
-import { bytesToHex, safeEqual, utf8Decode, utf8Encode } from '@/lib/bytes';
+import { base64ToBytes, bytesToBase64, bytesToHex, hexToBytes, safeEqual, utf8Decode, utf8Encode } from '@/lib/bytes';
 
 import { SECURE_KEYS, secureStore } from './secureStore';
 
@@ -50,34 +50,45 @@ export async function getPinLength(): Promise<number> {
 
 // ── Cifrado AES-256-GCM ──────────────────────────────────────────────────
 
-let cachedKey: Crypto.AESEncryptionKey | null = null;
+let keyPromise: Promise<Crypto.AESEncryptionKey> | null = null;
 
-async function getMasterKey(): Promise<Crypto.AESEncryptionKey> {
-  if (cachedKey) return cachedKey;
+async function loadOrCreateMasterKey(): Promise<Crypto.AESEncryptionKey> {
   const stored = await secureStore.get(SECURE_KEYS.masterKey);
-  if (stored) {
-    cachedKey = await Crypto.AESEncryptionKey.import(stored, 'hex');
-  } else {
-    cachedKey = await Crypto.AESEncryptionKey.generate();
-    await secureStore.set(SECURE_KEYS.masterKey, await cachedKey.encoded('hex'));
+  if (stored) return Crypto.AESEncryptionKey.import(hexToBytes(stored));
+  const key = await Crypto.AESEncryptionKey.generate();
+  await secureStore.set(SECURE_KEYS.masterKey, bytesToHex(await key.bytes()));
+  return key;
+}
+
+/**
+ * Se guarda la PROMESA, no la llave: si varias lecturas arrancan a la vez en el primer uso,
+ * todas esperan la misma llave en lugar de generar una distinta cada una.
+ */
+function getMasterKey(): Promise<Crypto.AESEncryptionKey> {
+  if (!keyPromise) {
+    keyPromise = loadOrCreateMasterKey().catch((e: unknown) => {
+      keyPromise = null;
+      throw e;
+    });
   }
-  return cachedKey;
+  return keyPromise;
 }
 
 /** Olvida la llave en memoria (se usa al borrar todos los datos). */
 export function forgetMasterKey(): void {
-  cachedKey = null;
+  keyPromise = null;
 }
 
 export async function encryptBytes(plain: Uint8Array): Promise<string> {
   const key = await getMasterKey();
   const sealed = await Crypto.aesEncryptAsync(plain, key);
-  return (await sealed.combined('base64')) as string;
+  return bytesToBase64((await sealed.combined('bytes')) as Uint8Array);
 }
 
 export async function decryptBytes(combinedBase64: string): Promise<Uint8Array> {
   const key = await getMasterKey();
-  const sealed = Crypto.AESSealedData.fromCombined(combinedBase64);
+  // En Android, fromCombined solo acepta bytes (no texto base64), aunque la documentación diga lo contrario.
+  const sealed = Crypto.AESSealedData.fromCombined(base64ToBytes(combinedBase64));
   return (await Crypto.aesDecryptAsync(sealed, key, { output: 'bytes' })) as Uint8Array;
 }
 

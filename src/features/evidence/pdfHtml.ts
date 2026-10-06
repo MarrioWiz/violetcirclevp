@@ -24,7 +24,12 @@ export const KIND_LABEL: Record<string, string> = {
 };
 
 export function escapeHtml(s: string): string {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 const fmt = (iso: string) => format(new Date(iso), "d 'de' MMMM 'de' yyyy, HH:mm", { locale: es });

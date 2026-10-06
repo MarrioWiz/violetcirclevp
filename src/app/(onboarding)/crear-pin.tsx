@@ -32,7 +32,7 @@ export default function PinStep() {
     try {
       await savePin(pin);
       setSaved(true);
-      if (!bio) router.push('/primer-circulo');
+      if (!bio) router.replace('/primer-circulo');
     } catch {
       notify(S.errors.generic);
     } finally {
@@ -42,7 +42,7 @@ export default function PinStep() {
 
   const enableBio = async () => {
     if (await authenticateBiometric(S.lock.biometricPrompt)) await update({ biometrics: true });
-    router.push('/primer-circulo');
+    router.replace('/primer-circulo');
   };
 
   if (saved && bio) {
@@ -52,8 +52,13 @@ export default function PinStep() {
         canGoBack={false}
         footer={
           <>
-            <Button label={t(S.onboarding.biometricsEnable, { method: bio })} size="lg" icon={ScanFace} onPress={() => void enableBio()} />
-            <Button label={S.common.skip} variant="ghost" onPress={() => router.push('/primer-circulo')} />
+            <Button
+              label={t(S.onboarding.biometricsEnable, { method: bio })}
+              size="lg"
+              icon={ScanFace}
+              onPress={() => void enableBio()}
+            />
+            <Button label={S.common.skip} variant="ghost" onPress={() => router.replace('/primer-circulo')} />
           </>
         }
       >

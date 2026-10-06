@@ -1,5 +1,6 @@
 import * as LocalAuthentication from 'expo-local-authentication';
 import { Platform } from 'react-native';
+import { markExternalNavigation } from '@/store/sessionStore';
 
 export interface BiometricInfo {
   available: boolean;
@@ -24,6 +25,7 @@ export async function getBiometricInfo(): Promise<BiometricInfo> {
 
 export async function authenticateBiometric(prompt: string): Promise<boolean> {
   try {
+    markExternalNavigation();
     const res = await LocalAuthentication.authenticateAsync({
       promptMessage: prompt,
       cancelLabel: 'Usar PIN',

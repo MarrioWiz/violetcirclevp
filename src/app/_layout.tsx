@@ -103,7 +103,9 @@ function AppShell() {
   }
 
   return (
-    <ThemeProvider value={{ ...navTheme, colors: { ...navTheme.colors, background: colors.bg, primary: colors.primary } }}>
+    <ThemeProvider
+      value={{ ...navTheme, colors: { ...navTheme.colors, background: colors.bg, primary: colors.primary } }}
+    >
       <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
       <View style={{ flex: 1, backgroundColor: colors.bg }}>
         {/* La navegación se mantiene montada bajo el bloqueo para no perder dónde estaba ella,

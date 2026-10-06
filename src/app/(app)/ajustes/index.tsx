@@ -1,4 +1,3 @@
-import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
 import {
   Bell,
@@ -20,6 +19,7 @@ import { Platform, View } from 'react-native';
 import { AppText } from '@/components/AppText';
 import { Card } from '@/components/Card';
 import { Divider, ListRow, SectionTitle, Segmented, ToggleRow } from '@/components/Rows';
+import { openExternalUrl } from '@/lib/external';
 import { ScopeNotice } from '@/components/ScopeNotice';
 import { Screen } from '@/components/Screen';
 import { exportMyData } from '@/features/settings/exportData';
@@ -94,7 +94,13 @@ export default function SettingsScreen() {
           onChange={(v) => void toggleBio(v)}
         />
         <Divider />
-        <ToggleRow icon={EyeOff} title={S.settings.hidePreview} body={S.settings.hidePreviewBody} value={s.hidePreview} onChange={(v) => void s.update({ hidePreview: v })} />
+        <ToggleRow
+          icon={EyeOff}
+          title={S.settings.hidePreview}
+          body={S.settings.hidePreviewBody}
+          value={s.hidePreview}
+          onChange={(v) => void s.update({ hidePreview: v })}
+        />
         <Divider />
         <ToggleRow
           icon={Calculator}
@@ -110,7 +116,10 @@ export default function SettingsScreen() {
             label={S.settings.autolock}
             value={s.autolock}
             onChange={(v) => void s.update({ autolock: v })}
-            options={(['immediate', '1m', '5m'] as AutoLock[]).map((v) => ({ value: v, label: S.settings.autolockOptions[v] }))}
+            options={(['immediate', '1m', '5m'] as AutoLock[]).map((v) => ({
+              value: v,
+              label: S.settings.autolockOptions[v],
+            }))}
           />
         </View>
       </Card>
@@ -123,7 +132,10 @@ export default function SettingsScreen() {
             label={S.settings.theme}
             value={s.theme}
             onChange={(v) => void s.update({ theme: v })}
-            options={(['system', 'light', 'dark'] as ThemePreference[]).map((v) => ({ value: v, label: S.settings.themeOptions[v] }))}
+            options={(['system', 'light', 'dark'] as ThemePreference[]).map((v) => ({
+              value: v,
+              label: S.settings.themeOptions[v],
+            }))}
           />
         </View>
         <View style={{ gap: spacing.sm }}>
@@ -139,30 +151,62 @@ export default function SettingsScreen() {
 
       <SectionTitle>{S.settings.notifications}</SectionTitle>
       <Card padded={false} style={card}>
-        <ToggleRow icon={Bell} title={S.settings.reminders} body={S.settings.remindersBody} value={s.selfCareReminders} onChange={(v) => void toggleReminders(v)} />
+        <ToggleRow
+          icon={Bell}
+          title={S.settings.reminders}
+          body={S.settings.remindersBody}
+          value={s.selfCareReminders}
+          onChange={(v) => void toggleReminders(v)}
+        />
       </Card>
 
       <SectionTitle>{S.settings.data}</SectionTitle>
       <Card padded={false} style={card}>
-        <ToggleRow icon={BarChart3} title={S.settings.stats} body={S.settings.statsBody} value={s.statsOptIn} onChange={(v) => void s.update({ statsOptIn: v })} />
+        <ToggleRow
+          icon={BarChart3}
+          title={S.settings.stats}
+          body={S.settings.statsBody}
+          value={s.statsOptIn}
+          onChange={(v) => void s.update({ statsOptIn: v })}
+        />
         <Divider />
         <ListRow icon={Download} title={S.settings.exportData} onPress={() => void exportMyData()} />
         <Divider />
-        <ListRow icon={Trash2} title={S.settings.deleteAll} body={S.settings.deleteAllBody} destructive onPress={() => void wipe()} />
+        <ListRow
+          icon={Trash2}
+          title={S.settings.deleteAll}
+          body={S.settings.deleteAllBody}
+          destructive
+          onPress={() => void wipe()}
+        />
       </Card>
 
       <SectionTitle>{S.settings.info}</SectionTitle>
       <Card padded={false} style={card}>
-        <ListRow icon={ShieldCheck} title={S.settings.privacyNotice} onPress={() => router.push({ pathname: '/info/[doc]', params: { doc: 'privacidad' } })} />
+        <ListRow
+          icon={ShieldCheck}
+          title={S.settings.privacyNotice}
+          onPress={() => router.push({ pathname: '/info/[doc]', params: { doc: 'privacidad' } })}
+        />
         <Divider />
-        <ListRow icon={TriangleAlert} title={S.settings.scopeNotice} onPress={() => router.push({ pathname: '/info/[doc]', params: { doc: 'alcance' } })} />
+        <ListRow
+          icon={TriangleAlert}
+          title={S.settings.scopeNotice}
+          onPress={() => router.push({ pathname: '/info/[doc]', params: { doc: 'alcance' } })}
+        />
         <Divider />
-        <ListRow icon={Info} title={S.settings.about} onPress={() => router.push({ pathname: '/info/[doc]', params: { doc: 'acerca' } })} />
+        <ListRow
+          icon={Info}
+          title={S.settings.about}
+          onPress={() => router.push({ pathname: '/info/[doc]', params: { doc: 'acerca' } })}
+        />
         <Divider />
         <ListRow
           icon={MessageSquareHeart}
           title={S.settings.feedback}
-          onPress={() => void Linking.openURL(`mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent('Comentarios VioletCircleVP')}`).catch(() => notify(S.errors.generic))}
+          onPress={() =>
+            openExternalUrl(`mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent('Comentarios VioletCircleVP')}`)
+          }
         />
       </Card>
 

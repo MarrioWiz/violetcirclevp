@@ -33,7 +33,10 @@ export default function StatsStep() {
   };
 
   return (
-    <OnboardingFrame step={5} footer={<Button label={S.onboarding.finish} size="lg" loading={busy} onPress={() => void finish()} />}>
+    <OnboardingFrame
+      step={5}
+      footer={<Button label={S.onboarding.finish} size="lg" loading={busy} onPress={() => void finish()} />}
+    >
       <View style={{ alignItems: 'center', gap: spacing.md }}>
         <IconBadge icon={BarChart3} size={80} />
         <AppText variant="title" center accessibilityRole="header">

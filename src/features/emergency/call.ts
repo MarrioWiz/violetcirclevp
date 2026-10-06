@@ -2,6 +2,7 @@ import * as Linking from 'expo-linking';
 
 import { confirmDialog, notify } from '@/lib/dialog';
 import { S } from '@/lib/strings.es';
+import { markExternalNavigation } from '@/store/sessionStore';
 
 export const EMERGENCY_NUMBER = '911';
 
@@ -18,6 +19,7 @@ export async function call911(): Promise<void> {
 export async function callNumber(phone: string): Promise<void> {
   const clean = phone.replace(/[^\d+]/g, '');
   try {
+    markExternalNavigation();
     await Linking.openURL(`tel:${clean}`);
   } catch {
     notify(S.errors.generic);

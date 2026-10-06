@@ -5,6 +5,8 @@ import { storage } from '@/services/storage';
 const DISGUISE_KEY = 'disguised';
 export const MAX_ATTEMPTS = 5;
 export const LOCKOUT_MS = 30_000;
+/** Si la app abrió otra app (cámara, Mensajes, compartir…), no se bloquea si vuelve antes de esto. */
+export const EXTERNAL_GRACE_MS = 5 * 60_000;
 
 interface SessionState {
   /** La app está bloqueada y pide PIN/biometría. */
@@ -17,6 +19,9 @@ interface SessionState {
   lockoutUntil: number;
   /** Momento en que la app pasó a segundo plano (para el autobloqueo). */
   backgroundedAt: number | null;
+  /** Hasta cuándo una salida a otra app iniciada por la propia app no provoca bloqueo. */
+  externalUntil: number;
+  markExternal: () => void;
   hydrateDisguise: () => Promise<void>;
   lock: () => void;
   unlock: () => void;
@@ -34,6 +39,8 @@ export const useSession = create<SessionState>((set, get) => ({
   failedAttempts: 0,
   lockoutUntil: 0,
   backgroundedAt: null,
+  externalUntil: 0,
+  markExternal: () => set({ externalUntil: Date.now() + EXTERNAL_GRACE_MS }),
   hydrateDisguise: async () => {
     set({ disguised: (await storage.get(DISGUISE_KEY)) === '1' });
   },
@@ -59,3 +66,8 @@ export const useSession = create<SessionState>((set, get) => ({
     await storage.remove(DISGUISE_KEY);
   },
 }));
+
+/** Llamar justo antes de abrir otra app desde VioletCircleVP (selector, cámara, SMS, compartir…). */
+export function markExternalNavigation(): void {
+  useSession.getState().markExternal();
+}

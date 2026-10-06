@@ -56,7 +56,9 @@ export const useIncidents = create<IncidentsState>((set, get) => {
       await saveIncidents(
         get().incidents.map((i) => {
           if (i.id !== id) return i;
-          const changed = (patch.description !== undefined && patch.description !== i.description) || (patch.notes !== undefined && patch.notes !== i.notes);
+          const changed =
+            (patch.description !== undefined && patch.description !== i.description) ||
+            (patch.notes !== undefined && patch.notes !== i.notes);
           const history = changed
             ? [{ savedAt: i.updatedAt, description: i.description, notes: i.notes }, ...i.history].slice(0, 20)
             : i.history;

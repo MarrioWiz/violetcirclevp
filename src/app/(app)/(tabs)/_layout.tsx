@@ -24,11 +24,19 @@ export default function TabsLayout() {
     >
       <Tabs.Screen
         name="index"
-        options={{ title: 'Inicio', tabBarIcon: ({ color }) => <House size={24} color={color} />, tabBarAccessibilityLabel: 'Inicio' }}
+        options={{
+          title: 'Inicio',
+          tabBarIcon: ({ color }) => <House size={24} color={color} />,
+          tabBarAccessibilityLabel: 'Inicio',
+        }}
       />
       <Tabs.Screen
         name="orientacion"
-        options={{ title: 'Orientación', tabBarIcon: ({ color }) => <Compass size={24} color={color} />, tabBarAccessibilityLabel: '¿Esto es violencia digital?' }}
+        options={{
+          title: 'Orientación',
+          tabBarIcon: ({ color }) => <Compass size={24} color={color} />,
+          tabBarAccessibilityLabel: '¿Esto es violencia digital?',
+        }}
       />
       <Tabs.Screen
         name="circulo"
@@ -36,7 +44,11 @@ export default function TabsLayout() {
       />
       <Tabs.Screen
         name="directorio"
-        options={{ title: 'Directorio', tabBarIcon: ({ color }) => <LifeBuoy size={24} color={color} />, tabBarAccessibilityLabel: 'Directorio de apoyo' }}
+        options={{
+          title: 'Directorio',
+          tabBarIcon: ({ color }) => <LifeBuoy size={24} color={color} />,
+          tabBarAccessibilityLabel: 'Directorio de apoyo',
+        }}
       />
       <Tabs.Screen
         name="mas"

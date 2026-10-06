@@ -8,7 +8,14 @@ import { AppText } from '@/components/AppText';
 import { QuickExitButton } from '@/components/QuickExitButton';
 import { bundled } from '@/features/content/repository';
 import { sendAnonymousStat } from '@/features/stats/sendStat';
-import { answer, getNode, isResultNode, resolveResult, type ResolvedResult, type TriageStep } from '@/features/triage/engine';
+import {
+  answer,
+  getNode,
+  isResultNode,
+  resolveResult,
+  type ResolvedResult,
+  type TriageStep,
+} from '@/features/triage/engine';
 import { ResultView, UrgentBlock } from '@/features/triage/ResultView';
 import { S } from '@/lib/strings.es';
 import { MIN_TOUCH, radius, spacing, useTheme } from '@/theme';
@@ -81,7 +88,12 @@ export default function Triage() {
           </View>
         </View>
         {messages.length > 2 && (
-          <Pressable accessibilityRole="button" accessibilityLabel={S.triage.restart} onPress={restart} style={[styles.iconBtn, { backgroundColor: colors.surfaceAlt }]}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={S.triage.restart}
+            onPress={restart}
+            style={[styles.iconBtn, { backgroundColor: colors.surfaceAlt }]}
+          >
             <RotateCcw size={18} color={colors.text} />
           </Pressable>
         )}
@@ -102,8 +114,18 @@ export default function Triage() {
             style={[
               styles.bubble,
               m.from === 'bot'
-                ? { alignSelf: 'flex-start', backgroundColor: colors.surface, borderColor: colors.border, borderBottomLeftRadius: 6 }
-                : { alignSelf: 'flex-end', backgroundColor: colors.primary, borderColor: colors.primary, borderBottomRightRadius: 6 },
+                ? {
+                    alignSelf: 'flex-start',
+                    backgroundColor: colors.surface,
+                    borderColor: colors.border,
+                    borderBottomLeftRadius: 6,
+                  }
+                : {
+                    alignSelf: 'flex-end',
+                    backgroundColor: colors.primary,
+                    borderColor: colors.primary,
+                    borderBottomRightRadius: 6,
+                  },
             ]}
           >
             <AppText style={m.from === 'me' ? { color: colors.onPrimary } : undefined}>{m.text}</AppText>
@@ -160,10 +182,22 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.md,
   },
   badgeRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 2 },
-  iconBtn: { width: MIN_TOUCH - 4, height: MIN_TOUCH - 4, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
+  iconBtn: {
+    width: MIN_TOUCH - 4,
+    height: MIN_TOUCH - 4,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   content: { paddingHorizontal: spacing.xl, paddingBottom: spacing.xxxl * 2, gap: spacing.sm },
   note: { borderRadius: radius.md, padding: spacing.md, marginBottom: spacing.sm },
-  bubble: { maxWidth: '88%', borderRadius: radius.lg, borderWidth: StyleSheet.hairlineWidth, paddingHorizontal: spacing.lg, paddingVertical: spacing.md },
+  bubble: {
+    maxWidth: '88%',
+    borderRadius: radius.lg,
+    borderWidth: StyleSheet.hairlineWidth,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+  },
   option: {
     minHeight: MIN_TOUCH + 4,
     borderRadius: radius.md,

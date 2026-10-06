@@ -11,7 +11,10 @@ interface Props extends TextInputProps {
   hint?: string;
 }
 
-export const TextField = forwardRef<TextInput, Props>(function TextField({ label, error, hint, style, multiline, ...rest }, ref) {
+export const TextField = forwardRef<TextInput, Props>(function TextField(
+  { label, error, hint, style, multiline, ...rest },
+  ref,
+) {
   const { colors, textScale } = useTheme();
   return (
     <View style={{ gap: spacing.xs }}>

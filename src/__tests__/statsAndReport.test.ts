@@ -54,7 +54,18 @@ describe('PDF de la bitácora', () => {
     const sha = 'a'.repeat(64);
     const html = buildIncidentReportHtml(
       [incident],
-      [{ id: 'f', incidentId: 'i1', localUri: 'file://x', name: 'cap.png', mime: 'image/png', sha256: sha, size: 2048, addedAt: '2026-10-01T19:05:00.000Z' }],
+      [
+        {
+          id: 'f',
+          incidentId: 'i1',
+          localUri: 'file://x',
+          name: 'cap.png',
+          mime: 'image/png',
+          sha256: sha,
+          size: 2048,
+          addedAt: '2026-10-01T19:05:00.000Z',
+        },
+      ],
     );
     expect(html).toContain(`SHA-256: ${sha}`);
     expect(html).toContain('cap.png');

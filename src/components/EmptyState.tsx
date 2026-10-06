@@ -17,7 +17,9 @@ interface Props {
 
 export function EmptyState({ icon, title, body, actionLabel, onAction }: Props) {
   return (
-    <View style={{ alignItems: 'center', paddingVertical: spacing.xxxl, paddingHorizontal: spacing.lg, gap: spacing.md }}>
+    <View
+      style={{ alignItems: 'center', paddingVertical: spacing.xxxl, paddingHorizontal: spacing.lg, gap: spacing.md }}
+    >
       <IconBadge icon={icon} size={72} />
       <AppText variant="heading" center>
         {title}
@@ -28,7 +30,12 @@ export function EmptyState({ icon, title, body, actionLabel, onAction }: Props) 
         </AppText>
       ) : null}
       {actionLabel && onAction ? (
-        <Button label={actionLabel} onPress={onAction} variant="secondary" style={{ marginTop: spacing.sm, alignSelf: 'stretch' }} />
+        <Button
+          label={actionLabel}
+          onPress={onAction}
+          variant="secondary"
+          style={{ marginTop: spacing.sm, alignSelf: 'stretch' }}
+        />
       ) : null}
     </View>
   );

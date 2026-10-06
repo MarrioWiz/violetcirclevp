@@ -37,7 +37,14 @@ export default function ArticleDetail() {
           accessibilityLabel={isFav ? S.learn.unfavorite : S.learn.favorite}
           accessibilityState={{ selected: isFav }}
           onPress={() => void toggleFavorite(article.slug)}
-          style={{ width: MIN_TOUCH - 4, height: MIN_TOUCH - 4, alignItems: 'center', justifyContent: 'center', borderRadius: 22, backgroundColor: colors.surfaceAlt }}
+          style={{
+            width: MIN_TOUCH - 4,
+            height: MIN_TOUCH - 4,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 22,
+            backgroundColor: colors.surfaceAlt,
+          }}
         >
           <Star size={20} color={colors.primary} fill={isFav ? colors.primary : 'transparent'} />
         </Pressable>

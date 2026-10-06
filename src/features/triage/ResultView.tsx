@@ -96,7 +96,12 @@ export function ResultView({ resolved }: { resolved: ResolvedResult }) {
         {S.triage.next}
       </AppText>
       <View style={{ gap: spacing.sm }}>
-        <Button label={S.triage.goEvidence} icon={ShieldCheck} variant="secondary" onPress={() => router.push('/guia/conservar-evidencia')} />
+        <Button
+          label={S.triage.goEvidence}
+          icon={ShieldCheck}
+          variant="secondary"
+          onPress={() => router.push('/guia/conservar-evidencia')}
+        />
         {platform ? (
           <Button
             label={t(S.triage.goPlatform, { platform: PLATFORM_NAMES[platform] ?? platform })}
@@ -105,8 +110,15 @@ export function ResultView({ resolved }: { resolved: ResolvedResult }) {
             onPress={() => router.push({ pathname: '/guia/[slug]', params: { slug: `plataforma-${platform}` } })}
           />
         ) : null}
-        <Button label={S.triage.goDirectory} icon={LifeBuoy} variant="secondary" onPress={() => router.push('/directorio')} />
-        {!result.urgent && <Button label={S.triage.goCircle} icon={Users} variant="outline" onPress={() => router.push('/alerta')} />}
+        <Button
+          label={S.triage.goDirectory}
+          icon={LifeBuoy}
+          variant="secondary"
+          onPress={() => router.push('/directorio')}
+        />
+        {!result.urgent && (
+          <Button label={S.triage.goCircle} icon={Users} variant="outline" onPress={() => router.push('/alerta')} />
+        )}
       </View>
 
       <AppText variant="caption" tone="textMuted">

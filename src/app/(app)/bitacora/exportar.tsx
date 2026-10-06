@@ -43,8 +43,22 @@ export default function ExportJournal() {
       edges={['top', 'bottom']}
       footer={
         <>
-          <Button label={busy === 'preview' ? S.journal.generating : S.journal.preview} icon={Eye} variant="secondary" loading={busy === 'preview'} disabled={!!busy || !incidents.length} onPress={() => void run('preview')} />
-          <Button label={busy === 'share' ? S.journal.generating : S.journal.share} icon={Share2} size="lg" loading={busy === 'share'} disabled={!!busy || !incidents.length || Platform.OS === 'web'} onPress={() => void run('share')} />
+          <Button
+            label={busy === 'preview' ? S.journal.generating : S.journal.preview}
+            icon={Eye}
+            variant="secondary"
+            loading={busy === 'preview'}
+            disabled={!!busy || !incidents.length}
+            onPress={() => void run('preview')}
+          />
+          <Button
+            label={busy === 'share' ? S.journal.generating : S.journal.share}
+            icon={Share2}
+            size="lg"
+            loading={busy === 'share'}
+            disabled={!!busy || !incidents.length || Platform.OS === 'web'}
+            onPress={() => void run('share')}
+          />
         </>
       }
     >
@@ -60,7 +74,8 @@ export default function ExportJournal() {
       <Card style={{ marginTop: spacing.lg }}>
         <AppText variant="bodyStrong">{t(S.journal.exportCount, { n: incidents.length, f: files.length })}</AppText>
         <AppText tone="textMuted" style={{ marginTop: spacing.sm }}>
-          El documento incluye la cronología, la descripción de cada entrada, las miniaturas de tus capturas y la huella SHA-256 de cada archivo.
+          El documento incluye la cronología, la descripción de cada entrada, las miniaturas de tus capturas y la huella
+          SHA-256 de cada archivo.
         </AppText>
         {incidents.some((i) => i.locked) ? (
           <AppText variant="caption" tone="textMuted" style={{ marginTop: spacing.sm }}>

@@ -7,6 +7,7 @@ import { Card } from '@/components/Card';
 import { Screen } from '@/components/Screen';
 import { bundled } from '@/features/content/repository';
 import { S } from '@/lib/strings.es';
+import { markExternalNavigation } from '@/store/sessionStore';
 import { spacing, useTheme } from '@/theme';
 
 const guide = bundled.legal.howToSupport;
@@ -34,6 +35,7 @@ export default function HowToSupport() {
           icon={Share2}
           onPress={() => {
             // Se comparte solo esta guía genérica; no incluye nada de la usuaria.
+            markExternalNavigation();
             void Share.share({ message: asPlainText() }).catch(() => undefined);
           }}
         />
@@ -48,7 +50,9 @@ export default function HowToSupport() {
             <View style={{ gap: spacing.sm }}>
               {s.items.map((i) => (
                 <View key={i} style={{ flexDirection: 'row', gap: spacing.sm }}>
-                  <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: colors.accent, marginTop: 9 }} />
+                  <View
+                    style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: colors.accent, marginTop: 9 }}
+                  />
                   <AppText style={{ flex: 1 }}>{i}</AppText>
                 </View>
               ))}

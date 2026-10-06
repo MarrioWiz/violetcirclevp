@@ -46,9 +46,20 @@ export default function JournalIndex() {
       subtitle={S.journal.subtitle}
       footer={
         <View style={{ flexDirection: 'row', gap: spacing.sm }}>
-          <Button label={S.journal.new} icon={Plus} onPress={() => router.push('/bitacora/nueva')} style={{ flex: 1 }} />
+          <Button
+            label={S.journal.new}
+            icon={Plus}
+            onPress={() => router.push('/bitacora/nueva')}
+            style={{ flex: 1 }}
+          />
           {incidents.length > 0 && (
-            <Button label={S.journal.exportPdf} icon={FileDown} variant="secondary" onPress={() => router.push('/bitacora/exportar')} style={{ flex: 1 }} />
+            <Button
+              label={S.journal.exportPdf}
+              icon={FileDown}
+              variant="secondary"
+              onPress={() => router.push('/bitacora/exportar')}
+              style={{ flex: 1 }}
+            />
           )}
         </View>
       }
@@ -76,7 +87,7 @@ export default function JournalIndex() {
             ) : (
               list.map((i) => {
                 const count = files.filter((f) => f.incidentId === i.id).length;
-                const when = format(new Date(i.occurredAt), "d MMM yyyy · HH:mm", { locale: es });
+                const when = format(new Date(i.occurredAt), 'd MMM yyyy · HH:mm', { locale: es });
                 return (
                   <Card
                     key={i.id}

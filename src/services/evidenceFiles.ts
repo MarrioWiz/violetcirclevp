@@ -7,6 +7,7 @@ import { Platform } from 'react-native';
 
 import { bytesToBase64 } from '@/lib/bytes';
 import type { EvidenceFile } from '@/types';
+import { markExternalNavigation } from '@/store/sessionStore';
 
 import { decryptBytes, encryptBytes, sha256Hex } from './crypto';
 
@@ -39,23 +40,38 @@ interface Picked {
 }
 
 async function pick(source: PickSource): Promise<Picked | 'denied' | null> {
+  markExternalNavigation(); // permisos, selector y cámara pausan la app
   if (source === 'files') {
-    const res = await DocumentPicker.getDocumentAsync({ type: ['image/*', 'application/pdf'], copyToCacheDirectory: true });
+    markExternalNavigation();
+    const res = await DocumentPicker.getDocumentAsync({
+      type: ['image/*', 'application/pdf'],
+      copyToCacheDirectory: true,
+    });
     if (res.canceled || !res.assets[0]) return null;
     const a = res.assets[0];
     return { uri: a.uri, name: a.name, mime: a.mimeType ?? 'application/octet-stream' };
   }
   const perm =
-    source === 'camera' ? await ImagePicker.requestCameraPermissionsAsync() : await ImagePicker.requestMediaLibraryPermissionsAsync();
+    source === 'camera'
+      ? await ImagePicker.requestCameraPermissionsAsync()
+      : await ImagePicker.requestMediaLibraryPermissionsAsync();
   if (!perm.granted) return 'denied';
-  const opts: ImagePicker.ImagePickerOptions = { mediaTypes: ['images'], quality: 1, exif: false, allowsEditing: false };
-  const res = source === 'camera' ? await ImagePicker.launchCameraAsync(opts) : await ImagePicker.launchImageLibraryAsync(opts);
+  const opts: ImagePicker.ImagePickerOptions = {
+    mediaTypes: ['images'],
+    quality: 1,
+    exif: false,
+    allowsEditing: false,
+  };
+  markExternalNavigation();
+  const res =
+    source === 'camera' ? await ImagePicker.launchCameraAsync(opts) : await ImagePicker.launchImageLibraryAsync(opts);
   if (res.canceled || !res.assets[0]) return null;
   const a = res.assets[0];
   return { uri: a.uri, name: a.fileName ?? `captura-${Date.now()}.jpg`, mime: a.mimeType ?? 'image/jpeg' };
 }
 
-export type AttachResult = { ok: true; file: EvidenceFile } | { ok: false; reason: 'denied' | 'too-big' | 'error' } | null;
+export type AttachResult =
+  { ok: true; file: EvidenceFile } | { ok: false; reason: 'denied' | 'too-big' | 'error' } | null;
 
 /**
  * Copia el archivo a la carpeta privada CIFRADO (AES-GCM) y calcula el SHA-256
@@ -135,6 +151,7 @@ export async function shareOriginal(file: EvidenceFile): Promise<void> {
   try {
     if (tmp.exists) tmp.delete();
     tmp.write(await readEvidenceBytes(file));
+    markExternalNavigation();
     await Sharing.shareAsync(tmp.uri, { mimeType: file.mime });
   } finally {
     try {

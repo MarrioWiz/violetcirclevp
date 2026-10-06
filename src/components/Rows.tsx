@@ -142,12 +142,19 @@ export function CheckRow({
 
 export function Divider() {
   const { colors } = useTheme();
-  return <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: colors.border, marginVertical: spacing.xs }} />;
+  return (
+    <View style={{ height: StyleSheet.hairlineWidth, backgroundColor: colors.border, marginVertical: spacing.xs }} />
+  );
 }
 
 export function SectionTitle({ children }: { children: string }) {
   return (
-    <AppText variant="label" tone="textMuted" accessibilityRole="header" style={{ marginTop: spacing.xl, marginBottom: spacing.sm }}>
+    <AppText
+      variant="label"
+      tone="textMuted"
+      accessibilityRole="header"
+      style={{ marginTop: spacing.xl, marginBottom: spacing.sm }}
+    >
       {children}
     </AppText>
   );
@@ -170,7 +177,10 @@ export function Chip({ label, selected, onPress }: { label: string; selected: bo
         },
       ]}
     >
-      <AppText variant="caption" style={{ fontFamily: 'Inter_600SemiBold', color: selected ? colors.onPrimary : colors.text }}>
+      <AppText
+        variant="caption"
+        style={{ fontFamily: 'Inter_600SemiBold', color: selected ? colors.onPrimary : colors.text }}
+      >
         {label}
       </AppText>
     </Pressable>
@@ -191,7 +201,11 @@ export function Segmented<T extends string>({
 }) {
   const { colors } = useTheme();
   return (
-    <View accessibilityRole="radiogroup" accessibilityLabel={label} style={[styles.segment, { backgroundColor: colors.surfaceAlt }]}>
+    <View
+      accessibilityRole="radiogroup"
+      accessibilityLabel={label}
+      style={[styles.segment, { backgroundColor: colors.surfaceAlt }]}
+    >
       {options.map((o) => {
         const selected = o.value === value;
         return (
@@ -201,9 +215,21 @@ export function Segmented<T extends string>({
             accessibilityState={{ selected }}
             accessibilityLabel={o.label}
             onPress={() => onChange(o.value)}
-            style={[styles.segmentItem, selected && { backgroundColor: colors.surface, shadowColor: colors.shadow, shadowOpacity: 0.1, shadowRadius: 6, elevation: 1 }]}
+            style={[
+              styles.segmentItem,
+              selected && {
+                backgroundColor: colors.surface,
+                shadowColor: colors.shadow,
+                shadowOpacity: 0.1,
+                shadowRadius: 6,
+                elevation: 1,
+              },
+            ]}
           >
-            <AppText variant="caption" style={{ fontFamily: 'Inter_600SemiBold', color: selected ? colors.primary : colors.textMuted }}>
+            <AppText
+              variant="caption"
+              style={{ fontFamily: 'Inter_600SemiBold', color: selected ? colors.primary : colors.textMuted }}
+            >
               {o.label}
             </AppText>
           </Pressable>
@@ -222,7 +248,13 @@ const styles = StyleSheet.create({
     minHeight: MIN_TOUCH + 8,
     paddingVertical: spacing.sm,
   },
-  checkRow: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.md, paddingVertical: spacing.md, minHeight: MIN_TOUCH },
+  checkRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: spacing.md,
+    paddingVertical: spacing.md,
+    minHeight: MIN_TOUCH,
+  },
   box: {
     width: 26,
     height: 26,
