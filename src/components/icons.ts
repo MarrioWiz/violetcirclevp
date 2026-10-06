@@ -1,0 +1,58 @@
+import {
+  AtSign,
+  BookHeart,
+  BookOpen,
+  Camera,
+  Eye,
+  EyeOff,
+  FileWarning,
+  Fingerprint,
+  Heart,
+  HeartHandshake,
+  Image,
+  KeyRound,
+  Landmark,
+  Lock,
+  Mail,
+  MapPinOff,
+  MessageCircle,
+  Music2,
+  ShieldAlert,
+  ShieldCheck,
+  Smartphone,
+  UserX,
+  Users,
+  type LucideIcon,
+} from 'lucide-react-native';
+
+/** Los JSON de contenido nombran íconos con texto; aquí se traducen a componentes. */
+const ICONS: Record<string, LucideIcon> = {
+  'at-sign': AtSign,
+  'book-heart': BookHeart,
+  'book-open': BookOpen,
+  camera: Camera,
+  eye: Eye,
+  'eye-off': EyeOff,
+  'file-warning': FileWarning,
+  fingerprint: Fingerprint,
+  heart: Heart,
+  'heart-handshake': HeartHandshake,
+  image: Image,
+  instagram: Camera,
+  'key-round': KeyRound,
+  landmark: Landmark,
+  lock: Lock,
+  mail: Mail,
+  'map-pin-off': MapPinOff,
+  'message-circle': MessageCircle,
+  music: Music2,
+  'shield-alert': ShieldAlert,
+  'shield-check': ShieldCheck,
+  smartphone: Smartphone,
+  'user-x': UserX,
+  users: Users,
+};
+
+export function iconFor(name: string | undefined): LucideIcon {
+  return (name && ICONS[name]) || BookOpen;
+}

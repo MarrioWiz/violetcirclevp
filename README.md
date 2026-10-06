@@ -1,56 +1,64 @@
-# Welcome to your Expo app 👋
+# VioletCircleVP
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Plataforma de acompañamiento y seguridad digital para mujeres universitarias de la UVP: **identificar** si lo que pasa es violencia digital, **documentarlo**, **recibir orientación** y **activar un círculo de confianza**.
 
-## Get started
+Proyecto integrador — Problemática Social Contemporánea, 7.º semestre, grupo 7C, Ingeniería en Sistemas y Tecnologías de la Información, Universidad del Valle de Puebla.
 
-1. Install dependencies
+> **No es un servicio de emergencia.** No sustituye una denuncia formal, atención psicológica, asesoría jurídica ni a las autoridades. En peligro inmediato: **911**.
 
-   ```bash
-   npm install
-   ```
+## Stack
 
-2. Start the app
+React Native + Expo SDK 57 · TypeScript estricto · Expo Router · Firebase JS SDK (Auth anónima + Firestore) · Zustand · react-hook-form + zod · date-fns · lucide-react-native · Reanimated. Todo funciona en **Expo Go**.
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Empezar
 
 ```bash
-npm run reset-project
+npm install
+cp .env.example .env      # opcional: sin claves de Firebase la app usa el contenido empaquetado
+npx expo start            # escanea el QR con la cámara del iPhone (requiere Expo Go)
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+| Script | Para qué |
+|---|---|
+| `npm start` | Servidor de desarrollo |
+| `npm test` | Pruebas unitarias y de accesibilidad (Jest) |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm run lint` | ESLint (config de Expo) |
+| `npm run format` | Prettier |
+| `npm run export:web` | Versión web/PWA en `dist/` |
 
-### Other setup steps
+## Estructura
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+```
+src/app/              rutas (Expo Router)
+  (onboarding)/       bienvenida, consentimiento, crear-pin, primer-circulo, estadisticas
+  (app)/(tabs)/       Inicio, Orientación, Mi círculo, Directorio, Más
+  (app)/alerta        alerta rápida (modal)
+  (app)/guia, directorio, circulo, bitacora, aprende, ajustes, info
+src/components/       UI reutilizable (Button, Card, Screen, PinPad, QuickExitButton, EmergencyBanner…)
+src/features/         lógica por módulo (auth, triage, circle, evidence, directory, content, settings, stats)
+src/services/         firebase, crypto (AES-GCM + SHA-256), secureStore, storage, evidenceFiles, pdf, notifications
+src/store/            Zustand (settings, session, circle, incidents, checklist, content)
+src/theme/            colores (claro/oscuro), tipografía, espaciado
+src/lib/strings.es.ts todos los textos de la interfaz (es-MX)
+assets/content/       contenido empaquetado (borradores): árbol, guías, artículos, directorio, plantillas, avisos
+firebase/             reglas de Firestore, índices, script de seed
+docs/                 DECISIONES, IPHONE, PRIVACIDAD, V-DE-GOWIN, CONTENIDO
+```
 
-## Learn more
+## Firebase (opcional)
 
-To learn more about developing your project with Expo, look at the following resources:
+1. Crea un proyecto en https://console.firebase.google.com (plan Spark, gratis).
+2. **Authentication → Sign-in method → Anónimo → Habilitar.**
+3. **Firestore Database → Crear base de datos** (modo producción).
+4. **Configuración del proyecto → Tus apps → Web (</>)** → copia la configuración en `.env`.
+5. Despliega las reglas: `firebase deploy --only firestore:rules --project <id>`.
+6. Sube el contenido: ver `firebase/seed/seed.mjs`.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Documentación
 
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- [docs/IPHONE.md](docs/IPHONE.md) — Expo Go, EAS, TestFlight, PWA.
+- [docs/PRIVACIDAD.md](docs/PRIVACIDAD.md) — qué se guarda, dónde y cómo borrarlo.
+- [docs/V-DE-GOWIN.md](docs/V-DE-GOWIN.md) — trazabilidad para la presentación.
+- [docs/DECISIONES.md](docs/DECISIONES.md) — decisiones técnicas.
+- [docs/CONTENIDO.md](docs/CONTENIDO.md) — fuentes y pendientes de verificación.

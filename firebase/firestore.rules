@@ -1,0 +1,57 @@
+rules_version = '2';
+
+// VioletCircleVP — reglas de Firestore.
+// Principio: Firestore solo guarda contenido institucional (solo lectura) y
+// estadísticas anónimas (solo creación, con esquema estricto). Nada sensible.
+service cloud.firestore {
+  match /databases/{db}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // ── Contenido institucional: solo lectura con sesión (anónima basta) ──
+    match /content/{id} {
+      allow read: if signedIn();
+      allow write: if false; // se edita desde la consola o con el script de seed (Admin SDK)
+    }
+
+    match /config/{id} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    // ── Directorio: solo se puede leer lo verificado ──
+    // Las consultas deben incluir where('verified', '==', true) o serán rechazadas.
+    match /directory/{id} {
+      allow read: if signedIn() && resource.data.verified == true;
+      allow write: if false;
+    }
+
+    // ── Perfil mínimo opcional ──
+    match /users/{uid} {
+      allow read, delete: if signedIn() && request.auth.uid == uid;
+      allow create, update: if signedIn()
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['createdAt', 'statsOptIn'])
+        && request.resource.data.statsOptIn is bool;
+    }
+
+    // ── Estadísticas anónimas: solo crear, nunca leer desde la app ──
+    match /stats/{id} {
+      allow read, update, delete: if false;
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['kind', 'platform', 'week'])
+        && request.resource.data.keys().hasAll(['kind', 'platform', 'week'])
+        && request.resource.data.kind in ['riesgo', 'ciberacoso', 'sextorsion', 'doxing', 'suplantacion', 'difusion', 'grooming', 'amenazas', 'otro']
+        && request.resource.data.platform in ['whatsapp', 'instagram', 'tiktok', 'facebook', 'otra']
+        && request.resource.data.week is string
+        && request.resource.data.week.matches('^[0-9]{4}-W[0-9]{2}$');
+    }
+
+    // Todo lo demás: denegado.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
