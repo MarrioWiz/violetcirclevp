@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import {
   Bell,
   BarChart3,
+  Calculator,
   Download,
   EyeOff,
   Info,
@@ -23,9 +24,10 @@ import { ScopeNotice } from '@/components/ScopeNotice';
 import { Screen } from '@/components/Screen';
 import { exportMyData } from '@/features/settings/exportData';
 import { useWipeAllData } from '@/features/settings/useWipeAllData';
-import { notify } from '@/lib/dialog';
+import { confirmDialog, notify } from '@/lib/dialog';
 import { S, t } from '@/lib/strings.es';
-import { authenticateBiometric, getBiometricInfo, isExpoGo } from '@/services/biometrics';
+import { authenticateBiometric, getBiometricInfo } from '@/services/biometrics';
+import { isDiscreetIconOn, setDiscreetIcon, supportsDiscreetIcon } from '@/services/discreet';
 import { cancelAllReminders, scheduleSelfCareReminder } from '@/services/notifications';
 import { useSettings } from '@/store/settingsStore';
 import { spacing } from '@/theme';
@@ -38,12 +40,29 @@ export default function SettingsScreen() {
   const s = useSettings();
   const wipe = useWipeAllData();
   const [bio, setBio] = useState<{ available: boolean; label: string }>({ available: false, label: 'Face ID' });
-  const expoGoIos = isExpoGo && Platform.OS === 'ios';
   const card = { paddingHorizontal: spacing.lg };
+
+  const [iconSupported, setIconSupported] = useState(false);
+  const [discreet, setDiscreet] = useState(false);
 
   useEffect(() => {
     void getBiometricInfo().then(setBio);
+    void supportsDiscreetIcon().then(setIconSupported);
+    void isDiscreetIconOn().then(setDiscreet);
   }, []);
+
+  const toggleDiscreet = async (on: boolean) => {
+    if (Platform.OS === 'android') {
+      const ok = await confirmDialog({
+        title: S.settings.discreetIcon,
+        message: S.settings.discreetIconAndroidNote,
+        confirmLabel: S.common.continue,
+      });
+      if (!ok) return;
+    }
+    if (await setDiscreetIcon(on)) setDiscreet(on);
+    else notify(S.settings.discreetIconUnavailable);
+  };
 
   const toggleBio = async (on: boolean) => {
     if (!on) return s.update({ biometrics: false });
@@ -69,13 +88,22 @@ export default function SettingsScreen() {
         <ToggleRow
           icon={ScanFace}
           title={t(S.settings.biometrics, { method: bio.label })}
-          body={expoGoIos ? S.settings.biometricsExpoGo : bio.available ? undefined : S.settings.biometricsUnavailable}
+          body={bio.available ? undefined : S.settings.biometricsUnavailable}
           value={s.biometrics}
-          disabled={!bio.available || expoGoIos}
+          disabled={!bio.available}
           onChange={(v) => void toggleBio(v)}
         />
         <Divider />
         <ToggleRow icon={EyeOff} title={S.settings.hidePreview} body={S.settings.hidePreviewBody} value={s.hidePreview} onChange={(v) => void s.update({ hidePreview: v })} />
+        <Divider />
+        <ToggleRow
+          icon={Calculator}
+          title={S.settings.discreetIcon}
+          body={iconSupported ? S.settings.discreetIconBody : S.settings.discreetIconUnavailable}
+          value={discreet}
+          disabled={!iconSupported}
+          onChange={(v) => void toggleDiscreet(v)}
+        />
         <View style={{ paddingVertical: spacing.md, gap: spacing.sm }}>
           <AppText variant="bodyStrong">{S.settings.autolock}</AppText>
           <Segmented<AutoLock>

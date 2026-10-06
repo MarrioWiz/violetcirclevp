@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { ScanFace } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
-import { Platform, View } from 'react-native';
+import { View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
@@ -10,7 +10,7 @@ import { PinSetup } from '@/features/auth/PinSetup';
 import { OnboardingFrame } from '@/features/onboarding/OnboardingFrame';
 import { notify } from '@/lib/dialog';
 import { S, t } from '@/lib/strings.es';
-import { authenticateBiometric, getBiometricInfo, isExpoGo } from '@/services/biometrics';
+import { authenticateBiometric, getBiometricInfo } from '@/services/biometrics';
 import { savePin } from '@/services/crypto';
 import { useSettings } from '@/store/settingsStore';
 import { spacing } from '@/theme';
@@ -23,8 +23,7 @@ export default function PinStep() {
 
   useEffect(() => {
     void getBiometricInfo().then((info) => {
-      // En Expo Go (iOS) Face ID no está disponible; usamos solo el PIN.
-      if (info.available && !(isExpoGo && Platform.OS === 'ios')) setBio(info.label);
+      if (info.available) setBio(info.label);
     });
   }, []);
 

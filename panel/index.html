@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Panel · VioletCircleVP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --primary: #6D28D9; --primary-dark: #4C1D95; --soft: #EDE9FE; --accent: #A78BFA;
+      --bg: #FAF7FF; --surface: #FFFFFF; --text: #1F1635; --muted: #5B5170; --border: #E6DFF7; --danger: #B42318;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --primary: #A78BFA; --primary-dark: #C4B5FD; --soft: #2B2145; --bg: #14101F; --surface: #1E1830; --text: #F3EEFF; --muted: #B8AECF; --border: #352C4E; --danger: #F97066; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 Inter, system-ui, sans-serif; }
+    header { padding: 20px 16px; max-width: 1080px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+    header h1 { font: 800 22px 'Plus Jakarta Sans', sans-serif; margin: 0; flex: 1; }
+    main { max-width: 1080px; margin: 0 auto; padding: 0 16px 48px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 20px; }
+    .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top: 16px; }
+    .kpis { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+    .kpi b { display: block; font: 800 30px 'Plus Jakarta Sans', sans-serif; color: var(--primary); }
+    .kpi span { color: var(--muted); font-size: 13px; }
+    h2 { font: 700 16px 'Plus Jakarta Sans', sans-serif; margin: 0 0 12px; }
+    button { font: 600 15px Inter, sans-serif; border: 0; border-radius: 14px; padding: 12px 20px; min-height: 44px; cursor: pointer; background: var(--primary); color: #fff; }
+    button.ghost { background: transparent; color: var(--primary); border: 1.5px solid var(--border); }
+    .note { background: var(--soft); color: var(--primary-dark); border-radius: 16px; padding: 14px 16px; font-size: 13px; margin: 16px 0; }
+    .center { text-align: center; padding: 64px 16px; }
+    .muted { color: var(--muted); }
+    .error { color: var(--danger); }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    td, th { padding: 8px 6px; border-bottom: 1px solid var(--border); text-align: left; }
+    td:last-child, th:last-child { text-align: right; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <header>
+    <svg width="40" height="40" viewBox="0 0 120 120" aria-hidden="true">
+      <path d="M93.94 26.06 A48 48 0 0 1 47.58 106.36" stroke="#6D28D9" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <path d="M26.06 93.94 A48 48 0 0 1 72.42 13.64" stroke="#6D28D9" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <circle cx="84" cy="18.43" r="6.5" fill="#A78BFA"/><circle cx="36" cy="101.57" r="6.5" fill="#A78BFA"/>
+      <path d="M60 30 L84 39 V60 C84 76 73 87 60 93 C47 87 36 76 36 60 V39 Z" fill="#6D28D9"/>
+      <path d="M60 45 Q62.5 57.5 73 60 Q62.5 62.5 60 75 Q57.5 62.5 47 60 Q57.5 57.5 60 45 Z" fill="#fff"/>
+    </svg>
+    <h1>Panel de tendencias</h1>
+    <button id="logout" class="ghost" hidden>Cerrar sesión</button>
+  </header>
+
+  <main>
+    <section id="login" class="card center" hidden>
+      <h2>Solo para el equipo de VioletCircleVP</h2>
+      <p class="muted">Inicia sesión con una cuenta de Google autorizada.</p>
+      <button id="signin">Iniciar sesión con Google</button>
+      <p id="loginError" class="error"></p>
+    </section>
+
+    <section id="loading" class="center muted">Cargando…</section>
+
+    <section id="dashboard" hidden>
+      <div class="note">
+        Estos datos son <b>anónimos y agregados</b>: solo tipo de situación, plataforma y semana del año, enviados
+        por quienes activaron la opción. Las cifras menores a 3 se muestran como «&lt;3» para evitar identificar a alguien.
+        No representan prevalencia: solo uso de la app.
+      </div>
+      <div class="kpis">
+        <div class="card kpi"><b id="kTotal">–</b><span>orientaciones registradas</span></div>
+        <div class="card kpi"><b id="kTop">–</b><span>tipo más frecuente</span></div>
+        <div class="card kpi"><b id="kPlat">–</b><span>plataforma más frecuente</span></div>
+        <div class="card kpi"><b id="kRisk">–</b><span>resultados de riesgo inmediato</span></div>
+      </div>
+      <div class="grid">
+        <div class="card"><h2>Por tipo</h2><canvas id="cKind" height="260"></canvas></div>
+        <div class="card"><h2>Por plataforma</h2><canvas id="cPlat" height="260"></canvas></div>
+      </div>
+      <div class="grid">
+        <div class="card"><h2>Por semana</h2><canvas id="cWeek" height="200"></canvas></div>
+        <div class="card"><h2>Tabla</h2><table id="tKind"></table></div>
+      </div>
+      <p class="muted" style="margin-top:16px">Actualizado: <span id="updated"></span> · <button id="refresh" class="ghost">Actualizar</button></p>
+    </section>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js';
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js';
+    import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js';
+
+    // La configuración web de Firebase es pública; build-web.mjs la inyecta desde .env.
+    const app = initializeApp(__FIREBASE_CONFIG__);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const KIND = { riesgo: 'Riesgo inmediato', ciberacoso: 'Ciberacoso', sextorsion: 'Sextorsión', doxing: 'Doxing', suplantacion: 'Suplantación', difusion: 'Difusión de contenido íntimo', grooming: 'Grooming', amenazas: 'Amenazas', otro: 'Otro' };
+    const PLAT = { whatsapp: 'WhatsApp', instagram: 'Instagram', tiktok: 'TikTok', facebook: 'Facebook', otra: 'Correo u otra' };
+    const MIN_CELL = 3;
+    const $ = (id) => document.getElementById(id);
+    const show = (id) => ['login', 'loading', 'dashboard'].forEach((s) => ($(s).hidden = s !== id));
+    const fmt = (n) => (n > 0 && n < MIN_CELL ? '<3' : String(n));
+    const charts = {};
+    const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+    function count(rows, key) {
+      const m = {};
+      rows.forEach((r) => (m[r[key]] = (m[r[key]] || 0) + 1));
+      return m;
+    }
+    // Para gráficas, los valores pequeños se redondean a 0 (se ocultan) para no exponer casos individuales.
+    const safe = (n) => (n < MIN_CELL ? 0 : n);
+    const top = (m, labels) => {
+      const e = Object.entries(m).filter(([, n]) => n >= MIN_CELL).sort((a, b) => b[1] - a[1])[0];
+      return e ? labels[e[0]] ?? e[0] : '–';
+    };
+
+    function draw(id, type, labels, data) {
+      charts[id]?.destroy();
+      charts[id] = new Chart($(id), {
+        type,
+        data: { labels, datasets: [{ data, backgroundColor: css('--primary'), borderColor: css('--primary'), borderRadius: 8, tension: 0.3 }] },
+        options: {
+          indexAxis: type === 'bar' && id !== 'cWeek' ? 'y' : 'x',
+          plugins: { legend: { display: false } },
+          scales: { x: { ticks: { color: css('--muted') }, grid: { color: css('--border') } }, y: { ticks: { color: css('--muted'), precision: 0 }, grid: { display: false } } },
+        },
+      });
+    }
+
+    async function load() {
+      show('loading');
+      try {
+        const snap = await getDocs(collection(db, 'stats'));
+        const rows = snap.docs.map((d) => d.data());
+        const byKind = count(rows, 'kind');
+        const byPlat = count(rows, 'platform');
+        const byWeek = count(rows, 'week');
+        $('kTotal').textContent = fmt(rows.length);
+        $('kTop').textContent = top(byKind, KIND);
+        $('kPlat').textContent = top(byPlat, PLAT);
+        $('kRisk').textContent = fmt(byKind.riesgo || 0);
+        const kinds = Object.keys(KIND);
+        draw('cKind', 'bar', kinds.map((k) => KIND[k]), kinds.map((k) => safe(byKind[k] || 0)));
+        const plats = Object.keys(PLAT);
+        draw('cPlat', 'bar', plats.map((p) => PLAT[p]), plats.map((p) => safe(byPlat[p] || 0)));
+        const weeks = Object.keys(byWeek).sort().slice(-16);
+        draw('cWeek', 'line', weeks, weeks.map((w) => safe(byWeek[w])));
+        $('tKind').innerHTML = '<tr><th>Tipo</th><th>Total</th></tr>' + kinds.map((k) => `<tr><td>${KIND[k]}</td><td>${fmt(byKind[k] || 0)}</td></tr>`).join('');
+        $('updated').textContent = new Date().toLocaleString('es-MX');
+        show('dashboard');
+      } catch (e) {
+        show('login');
+        $('loginError').textContent = e.code === 'permission-denied'
+          ? 'Esta cuenta no está autorizada para ver el panel.'
+          : 'No se pudieron cargar los datos. Intenta de nuevo.';
+      }
+    }
+
+    $('signin').onclick = async () => {
+      $('loginError').textContent = '';
+      try { await signInWithPopup(auth, new GoogleAuthProvider()); }
+      catch { $('loginError').textContent = 'No se pudo iniciar sesión.'; }
+    };
+    $('logout').onclick = () => signOut(auth);
+    $('refresh').onclick = load;
+
+    onAuthStateChanged(auth, (user) => {
+      $('logout').hidden = !user;
+      if (user && !user.isAnonymous) load();
+      else show('login');
+    });
+  </script>
+</body>
+</html>

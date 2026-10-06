@@ -37,9 +37,18 @@ service cloud.firestore {
         && request.resource.data.statsOptIn is bool;
     }
 
-    // ── Estadísticas anónimas: solo crear, nunca leer desde la app ──
+    // Equipo autorizado para ver el panel de estadísticas agregadas (inicia sesión con Google).
+    // Para agregar a alguien: añade su correo aquí y vuelve a desplegar las reglas.
+    function isTeam() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in ['marioimanol02@gmail.com'];
+    }
+
+    // ── Estadísticas anónimas: la app solo crea; solo el equipo puede leer ──
     match /stats/{id} {
-      allow read, update, delete: if false;
+      allow read: if isTeam();
+      allow update, delete: if false;
       allow create: if signedIn()
         && request.resource.data.keys().hasOnly(['kind', 'platform', 'week'])
         && request.resource.data.keys().hasAll(['kind', 'platform', 'week'])

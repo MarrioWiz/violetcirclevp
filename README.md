@@ -8,14 +8,15 @@ Proyecto integrador — Problemática Social Contemporánea, 7.º semestre, grup
 
 ## Stack
 
-React Native + Expo SDK 57 · TypeScript estricto · Expo Router · Firebase JS SDK (Auth anónima + Firestore) · Zustand · react-hook-form + zod · date-fns · lucide-react-native · Reanimated. Todo funciona en **Expo Go**.
+React Native + Expo SDK 57 · TypeScript estricto · Expo Router · Firebase JS SDK (Auth anónima + Firestore) · Zustand · react-hook-form + zod · date-fns · lucide-react-native · Reanimated. Build nativa local (Android Studio/Gradle); iPhone con EAS/TestFlight o PWA.
 
 ## Empezar
 
 ```bash
 npm install
-cp .env.example .env      # opcional: sin claves de Firebase la app usa el contenido empaquetado
-npx expo start            # escanea el QR con la cámara del iPhone (requiere Expo Go)
+cp .env.example .env      # configuración de Firebase (proyecto violetcirclevp-uvp)
+npx expo run:android      # desarrollo en un teléfono/emulador conectado
+npm run android:release   # APK release (ver docs/ANDROID.md)
 ```
 
 | Script | Para qué |
@@ -25,7 +26,9 @@ npx expo start            # escanea el QR con la cámara del iPhone (requiere Ex
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | ESLint (config de Expo) |
 | `npm run format` | Prettier |
-| `npm run export:web` | Versión web/PWA en `dist/` |
+| `npm run test:rules` | Pruebas de reglas de Firestore con el emulador |
+| `npm run android:release` | APK release firmado |
+| `npm run build:web` | PWA + panel de tendencias en `dist/` |
 
 ## Estructura
 
@@ -57,7 +60,8 @@ docs/                 DECISIONES, IPHONE, PRIVACIDAD, V-DE-GOWIN, CONTENIDO
 
 ## Documentación
 
-- [docs/IPHONE.md](docs/IPHONE.md) — Expo Go, EAS, TestFlight, PWA.
+- [docs/ANDROID.md](docs/ANDROID.md) — APK release, firma e instalación.
+- [docs/IPHONE.md](docs/IPHONE.md) — TestFlight y PWA.
 - [docs/PRIVACIDAD.md](docs/PRIVACIDAD.md) — qué se guarda, dónde y cómo borrarlo.
 - [docs/V-DE-GOWIN.md](docs/V-DE-GOWIN.md) — trazabilidad para la presentación.
 - [docs/DECISIONES.md](docs/DECISIONES.md) — decisiones técnicas.

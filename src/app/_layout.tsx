@@ -17,6 +17,7 @@ import { DisguiseCalculator } from '@/features/auth/DisguiseCalculator';
 import { LockScreen } from '@/features/auth/LockScreen';
 import { PrivacyCover } from '@/features/auth/PrivacyCover';
 import { useAppLifecycle } from '@/features/auth/useAppLifecycle';
+import { setScreenProtection } from '@/services/discreet';
 import { useChecklist } from '@/store/checklistStore';
 import { useCircle } from '@/store/circleStore';
 import { useContent } from '@/store/contentStore';
@@ -71,6 +72,12 @@ function AppShell() {
   const locked = useSession((s) => s.locked);
   const disguised = useSession((s) => s.disguised);
   const covered = useSession((s) => s.covered);
+  const hidePreview = useSettings((s) => s.hidePreview);
+
+  // Sin capturas ni miniatura en "Recientes" (Android) mientras "Ocultar vista previa" esté activo.
+  useEffect(() => {
+    void setScreenProtection(hidePreview);
+  }, [hidePreview]);
 
   const showLock = onboarded && locked;
   const unlocked = onboarded && !locked && !disguised;

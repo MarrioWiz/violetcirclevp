@@ -17,7 +17,7 @@ Docente: Edgar Cardona Sierra · Problemática Social Contemporánea · 7.º sem
 | **Círculo de confianza** | Las redes de apoyo entre pares fortalecen la respuesta. | Círculo de 1–5 contactos local y cifrado; plantillas; "Cómo acompañar" para compartir. | P8: acuden a amigas y familia; P13–P14: "red de contactos de confianza". |
 | **Respuesta rápida** | Protección. | "Necesito ayuda ahora": alerta en 3 toques (Mensajes/WhatsApp con texto listo, 911, bitácora). | P13–P14: "botón de reporte/alerta rápida". |
 | **Seguridad percibida** | Prevención + protección. | PIN/Face ID, bloqueo automático, pantalla de privacidad, salida rápida a calculadora, notificaciones discretas, borrado total. | P15: privacidad, discreción, control de sus datos. |
-| **Plataforma** | Accesibilidad. | iPhone primero (Expo Go/TestFlight/PWA) y Android sin cambios. | P12: sistema operativo del móvil. |
+| **Plataforma** | Accesibilidad. | APK release para Android; iPhone por TestFlight o PWA (mismo código). | P12: sistema operativo del móvil. |
 
 ## Alcances y límites reflejados en la app
 

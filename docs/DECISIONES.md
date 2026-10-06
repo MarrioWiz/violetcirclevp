@@ -3,8 +3,8 @@
 ## Plan técnico (resumen)
 
 1. **Expo SDK 57 + TypeScript estricto + Expo Router.** Las rutas viven en `src/app/` (convención por defecto de la plantilla SDK 57) en lugar de `app/` en la raíz; el resto de la estructura (`src/components`, `src/features`, `src/services`…) sigue el documento.
-2. **Todo corre en Expo Go**: solo se usan módulos incluidos en Expo Go (secure-store, crypto, local-authentication, contacts, sms, location, image-picker, document-picker, file-system, print, sharing, notifications, haptics, clipboard).
-3. **Cifrado local con AES-256-GCM nativo de `expo-crypto`** (`aesEncryptAsync`/`aesDecryptAsync`, disponibles en Expo Go desde SDK 55+). La llave maestra se genera en el dispositivo y vive solo en `expo-secure-store` (Keychain en iPhone).
+2. **Build nativa local** (`expo prebuild` + Gradle en Android; EAS/TestFlight en iPhone). Se descartó Expo Go (decisión de Mario, 2026-10-05): permite huella/Face ID reales, bloqueo de capturas e ícono discreto.
+3. **Cifrado local con AES-256-GCM nativo de `expo-crypto`** (`aesEncryptAsync`/`aesDecryptAsync`). La llave maestra se genera en el dispositivo y vive solo en `expo-secure-store` (Keychain en iPhone).
 4. **Almacenamiento local**: los datos sensibles (círculo, bitácora, avances de checklists) se guardan como JSON **cifrado** en AsyncStorage (un registro por colección). Se descartó `expo-sqlite` porque el volumen es pequeño (≤ 5 contactos, decenas de entradas) y porque en web/PWA requiere WebAssembly y cabeceras especiales. Los archivos de evidencia irán a `Paths.document/evidence/` (fase 2).
 5. **Firebase JS SDK modular** (no `react-native-firebase`): Auth anónima + Firestore solo para contenido institucional, directorio verificado y estadísticas anónimas. Firestore usa long-polling en nativo (el streaming por defecto falla con Hermes).
 6. **La app funciona sin Firebase.** Si `.env` no tiene las claves, la app usa el contenido empaquetado en `assets/content/*.json`. Firebase es una mejora (actualizar contenido sin publicar nueva versión), no un requisito.
@@ -22,7 +22,7 @@
 
 ## Supuestos
 
-- La usuaria tiene iPhone con iOS reciente y Expo Go instalado para desarrollo.
+- Se prueba primero en Android con APK release; iPhone vía TestFlight o PWA.
 - El equipo verificará teléfonos e instituciones antes de marcarlos `verified: true`.
 - Todo el contenido inicial es **borrador** (`reviewStatus: "borrador"`).
 
@@ -48,10 +48,16 @@
 - **Salida rápida en onboarding**: no se muestra hasta que existe un PIN (sin PIN no habría forma de volver de la calculadora).
 - **Correo de comentarios**: queda vacío (`FEEDBACK_EMAIL`) hasta que el equipo defina uno.
 
-## Librerías y Expo Go
+## Fase 3 (2026-10-05)
 
-| Librería | ¿Funciona en Expo Go? | Nota |
-|---|---|---|
-| Face ID (`expo-local-authentication`) | Parcial | En Expo Go (iOS) no hay permiso de Face ID para la app; cae al código del teléfono. Por eso existe el PIN propio. |
-| `expo-notifications` | Solo locales | Push remoto requiere build de desarrollo. Solo usamos recordatorios locales. |
-| Ícono alterno discreto | No | Requiere build de desarrollo (fase 3). |
+- **Firebase**: proyecto `violetcirclevp-uvp` (plan Spark), auth anónima habilitada, Firestore `(default)` en `nam5`, reglas desplegadas y probadas en vivo y con emulador (`npm run test:rules`, 17 casos).
+- **Contenido en Firestore**: no se subió (requiere una llave de cuenta de servicio). La app usa el contenido empaquetado, que es el mismo; el equipo puede subirlo con `firebase/seed/seed.mjs`.
+- **Bloqueo de capturas** (`expo-screen-capture`): ligado a "Ocultar vista previa". En Android pone FLAG_SECURE (sin capturas y miniatura negra en "Recientes"). En iOS solo tapa grabaciones; las capturas de iOS no se pueden bloquear.
+- **Ícono discreto "Calculadora"** (`expo-alternate-app-icons` + `plugins/withDiscreetIconLabel.js` para cambiar también el nombre en Android). Coherente con la salida rápida. Al borrar todos los datos se restaura el ícono normal.
+- **Firma release** con `plugins/withReleaseSigning.js`: la llave vive en `keystore/` (fuera de `android/`, ignorada por git), así `prebuild --clean` ya no la borra.
+- **Permisos mínimos**: se bloquean ubicación precisa y en segundo plano, micrófono, escribir contactos y ventanas superpuestas.
+- **Panel web de tendencias** (`panel/index.html`, se publica en `/panel` con Firebase Hosting): inicio de sesión con Google; solo los correos de `isTeam()` en las reglas pueden leer `stats`. Las cifras menores a 3 se ocultan («<3») para no exponer casos individuales.
+- **No implementado de la fase 3**:
+  - *Asistente con LLM*: Cloud Functions exige el plan Blaze (de pago) y una llave de un proveedor de IA; además implica enviar texto sensible a terceros. Se propone solo si el equipo lo aprueba.
+  - *Inglés*: requiere traducir y revisar todo el contenido; los textos ya están centralizados en `src/lib/strings.es.ts` para facilitarlo.
+  - *Sincronización cifrada*: contradice el principio local-first sin un diseño de llaves revisado; se deja fuera.

@@ -1,9 +1,5 @@
-import Constants, { ExecutionEnvironment } from 'expo-constants';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { Platform } from 'react-native';
-
-/** En Expo Go (iOS) Face ID no está disponible para la app y cae al código del teléfono. */
-export const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
 
 export interface BiometricInfo {
   available: boolean;

@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { confirmDialog, notify } from '@/lib/dialog';
 import { S } from '@/lib/strings.es';
 import { forgetMasterKey } from '@/services/crypto';
+import { isDiscreetIconOn, setDiscreetIcon } from '@/services/discreet';
 import { deleteAllEvidence } from '@/services/evidenceFiles';
 import { deleteFirebaseAccount } from '@/services/firebase';
 import { cancelAllReminders } from '@/services/notifications';
@@ -28,6 +29,8 @@ export async function wipeAllData(): Promise<void> {
   useIncidents.getState().reset();
   useSettings.getState().reset();
   await useSession.getState().leaveDisguise();
+  // Al final, porque en Android cambiar el ícono cierra la app.
+  if (await isDiscreetIconOn()) await setDiscreetIcon(false);
 }
 
 export function useWipeAllData() {

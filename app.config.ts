@@ -39,10 +39,19 @@ const config: ExpoConfig = {
     },
     permissions: [
       'android.permission.READ_CONTACTS',
+      'android.permission.CAMERA',
+      'android.permission.POST_NOTIFICATIONS',
       'android.permission.ACCESS_COARSE_LOCATION',
-      'android.permission.ACCESS_FINE_LOCATION',
       'android.permission.USE_BIOMETRIC',
       'android.permission.USE_FINGERPRINT',
+    ],
+    // Privacidad: solo ubicación aproximada y sin micrófono ni ventanas superpuestas.
+    blockedPermissions: [
+      'android.permission.ACCESS_FINE_LOCATION',
+      'android.permission.RECORD_AUDIO',
+      'android.permission.SYSTEM_ALERT_WINDOW',
+      'android.permission.ACCESS_BACKGROUND_LOCATION',
+      'android.permission.WRITE_CONTACTS',
     ],
     predictiveBackGestureEnabled: false,
   },
@@ -93,9 +102,28 @@ const config: ExpoConfig = {
           'VioletCircleVP te permite adjuntar capturas de pantalla a tu bitácora privada. Se guardan solo en este teléfono.',
         cameraPermission:
           'VioletCircleVP te permite tomar fotos para tu bitácora privada. Se guardan solo en este teléfono.',
+        microphonePermission: false,
       },
     ],
     ['expo-notifications', { color: VIOLET }],
+    '@react-native-community/datetimepicker',
+    // Ícono discreto (fase 3): la usuaria puede cambiar el ícono por una "Calculadora".
+    // La etiqueta se registra antes: los mods de Android se ejecutan en orden inverso.
+    ['./plugins/withDiscreetIconLabel', { Calculadora: 'Calculadora' }],
+    [
+      'expo-alternate-app-icons',
+      [
+        {
+          name: 'Calculadora',
+          ios: './assets/images/icon-calculadora.png',
+          android: {
+            foregroundImage: './assets/images/icon-calculadora-foreground.png',
+            backgroundColor: '#1C1C1E',
+          },
+        },
+      ],
+    ],
+    './plugins/withReleaseSigning',
   ],
   experiments: {
     typedRoutes: true,

@@ -48,3 +48,8 @@ example
 firebase/seed/service-account.json
 .firebase/
 *-debug.log
+
+# Llave de firma Android (NUNCA subir a git)
+keystore/
+build-release.log
+build-x86.log

@@ -39,6 +39,7 @@ En la versión web (PWA) no existe SecureStore: la llave se guarda en el almacen
 - `kind`: uno de `riesgo, ciberacoso, sextorsion, doxing, suplantacion, difusion, grooming, amenazas, otro`.
 - `platform`: uno de `whatsapp, instagram, tiktok, facebook, otra`.
 - `week`: semana ISO (`AAAA-Www`), nunca la fecha exacta.
+- Solo el equipo autorizado (correos en `isTeam()` de las reglas, con inicio de sesión de Google) puede leerlas, desde el panel `/panel`. El panel oculta cifras menores a 3.
 - **Sin** UID, sin ubicación, sin texto libre. Las reglas de Firestore rechazan cualquier otro campo y nadie puede leer `stats/` desde la app.
 
 ## Bloqueo y discreción
@@ -48,6 +49,9 @@ En la versión web (PWA) no existe SecureStore: la llave se guarda en el almacen
 - Biometría opcional (Face ID / huella) en builds reales.
 - Bloqueo automático al ir a segundo plano: inmediato (por defecto), 1 min o 5 min.
 - Capa de privacidad al dejar de estar activa: el selector de apps no muestra contenido.
+- Android: con "Ocultar vista previa" activo se bloquean las capturas de pantalla dentro de la app y la miniatura de "Recientes" sale en negro (FLAG_SECURE).
+- Ícono discreto opcional: la app puede aparecer como "Calculadora" en el teléfono.
+- Ubicación: Android solo tiene permiso de ubicación **aproximada**; la precisa y la de segundo plano están bloqueadas.
 - **Salida rápida**: muestra una calculadora funcional y borra el historial de navegación. Para volver: escribir el PIN y tocar `=`.
 - Notificaciones discretas: título "Recordatorio", sin mencionar la app ni el tema.
 - Entradas de bitácora con PIN extra opcional.
