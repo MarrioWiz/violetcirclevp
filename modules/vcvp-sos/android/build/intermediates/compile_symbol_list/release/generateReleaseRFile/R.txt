@@ -1,0 +1,4 @@
+int string vcvp_sos_accessibility_description 0x0
+int string vcvp_sos_accessibility_label 0x0
+int string vcvp_sos_launcher_label 0x0
+int xml vcvp_sos_accessibility 0x0

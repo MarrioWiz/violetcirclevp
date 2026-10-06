@@ -75,3 +75,10 @@ Las estadísticas anónimas ya enviadas no se pueden borrar porque no están lig
 - **Ajustes → Exportar mis datos**: JSON con círculo, bitácora y metadatos de evidencia (sin cifrar; se advierte antes).
 - **Bitácora → Exportar PDF**: expediente con cronología, miniaturas y hashes (sin cifrar; se advierte antes).
 - **Compartir archivo original** de cada evidencia: se descifra temporalmente para que su SHA-256 coincida con el registrado; el archivo temporal se borra al terminar.
+
+## "Pedir ayuda" (Android)
+
+- Envía un SMS desde el teléfono de la usuaria a su círculo con su ubicación precisa (enlace de Google Maps) y la hora. No pasa por ningún servidor de la app.
+- Se registra en la bitácora local que se pidió ayuda (sin el texto del mensaje ni la ubicación).
+- El servicio de accesibilidad "Pedir ayuda con el volumen" solo detecta el botón de bajar volumen; no lee la pantalla, no guarda teclas y no registra nada.
+- La ubicación precisa se pide únicamente para esta alerta; el resto de la app usa la aproximada.

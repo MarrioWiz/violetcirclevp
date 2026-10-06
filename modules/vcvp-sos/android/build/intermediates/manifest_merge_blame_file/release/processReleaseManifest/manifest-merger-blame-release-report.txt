@@ -1,0 +1,72 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="mx.uvp.violetcirclevp.sos" >
+4
+5    <uses-sdk android:minSdkVersion="24" />
+6    <!-- Solo para la alerta "Pedir ayuda": se envía cuando ella confirma. -->
+7    <uses-permission android:name="android.permission.SEND_SMS" />
+7-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:3:3-65
+7-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:3:20-62
+8
+9    <application>
+9-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:5:3-35:17
+10
+11        <!-- Entrada "Pedir ayuda" (desactivada hasta que ella la active en Ajustes). -->
+12        <activity
+12-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:7:5-20:16
+13            android:name="mx.uvp.violetcirclevp.sos.SosLauncherActivity"
+13-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:8:7-67
+14            android:enabled="false"
+14-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:9:7-30
+15            android:excludeFromRecents="true"
+15-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:11:7-40
+16            android:exported="true"
+16-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:10:7-30
+17            android:label="@string/vcvp_sos_launcher_label"
+17-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:12:7-54
+18            android:noHistory="true"
+18-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:13:7-31
+19            android:taskAffinity=""
+19-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:14:7-30
+20            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+20-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:15:7-66
+21            <intent-filter>
+21-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:16:7-19:23
+22                <action android:name="android.intent.action.MAIN" />
+22-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:17:9-61
+22-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:17:17-58
+23
+24                <category android:name="android.intent.category.LAUNCHER" />
+24-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:18:9-69
+24-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:18:19-66
+25            </intent-filter>
+26        </activity>
+27
+28        <!-- Botones de volumen: solo funciona si ella lo activa en Accesibilidad. -->
+29        <service
+29-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:23:5-34:15
+30            android:name="mx.uvp.violetcirclevp.sos.VolumeSosService"
+30-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:24:7-64
+31            android:exported="false"
+31-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:25:7-31
+32            android:label="@string/vcvp_sos_accessibility_label"
+32-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:26:7-59
+33            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
+33-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:27:7-73
+34            <intent-filter>
+34-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:28:7-30:23
+35                <action android:name="android.accessibilityservice.AccessibilityService" />
+35-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:29:9-84
+35-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:29:17-81
+36            </intent-filter>
+37
+38            <meta-data
+38-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:31:7-33:58
+39                android:name="android.accessibilityservice"
+39-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:32:9-52
+40                android:resource="@xml/vcvp_sos_accessibility" />
+40-->C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\AndroidManifest.xml:33:9-55
+41        </service>
+42    </application>
+43
+44</manifest>

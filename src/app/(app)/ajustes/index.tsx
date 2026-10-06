@@ -10,6 +10,7 @@ import {
   MessageSquareHeart,
   ScanFace,
   ShieldCheck,
+  Siren,
   Trash2,
   TriangleAlert,
 } from 'lucide-react-native';
@@ -81,6 +82,16 @@ export default function SettingsScreen() {
 
   return (
     <Screen nav="back" title={S.settings.title}>
+      <SectionTitle>{S.sos.title}</SectionTitle>
+      <Card padded={false} style={card}>
+        <ListRow
+          icon={Siren}
+          title={S.sos.setupTitle}
+          body={S.sos.homeCardBody}
+          onPress={() => router.push('/ajustes/ayuda-rapida')}
+        />
+      </Card>
+
       <SectionTitle>{S.settings.security}</SectionTitle>
       <Card padded={false} style={card}>
         <ListRow icon={KeyRound} title={S.settings.changePin} onPress={() => router.push('/ajustes/pin')} />

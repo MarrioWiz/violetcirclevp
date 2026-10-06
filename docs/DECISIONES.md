@@ -61,3 +61,16 @@
   - *Asistente con LLM*: Cloud Functions exige el plan Blaze (de pago) y una llave de un proveedor de IA; además implica enviar texto sensible a terceros. Se propone solo si el equipo lo aprueba.
   - *Inglés*: requiere traducir y revisar todo el contenido; los textos ya están centralizados en `src/lib/strings.es.ts` para facilitarlo.
   - *Sincronización cifrada*: contradice el principio local-first sin un diseño de llaves revisado; se deja fuera.
+
+## "Pedir ayuda" sin abrir la app (2026-10-06, pedido por Mario)
+
+- **Módulo nativo propio** `modules/vcvp-sos` (Kotlin, solo Android): SMS automático (`SmsManager`), servicio de accesibilidad para 3 pulsaciones de bajar volumen, entrada "Pedir ayuda" para botón lateral/Quick Tap (desactivada por defecto), atajo del ícono y mostrar la alerta sobre la pantalla bloqueada.
+- **Desde fuera de la app**: la cuenta de 10 s es **para cancelar**; si no se cancela, se envía sola (en una emergencia puede no poder tocar la pantalla). Tocar el círculo envía ya. El botón "atrás" cancela.
+- **Dentro de la app**: el círculo de Inicio — tocar abre las opciones de siempre; **mantener 2 s** envía el SMS con ubicación (el anillo se llena; si suelta antes, no se envía nada).
+- **Cambio respecto al documento original**: el prompt pedía no enviar automáticamente (limitación de iOS). En Android sí se puede, y Mario eligió envío automático por SMS. iPhone sigue abriendo el compositor de Mensajes.
+- **WhatsApp no se puede automatizar** (no hay API para cuentas personales); tras enviar el SMS hay un botón opcional para reenviar por WhatsApp.
+- **Ubicación precisa solo para la alerta**: se habilitó `ACCESS_FINE_LOCATION`. Si la ubicación del teléfono está apagada, no se muestra el diálogo de activarla (bloquearía el envío): se envía sin ubicación pidiendo que la llamen.
+- **Sin reenvíos**: el momento de envío se guarda en el store; si la pantalla se vuelve a montar (p. ej. la app se cerró), se muestra "Tu alerta ya se envió" y no reenvía.
+- **Sin PIN**: la alerta se muestra encima del PIN, la calculadora y la pantalla bloqueada del teléfono, pero no muestra datos privados. Al cerrarla, la app sigue bloqueada.
+- **Pendiente de probar en teléfono real**: el disparo por botones de volumen (el emulador no permite simular la tecla física). En Android 13+ hay que "Permitir ajustes restringidos" para activar el servicio de accesibilidad en apps instaladas por APK; la app lo explica.
+- **Discreción**: el SMS no menciona el nombre de la app. La entrada "Pedir ayuda" y el atajo sí muestran ese nombre aunque esté activo el ícono "Calculadora" (se avisa en la pantalla de configuración).

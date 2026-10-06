@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="mx.uvp.violetcirclevp.sos" >
+
+    <uses-sdk android:minSdkVersion="24" />
+    <!-- Solo para la alerta "Pedir ayuda": se envía cuando ella confirma. -->
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
+    <application>
+
+        <!-- Entrada "Pedir ayuda" (desactivada hasta que ella la active en Ajustes). -->
+        <activity
+            android:name="mx.uvp.violetcirclevp.sos.SosLauncherActivity"
+            android:enabled="false"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:label="@string/vcvp_sos_launcher_label"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Botones de volumen: solo funciona si ella lo activa en Accesibilidad. -->
+        <service
+            android:name="mx.uvp.violetcirclevp.sos.VolumeSosService"
+            android:exported="false"
+            android:label="@string/vcvp_sos_accessibility_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/vcvp_sos_accessibility" />
+        </service>
+    </application>
+
+</manifest>

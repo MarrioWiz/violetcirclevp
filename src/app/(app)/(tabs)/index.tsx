@@ -1,18 +1,17 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { router, type Href } from 'expo-router';
 import {
   BookHeart,
   ChevronRight,
   Compass,
-  HandHeart,
   LifeBuoy,
   ListChecks,
   NotebookPen,
+  Siren,
   Users,
   type LucideIcon,
 } from 'lucide-react-native';
 import { useMemo } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { Card } from '@/components/Card';
@@ -20,6 +19,7 @@ import { EmergencyBanner } from '@/components/EmergencyBanner';
 import { IconBadge } from '@/components/IconBadge';
 import { Logo } from '@/components/Logo';
 import { ScopeNotice } from '@/components/ScopeNotice';
+import { HoldToHelpOrb } from '@/features/sos/HoldToHelpOrb';
 import { Screen } from '@/components/Screen';
 import { S } from '@/lib/strings.es';
 import { useCircle } from '@/store/circleStore';
@@ -57,31 +57,28 @@ export default function Home() {
         </View>
       </View>
 
-      {/* Un solo llamado principal: alerta rápida (toque 1 de 3). */}
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={S.home.helpNow}
-        accessibilityHint={S.home.helpNowHint}
-        onPress={() => router.push('/alerta')}
-        style={({ pressed }) => [{ transform: [{ scale: pressed ? 0.98 : 1 }] }]}
-      >
-        <LinearGradient
-          colors={['#7C3AED', '#5B21B6']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={[styles.hero, { shadowColor: colors.shadow }]}
+      {/* Llamado principal: tocar = opciones de ayuda (alerta rápida); mantener 2 s = SMS con ubicación. */}
+      <HoldToHelpOrb />
+
+      {Platform.OS === 'android' ? (
+        <Card
+          tone="soft"
+          style={{ marginTop: spacing.md }}
+          onPress={() => router.push('/ajustes/ayuda-rapida')}
+          accessibilityLabel={`${S.sos.homeCard}. ${S.sos.homeCardBody}`}
         >
-          <View style={{ flex: 1, gap: spacing.xs }}>
-            <AppText variant="title" style={{ color: '#FFFFFF' }}>
-              {S.home.helpNow}
-            </AppText>
-            <AppText style={{ color: '#EDE9FE' }}>{S.home.helpNowHint}</AppText>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md }}>
+            <IconBadge icon={Siren} size={40} />
+            <View style={{ flex: 1 }}>
+              <AppText variant="subheading">{S.sos.homeCard}</AppText>
+              <AppText variant="caption" tone="textMuted">
+                {S.sos.homeCardBody}
+              </AppText>
+            </View>
+            <ChevronRight size={18} color={colors.textMuted} />
           </View>
-          <View style={styles.heroIcon}>
-            <HandHeart size={32} color="#FFFFFF" strokeWidth={1.8} />
-          </View>
-        </LinearGradient>
-      </Pressable>
+        </Card>
+      ) : null}
 
       <AppText variant="label" tone="textMuted" style={{ marginTop: spacing.xxl, marginBottom: spacing.md }}>
         {S.home.sections}

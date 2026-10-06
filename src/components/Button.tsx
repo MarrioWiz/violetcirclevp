@@ -6,7 +6,7 @@ import { MIN_TOUCH, radius, spacing, useTheme } from '@/theme';
 
 import { AppText } from './AppText';
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'outline';
+type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'outline' | 'inverse';
 
 interface Props {
   label: string;
@@ -39,6 +39,8 @@ export function Button({
     ghost: { bg: 'transparent', fg: colors.primary },
     outline: { bg: 'transparent', fg: colors.text, border: colors.border },
     danger: { bg: colors.danger, fg: colors.onDanger },
+    // Para fondos oscuros fijos (pantalla "Pedir ayuda").
+    inverse: { bg: 'transparent', fg: '#FFFFFF', border: 'rgba(255,255,255,0.45)' },
   };
   const p = palette[variant];
   const inactive = disabled || loading;

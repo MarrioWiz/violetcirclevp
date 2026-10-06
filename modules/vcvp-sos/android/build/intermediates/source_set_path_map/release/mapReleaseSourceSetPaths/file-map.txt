@@ -1,0 +1,7 @@
+mx.uvp.violetcirclevp.sos.vcvp-sos-pngs-0 C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\build\generated\res\pngs\release
+mx.uvp.violetcirclevp.sos.vcvp-sos-resValues-1 C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\build\generated\res\resValues\release
+mx.uvp.violetcirclevp.sos.vcvp-sos-mergeReleaseResources-2 C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\build\intermediates\incremental\release\mergeReleaseResources\merged.dir
+mx.uvp.violetcirclevp.sos.vcvp-sos-mergeReleaseResources-3 C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\build\intermediates\incremental\release\mergeReleaseResources\stripped.dir
+mx.uvp.violetcirclevp.sos.vcvp-sos-release-4 C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\build\intermediates\merged_res\release\mergeReleaseResources
+mx.uvp.violetcirclevp.sos.vcvp-sos-main-5 C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\main\res
+mx.uvp.violetcirclevp.sos.vcvp-sos-release-6 C:\laragon\www\violetcirclevp\modules\vcvp-sos\android\src\release\res

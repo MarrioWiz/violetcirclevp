@@ -42,12 +42,13 @@ const config: ExpoConfig = {
       'android.permission.CAMERA',
       'android.permission.POST_NOTIFICATIONS',
       'android.permission.ACCESS_COARSE_LOCATION',
+      // Precisa solo para la alerta "Pedir ayuda" (para que puedan encontrarla).
+      'android.permission.ACCESS_FINE_LOCATION',
       'android.permission.USE_BIOMETRIC',
       'android.permission.USE_FINGERPRINT',
     ],
     // Privacidad: solo ubicación aproximada y sin micrófono ni ventanas superpuestas.
     blockedPermissions: [
-      'android.permission.ACCESS_FINE_LOCATION',
       'android.permission.RECORD_AUDIO',
       'android.permission.SYSTEM_ALERT_WINDOW',
       'android.permission.ACCESS_BACKGROUND_LOCATION',

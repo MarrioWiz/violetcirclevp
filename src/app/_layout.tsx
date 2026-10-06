@@ -17,6 +17,7 @@ import { DisguiseCalculator } from '@/features/auth/DisguiseCalculator';
 import { LockScreen } from '@/features/auth/LockScreen';
 import { PrivacyCover } from '@/features/auth/PrivacyCover';
 import { useAppLifecycle } from '@/features/auth/useAppLifecycle';
+import { SosScreen } from '@/features/sos/SosScreen';
 import { setScreenProtection } from '@/services/discreet';
 import { useChecklist } from '@/store/checklistStore';
 import { useCircle } from '@/store/circleStore';
@@ -73,6 +74,8 @@ function AppShell() {
   const disguised = useSession((s) => s.disguised);
   const covered = useSession((s) => s.covered);
   const hidePreview = useSettings((s) => s.hidePreview);
+  // "Pedir ayuda" va encima de todo (PIN y calculadora incluidos); solo tras el onboarding.
+  const sos = useSession((s) => s.sosActive) && onboarded;
 
   // Sin capturas ni miniatura en "Recientes" (Android) mientras "Ocultar vista previa" esté activo.
   useEffect(() => {
@@ -80,6 +83,7 @@ function AppShell() {
   }, [hidePreview]);
 
   const showLock = onboarded && locked;
+  const hideBelow = showLock || sos;
   const unlocked = onboarded && !locked && !disguised;
 
   // Los datos cifrados se cargan en memoria solo después de desbloquear.
@@ -97,6 +101,7 @@ function AppShell() {
     return (
       <View style={{ flex: 1 }}>
         <DisguiseCalculator />
+        {sos && <SosOverlay />}
         {covered && <PrivacyCover />}
       </View>
     );
@@ -112,8 +117,8 @@ function AppShell() {
             pero queda oculta para lectores de pantalla y tapada por completo. */}
         <View
           style={{ flex: 1 }}
-          importantForAccessibility={showLock ? 'no-hide-descendants' : 'auto'}
-          accessibilityElementsHidden={showLock}
+          importantForAccessibility={hideBelow ? 'no-hide-descendants' : 'auto'}
+          accessibilityElementsHidden={hideBelow}
         >
           <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }}>
             <Stack.Protected guard={!onboarded}>
@@ -129,8 +134,17 @@ function AppShell() {
             <LockScreen />
           </View>
         )}
+        {sos && <SosOverlay />}
         {covered && <PrivacyCover />}
       </View>
     </ThemeProvider>
+  );
+}
+
+function SosOverlay() {
+  return (
+    <View style={StyleSheet.absoluteFill} accessibilityViewIsModal>
+      <SosScreen />
+    </View>
   );
 }
