@@ -1,6 +1,0 @@
-R_DEF: Internal format may change without notice
-local
-string vcvp_sos_accessibility_description
-string vcvp_sos_accessibility_label
-string vcvp_sos_launcher_label
-xml vcvp_sos_accessibility

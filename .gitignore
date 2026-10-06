@@ -53,3 +53,7 @@ firebase/seed/service-account.json
 keystore/
 build-release.log
 build-x86.log
+
+# Compilación de módulos nativos locales
+modules/*/android/build/
+modules/*/android/.cxx/

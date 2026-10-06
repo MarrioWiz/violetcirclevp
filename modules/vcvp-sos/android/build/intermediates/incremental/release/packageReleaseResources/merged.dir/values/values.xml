@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="vcvp_sos_accessibility_description">Presiona 3 veces seguidas el botón de bajar volumen para abrir la pantalla «Pedir ayuda». Este servicio solo detecta ese botón: no lee tu pantalla ni lo que escribes.</string>
-    <string name="vcvp_sos_accessibility_label">Pedir ayuda con el volumen</string>
-    <string name="vcvp_sos_launcher_label">Pedir ayuda</string>
-</resources>

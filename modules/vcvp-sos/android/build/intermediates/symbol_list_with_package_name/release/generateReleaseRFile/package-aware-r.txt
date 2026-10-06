@@ -1,5 +1,0 @@
-mx.uvp.violetcirclevp.sos
-string vcvp_sos_accessibility_description
-string vcvp_sos_accessibility_label
-string vcvp_sos_launcher_label
-xml vcvp_sos_accessibility
