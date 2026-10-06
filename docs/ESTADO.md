@@ -2,6 +2,8 @@
 
 Última actualización: 2026-10-06.
 
+Código: https://github.com/MarrioWiz/violetcirclevp (privado, rama `master`).
+
 ## Qué hay publicado / instalado
 
 | Qué | Dónde | Versión |
