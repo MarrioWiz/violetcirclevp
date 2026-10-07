@@ -44,7 +44,7 @@ adb install --user 0 -r release/PedirAyuda-1.0.0.apk
   (por `SEND_SMS` + servicio de accesibilidad) y no ofrece "instalar de todos modos". La alternativa es
   apagar un momento "Analizar apps con Play Protect". La mini app sí se instala normal.
 - **`--user 0`** en `adb install`: el cel tiene otro perfil (Carpeta Segura, usuario 150) y sin eso falla.
-- **Llave de firma** en `keystore/` (gitignored). Sin ella no se puede actualizar la app instalada. Respaldarla.
+- **Llave de firma** en `keystore/` (gitignored). Sin ella no se puede actualizar la app instalada. Respaldo (2026-10-07): Google Drive de Mario, carpeta "VioletCircleVP - llave de firma (NO BORRAR NI COMPARTIR)" (los 2 archivos).
 - **Botón lateral de Samsung / Quick Tap de Pixel**: listan apps, no accesos → se asigna la mini app
   "Pedir ayuda". Samsung no deja cambiar ese ajuste por ADB. Ver `docs/ANDROID.md`.
 - **No abrir "Pedir ayuda" ni `violetcirclevp://sos` para probar** sin un contacto avisado: es la alerta
