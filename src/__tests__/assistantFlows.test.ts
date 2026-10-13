@@ -103,3 +103,18 @@ describe('Vi: acoso en persona', () => {
     expect(replies[2].actions?.some((a) => a.kind === 'call' && a.phone === '2222323738')).toBe(true);
   });
 });
+
+describe('Vi: cambia a "en persona" si no es en una app', () => {
+  it('acoso → a salvo → "en persona" pregunta dónde pasa (no vuelve a pedir la app)', async () => {
+    const { replies, state } = await chat(['me están acosando', 'estoy a salvo', 'en persona']);
+    expect(replies[1].suggestions).toContain('En persona');
+    expect(replies[2].messages.join(' ')).toMatch(/Dónde está pasando/);
+    expect(replies[2].suggestions).toContain('En la universidad');
+    expect(state).toMatchObject({ flow: 'inPerson', step: 'place' });
+  });
+
+  it('también desde "¿cómo lo reporto?"', async () => {
+    const { replies } = await chat(['¿cómo lo reporto?', 'fue en la calle']);
+    expect(replies[1].messages.join(' ')).toMatch(/pasa en persona/);
+  });
+});

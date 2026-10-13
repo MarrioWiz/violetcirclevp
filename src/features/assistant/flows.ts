@@ -45,7 +45,25 @@ const PLATFORMS: Record<string, string> = {
   facebook: 'Facebook',
   otra: 'otra app',
 };
-const PLATFORM_CHIPS = ['WhatsApp', 'Instagram', 'TikTok', 'Facebook', 'Otra'];
+const PLATFORM_CHIPS = ['WhatsApp', 'Instagram', 'TikTok', 'Facebook', 'Otra', 'En persona'];
+
+/** ¿Respondió que pasa en persona (no en una app)? */
+function saysInPerson(t: string): boolean {
+  return (
+    has(t, [' persona', ' en la calle', ' camion', ' transporte', ' en la uni', ' escuela', ' en clase', ' salon', ' en el trabajo', ' en mi casa', ' en casa', ' fisic', ' cara a cara', ' no es en internet', ' no es en linea']) ||
+    classify(t) === 'inPerson'
+  );
+}
+
+/** Cambia a la conversación de acoso en persona (ya se sabe que está a salvo). */
+function toInPerson(): ViOutput {
+  return {
+    reply: bot(['Entendido, pasa en persona. Eso también es acoso y no es tu culpa.', '¿Dónde está pasando?'], {
+      suggestions: PLACE_CHIPS,
+    }),
+    state: { flow: 'inPerson', step: 'place' },
+  };
+}
 
 const PLATFORM_TIPS: Record<string, string[]> = {
   whatsapp: [
@@ -378,6 +396,7 @@ function step(state: ViState, t: string, names: string[]): ViOutput | null {
         };
       }
       if (state.step === 'platform') {
+        if (saysInPerson(t)) return toInPerson();
         const p = pickPlatform(t);
         if (!p) return { reply: bot(['¿En cuál de estas apps?'], { suggestions: PLATFORM_CHIPS }), state };
         return {
@@ -451,6 +470,7 @@ function step(state: ViState, t: string, names: string[]): ViOutput | null {
 
     case 'report': {
       if (state.step === 'platform') {
+        if (saysInPerson(t)) return toInPerson();
         const p = pickPlatform(t);
         if (!p) return { reply: bot(['¿En cuál de estas apps?'], { suggestions: PLATFORM_CHIPS }), state };
         return {
