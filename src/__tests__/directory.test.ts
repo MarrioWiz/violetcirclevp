@@ -18,9 +18,11 @@ const base: DirectoryEntry = {
 };
 
 describe('reglas del directorio', () => {
-  it('con los datos empaquetados solo se ve el 911', () => {
+  it('con los datos empaquetados se ven solo los contactos verificados por el equipo', () => {
     const visible = visibleEntries(bundledEntries);
-    expect(visible.map((e) => e.phone)).toEqual(['911']);
+    expect(visible.map((e) => e.id).sort()).toEqual(
+      ['emergencias-911', 'fiscalia-puebla', 'policia-cibernetica-puebla', 'telmujer-puebla', 'uvp-genero'].sort(),
+    );
   });
 
   it('ninguna entrada no verificada es visible', () => {
@@ -34,9 +36,12 @@ describe('reglas del directorio', () => {
     expect(isPublishable(base)).toBe(true);
   });
 
-  it('ningún teléfono empaquetado distinto de 911 está publicado como verificado', () => {
-    for (const e of bundledEntries) {
-      if (e.phone && e.phone !== '911') expect(e.verified).toBe(false);
+  it('todo teléfono publicado tiene fuente, fecha de verificación y formato válido', () => {
+    for (const e of visibleEntries(bundledEntries)) {
+      expect(e.source).toBeTruthy();
+      expect(e.verifiedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(e.whatToExpect).toBeTruthy();
+      if (e.phone) expect(e.phone.replace(/\D/g, '')).toMatch(/^(911|\d{10})$/);
     }
   });
 

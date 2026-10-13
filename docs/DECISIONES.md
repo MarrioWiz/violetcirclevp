@@ -74,3 +74,8 @@
 - **Sin PIN**: la alerta se muestra encima del PIN, la calculadora y la pantalla bloqueada del teléfono, pero no muestra datos privados. Al cerrarla, la app sigue bloqueada.
 - **Pendiente de probar en teléfono real**: el disparo por botones de volumen (el emulador no permite simular la tecla física). En Android 13+ hay que "Permitir ajustes restringidos" para activar el servicio de accesibilidad en apps instaladas por APK; la app lo explica.
 - **Discreción**: el SMS no menciona el nombre de la app. La entrada "Pedir ayuda" y el atajo sí muestran ese nombre aunque esté activo el ícono "Calculadora" (se avisa en la pantalla de configuración).
+
+## Directorio con datos del equipo (2026-10-12)
+
+- Mario pidió publicar los teléfonos de Puebla que el equipo reunió (app del compañero): Policía Cibernética (222 213 8111, 089 anónimo), Fiscalía de Violencia de Género contra las Mujeres (222 232 0168), Línea Telmujer (222 232 3738) y Atención a estudiantes UVP (222 266 9488). Quedan `verified: true` con `source` = equipo y `verifiedAt` 2026-10-12. Si algún dato cambia, corregirlo en `assets/content/directory.json`.
+- Siguen ocultos (pendientes): Instituto Poblano de las Mujeres, línea nacional, apoyo psicológico, asesoría jurídica y psicopedagógico UVP.
