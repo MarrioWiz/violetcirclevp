@@ -8,9 +8,9 @@ Código: https://github.com/MarrioWiz/violetcirclevp (privado, rama `master`).
 
 | Qué | Dónde | Versión |
 |---|---|---|
-| App Android | `release/VioletCircleVP-1.2.0.apk` (arm64 + armv7, gitignored) — en el cel sigue la 1.1.0 hasta instalarla | 1.2.0 |
+| App Android | `release/VioletCircleVP-1.2.0.apk` (63 MB, arm64 + armv7, gitignored) — instalada en el cel 2026-10-12 | 1.2.0 |
 | Mini app "Pedir ayuda" | `release/PedirAyuda-1.0.0.apk` (180 KB, sin permisos) · código en `companion/` | 1.0.0 |
-| Web (PWA) | https://violetcirclevp-uvp.web.app | build de `d7e8ed2` |
+| Web (PWA) | https://violetcirclevp-uvp.web.app | build de `d7e8ed2` (aún SIN el rediseño 1.2.0: falta `npm run build:web` + deploy) |
 | Panel de tendencias | https://violetcirclevp-uvp.web.app/panel/ (Google, solo marioimanol02@gmail.com) | — |
 | Firebase | proyecto `violetcirclevp-uvp` (Spark): Auth anónima + Google, Firestore `nam5`, reglas desplegadas | — |
 
@@ -19,7 +19,7 @@ Ambas apps están instaladas por ADB en el Galaxy S24 Ultra de Mario (SM-S928B, 
 ## Comandos
 
 ```bash
-npm test                 # 67 pruebas (Jest)
+npm test                 # 76 pruebas (Jest)
 npm run test:rules       # 17 pruebas de reglas (emulador de Firestore)
 npx tsc --noEmit && npx eslint .
 
@@ -58,7 +58,8 @@ adb install --user 0 -r release/PedirAyuda-1.0.0.apk
    "Permitir ajustes restringidos"), tecla lateral → mini app, y ambos **con la pantalla bloqueada**.
 2. **Confirmar en navegador móvil** que mantener presionado el círculo ya completa los 2 s (arreglo `d7e8ed2`).
 3. ~~Texto del botón lateral~~ (hecho en 1.2.0: apunta a la mini app).
-4. **Instalar la 1.2.0 en el cel** (incluye el arreglo del orbe y el rediseño) y revisar: permisos al inicio,
-   aviso tras el PIN, chat de Vi con el teclado de Samsung.
+4. ~~Instalar la 1.2.0~~ (hecho 2026-10-12). Revisar en el cel: aviso de permisos tras el PIN, chat de Vi
+   con el teclado de Samsung, y publicar la web con el rediseño cuando Mario lo apruebe.
+   Nota: `expo prebuild` borra `android/local.properties`; recrearlo con `sdk.dir=C:/Users/Mario/AppData/Local/Android/Sdk`.
 5. Sembrar el contenido en Firestore (necesita llave de cuenta de servicio); hoy la app usa el JSON incluido.
 6. iPhone: sin build todavía (`docs/IPHONE.md`).
