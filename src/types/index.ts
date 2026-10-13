@@ -23,6 +23,8 @@ export interface Settings {
   statsOptIn: boolean;
   notificationsDiscreet: boolean;
   selfCareReminders: boolean;
+  /** Ya vio la explicación de la salida rápida (onboarding o aviso tras actualizar). */
+  quickExitTipSeen: boolean;
 }
 
 // ── Círculo ───────────────────────────────────────────────────────────────

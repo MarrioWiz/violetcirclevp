@@ -16,11 +16,11 @@ export function Backdrop({ accent: accentProp, bottomGlow = true }: { accent?: s
       <Svg width={width} height={height}>
         <Defs>
           <RadialGradient id="top" cx="50%" cy="0%" rx="70%" ry="45%" fx="50%" fy="0%">
-            <Stop offset="0" stopColor={palette.violetHalo} stopOpacity={0.55} />
+            <Stop offset="0" stopColor={palette.violetHalo} stopOpacity={0.4} />
             <Stop offset="1" stopColor={palette.violetHalo} stopOpacity={0} />
           </RadialGradient>
           <RadialGradient id="bottom" cx="50%" cy="100%" rx="60%" ry="30%" fx="50%" fy="100%">
-            <Stop offset="0" stopColor={glow} stopOpacity={0.18} />
+            <Stop offset="0" stopColor={glow} stopOpacity={0.1} />
             <Stop offset="1" stopColor={glow} stopOpacity={0} />
           </RadialGradient>
         </Defs>

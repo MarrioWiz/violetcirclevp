@@ -5,7 +5,7 @@ const VIOLET = '#6D28D9';
 const config: ExpoConfig = {
   name: 'VioletCircleVP',
   slug: 'violetcirclevp',
-  version: '1.1.0',
+  version: '1.2.0',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
   scheme: 'violetcirclevp',

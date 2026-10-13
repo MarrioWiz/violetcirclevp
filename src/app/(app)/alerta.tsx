@@ -52,8 +52,9 @@ function Option({
 
 export default function QuickAlert() {
   // Desde "Mi círculo" se puede llegar directo al mensaje para una persona.
-  const { to } = useLocalSearchParams<{ to?: string }>();
-  const [stage, setStage] = useState<'choose' | 'compose'>(to ? 'compose' : 'choose');
+  // Desde "Círculo" se abre directo el mensaje (compose=1) o para una sola persona (to).
+  const { to, compose } = useLocalSearchParams<{ to?: string; compose?: string }>();
+  const [stage, setStage] = useState<'choose' | 'compose'>(to || compose ? 'compose' : 'choose');
   const [breathing, setBreathing] = useState(false);
   const logAlert = useIncidents((s) => s.logAlert);
   const logged = useRef(false);

@@ -28,6 +28,14 @@ export function answer(step: TriageStep, option: TriageOption): TriageStep {
   return { nodeId: option.next, context: { ...step.context, ...(option.set ?? {}) } };
 }
 
+/** Máximo de preguntas que aún pueden faltar desde un nodo (para la barra de progreso). */
+export function remainingQuestions(tree: TriageTree, id: string, seen: Set<string> = new Set()): number {
+  const node = getNode(tree, id);
+  if (isResultNode(node) || seen.has(id)) return 0;
+  const next = new Set(seen).add(id);
+  return 1 + Math.max(0, ...node.options.map((o) => remainingQuestions(tree, o.next, next)));
+}
+
 export interface ResolvedResult {
   result: TriageResult;
   extras: string[];

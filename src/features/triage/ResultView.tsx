@@ -5,8 +5,8 @@ import { View } from 'react-native';
 import { AppText } from '@/components/AppText';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
-import { SectionTitle } from '@/components/Rows';
-import { FileCard } from '@/components/ui/FileCard';
+import { Expandable } from '@/components/Expandable';
+import { ListRow } from '@/components/Rows';
 import { call911 } from '@/features/emergency/call';
 import { S, t } from '@/lib/strings.es';
 import { spacing, useTheme } from '@/theme';
@@ -63,65 +63,51 @@ export function ResultView({ resolved }: { resolved: ResolvedResult }) {
     <View style={{ gap: spacing.lg }}>
       {result.urgent && <UrgentBlock />}
 
-      <FileCard name="resultado.orientación" meta={result.kind.toUpperCase()}>
+      <Card tone="accent">
         <AppText variant="caption" tone="textMuted">
           {S.triage.resultLead}
         </AppText>
-        <AppText variant="title" accent accessibilityRole="header">
+        <AppText variant="title" accent accessibilityRole="header" style={{ marginTop: spacing.xs }}>
           {result.title}
         </AppText>
         <AppText style={{ marginTop: spacing.sm }}>{result.explanation}</AppText>
-        <AppText variant="bodyStrong" accent style={{ marginTop: spacing.md }}>
+        <AppText variant="bodyStrong" style={{ marginTop: spacing.md }}>
           {S.triage.notYourFault}
         </AppText>
-      </FileCard>
+      </Card>
 
       {extras.map((e) => (
-        <Card key={e} tone="accent">
+        <Card key={e}>
           <AppText>{e}</AppText>
         </Card>
       ))}
 
-      <FileCard name="qué-puedes-hacer.ahora" accent={colors.success}>
+      <Card>
         <AppText variant="heading" accessibilityRole="header" style={{ marginBottom: spacing.md }}>
           {S.triage.doNow}
         </AppText>
         <NumberedList items={result.doNow} color={colors.success} />
-      </FileCard>
+      </Card>
 
-      <FileCard name="mejor-evitar" accent={colors.warning}>
-        <AppText variant="heading" accessibilityRole="header" style={{ marginBottom: spacing.md }}>
-          {S.triage.dontDo}
-        </AppText>
+      <Expandable title={S.triage.dontDo} summary={result.dontDo[0]}>
         <NumberedList items={result.dontDo} color={colors.warning} />
-      </FileCard>
+      </Expandable>
 
-      <SectionTitle>{S.triage.next}</SectionTitle>
-      <View style={{ gap: spacing.sm }}>
-        <Button
-          label={S.triage.goEvidence}
-          icon={ShieldCheck}
-          variant="secondary"
-          onPress={() => router.push('/guia/conservar-evidencia')}
-        />
+      <Button label={S.triage.goEvidence} icon={ShieldCheck} onPress={() => router.push('/guia/conservar-evidencia')} />
+
+      <Card padded={false} style={{ paddingHorizontal: spacing.lg }}>
         {platform ? (
-          <Button
-            label={t(S.triage.goPlatform, { platform: PLATFORM_NAMES[platform] ?? platform })}
+          <ListRow
             icon={BookOpen}
-            variant="secondary"
+            title={t(S.triage.goPlatform, { platform: PLATFORM_NAMES[platform] ?? platform })}
             onPress={() => router.push({ pathname: '/guia/[slug]', params: { slug: `plataforma-${platform}` } })}
           />
         ) : null}
-        <Button
-          label={S.triage.goDirectory}
-          icon={LifeBuoy}
-          variant="secondary"
-          onPress={() => router.push('/directorio')}
-        />
+        <ListRow icon={LifeBuoy} title={S.triage.goDirectory} onPress={() => router.push('/directorio')} />
         {!result.urgent && (
-          <Button label={S.triage.goCircle} icon={Users} variant="outline" onPress={() => router.push('/alerta')} />
+          <ListRow icon={Users} title={S.triage.goCircle} onPress={() => router.push('/alerta')} />
         )}
-      </View>
+      </Card>
 
       <AppText variant="caption" tone="textMuted">
         {S.triage.disclaimer}

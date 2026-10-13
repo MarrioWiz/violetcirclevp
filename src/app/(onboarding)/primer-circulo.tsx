@@ -26,7 +26,7 @@ export default function CircleStep() {
 
   return (
     <OnboardingFrame
-      step={4}
+      step={6}
       canGoBack={false}
       footer={
         <Button

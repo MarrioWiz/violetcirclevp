@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, usePathname } from 'expo-router';
 import { ChevronLeft, X } from 'lucide-react-native';
 import type { ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from 'react-native';
@@ -37,6 +37,25 @@ interface Props {
   dock?: boolean;
 }
 
+/** Ruta visible ("Más · Bitácora") para saber siempre en qué sección se está. */
+const BREADCRUMBS: [string, string][] = [
+  ['/bitacora', 'Más · Bitácora'],
+  ['/biblioteca', 'Más · Biblioteca'],
+  ['/guia', 'Más · Biblioteca'],
+  ['/aprende', 'Más · Biblioteca'],
+  ['/circulo/acompanar', 'Más · Biblioteca'],
+  ['/ajustes/ayuda-rapida', 'Más · Pedir ayuda rápido'],
+  ['/ajustes', 'Más · Ajustes'],
+  ['/info', 'Más · Ajustes'],
+  ['/directorio/', 'Apoyo'],
+  ['/circulo/nuevo', 'Círculo'],
+  ['/alerta', 'Pedir ayuda'],
+];
+
+export function breadcrumbFor(pathname: string): string | undefined {
+  return BREADCRUMBS.find(([p]) => pathname === p || pathname.startsWith(p.endsWith('/') ? p : `${p}/`))?.[1];
+}
+
 const COLLAPSE_FROM = 40;
 const COLLAPSE_TO = 110;
 
@@ -59,6 +78,8 @@ export function Screen({
   dock = false,
 }: Props) {
   const dockInset = useDockInset();
+  const pathname = usePathname();
+  const crumb = eyebrow ?? breadcrumbFor(pathname);
   const NavIcon = nav === 'close' ? X : ChevronLeft;
   const y = useSharedValue(0);
   const onScroll = useAnimatedScrollHandler((e) => {
@@ -99,10 +120,11 @@ export function Screen({
   );
 
   const header = title ? (
-    <ScreenHeader eyebrow={eyebrow} title={title} subtitle={subtitle} size={bigTitle ? 'display' : 'hero'} />
+    <ScreenHeader eyebrow={crumb} title={title} subtitle={subtitle} size={bigTitle ? 'display' : 'hero'} />
   ) : null;
 
-  const bottomPad = dock ? dockInset : spacing.x5;
+  // En pestañas también se deja lugar para el botón de Vi (abajo a la derecha, sobre el dock).
+  const bottomPad = dock ? dockInset + 64 : spacing.x5 + 64;
 
   return (
     <View style={styles.flex}>

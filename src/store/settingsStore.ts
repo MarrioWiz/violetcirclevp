@@ -17,6 +17,7 @@ export const defaultSettings: Settings = {
   statsOptIn: false,
   notificationsDiscreet: true,
   selfCareReminders: false,
+  quickExitTipSeen: false,
 };
 
 interface SettingsState extends Settings {

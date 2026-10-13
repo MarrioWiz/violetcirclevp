@@ -17,8 +17,7 @@ export default function Welcome() {
   const { accent } = useTheme();
   return (
     <OnboardingFrame
-      step={1}
-      canGoBack={false}
+      step={2}
       footer={<Button label={S.common.continue} size="lg" onPress={() => router.push('/consentimiento')} />}
     >
       <View style={styles.hero}>

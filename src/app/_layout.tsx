@@ -19,6 +19,7 @@ import { DisguiseCalculator } from '@/features/auth/DisguiseCalculator';
 import { LockScreen } from '@/features/auth/LockScreen';
 import { PrivacyCover } from '@/features/auth/PrivacyCover';
 import { useAppLifecycle } from '@/features/auth/useAppLifecycle';
+import { SetupGate, useSetupGate } from '@/features/permissions/SetupGate';
 import { SosScreen } from '@/features/sos/SosScreen';
 import { setScreenProtection } from '@/services/discreet';
 import { useChecklist } from '@/store/checklistStore';
@@ -87,6 +88,8 @@ function AppShell() {
   const showLock = onboarded && locked;
   const hideBelow = showLock || sos;
   const unlocked = onboarded && !locked && !disguised;
+  // Tras desbloquear: permisos críticos que falten y la guía de salida rápida (una vez).
+  const gate = useSetupGate(unlocked && !sos);
 
   // Los datos cifrados se cargan en memoria solo después de desbloquear.
   useEffect(() => {
@@ -131,6 +134,7 @@ function AppShell() {
             </Stack.Protected>
           </Stack>
         </View>
+        {unlocked && !sos && gate.pages.length > 0 && <SetupGate pages={gate.pages} close={gate.close} />}
         {showLock && (
           <View style={StyleSheet.absoluteFill} accessibilityViewIsModal>
             <LockScreen />

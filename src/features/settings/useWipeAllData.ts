@@ -51,7 +51,7 @@ export function useWipeAllData() {
     if (!second) return false;
     try {
       await wipeAllData();
-      router.replace('/bienvenida');
+      router.replace('/permisos');
       notify(S.settings.deleted);
       return true;
     } catch {

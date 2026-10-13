@@ -21,7 +21,7 @@ export default function PrivacyStep() {
 
   return (
     <OnboardingFrame
-      step={2}
+      step={3}
       footer={
         <>
           <CheckRow label={S.onboarding.consent} checked={accepted} onToggle={() => setAccepted((v) => !v)} />

@@ -135,8 +135,8 @@ export function HoldToHelpOrb() {
         <Svg width={GLOW} height={GLOW} style={styles.glow} pointerEvents="none">
           <Defs>
             <RadialGradient id="orbGlow" cx="50%" cy="50%" rx="50%" ry="50%">
-              <Stop offset="0" stopColor={palette.violet} stopOpacity={0.45} />
-              <Stop offset="0.55" stopColor={palette.violet} stopOpacity={0.12} />
+              <Stop offset="0" stopColor={palette.violet} stopOpacity={0.28} />
+              <Stop offset="0.55" stopColor={palette.violet} stopOpacity={0.08} />
               <Stop offset="1" stopColor={palette.violet} stopOpacity={0} />
             </RadialGradient>
           </Defs>

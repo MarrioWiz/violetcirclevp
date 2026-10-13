@@ -1,61 +1,60 @@
-import { router } from 'expo-router';
-import { BookHeart, HeartHandshake, Info, ListChecks, NotebookPen, Settings, ShieldCheck } from 'lucide-react-native';
+import { router, type Href } from 'expo-router';
+import { BookHeart, NotebookPen, Settings, Siren, type LucideIcon } from 'lucide-react-native';
+import { Platform, View } from 'react-native';
 
+import { AppText } from '@/components/AppText';
 import { Card } from '@/components/Card';
-import { Divider, ListRow, SectionTitle } from '@/components/Rows';
+import { IconBadge } from '@/components/IconBadge';
 import { tabMeta } from '@/components/dock/tabs';
 import { Screen } from '@/components/Screen';
 import { S } from '@/lib/strings.es';
 import { useIncidents } from '@/store/incidentsStore';
 import { spacing } from '@/theme';
 
+interface Entry {
+  icon: LucideIcon;
+  title: string;
+  body: string;
+  href: Href;
+}
+
+/** Más: solo 4 lugares (3 en web). Cada función vive en uno solo. */
 export default function More() {
   const meta = tabMeta('mas');
   const count = useIncidents((s) => s.incidents.length);
-  const card = { paddingHorizontal: spacing.lg };
+
+  const entries: Entry[] = [
+    {
+      icon: NotebookPen,
+      title: S.more.journal,
+      body: count ? `${count} ${count === 1 ? 'entrada' : 'entradas'} · ${S.more.journalBody}` : S.more.journalBody,
+      href: '/bitacora',
+    },
+    { icon: BookHeart, title: S.more.library, body: S.more.libraryBody, href: '/biblioteca' },
+    // La configuración de botones solo existe en el APK de Android.
+    ...(Platform.OS === 'android'
+      ? [{ icon: Siren, title: S.more.quickHelp, body: S.more.quickHelpBody, href: '/ajustes/ayuda-rapida' as Href }]
+      : []),
+    { icon: Settings, title: S.more.settings, body: S.more.settingsBody, href: '/ajustes' },
+  ];
+
   return (
     <Screen dock title={meta.title} subtitle={meta.subtitle}>
-      <Card padded={false} style={card}>
-        <ListRow
-          icon={NotebookPen}
-          title={S.more.journal}
-          body={count ? `${S.more.journalBody} · ${count} ${count === 1 ? 'entrada' : 'entradas'}` : S.more.journalBody}
-          onPress={() => router.push('/bitacora')}
-        />
-        <Divider />
-        <ListRow
-          icon={BookHeart}
-          title={S.more.learn}
-          body={S.more.learnBody}
-          onPress={() => router.push('/aprende')}
-        />
-        <Divider />
-        <ListRow icon={ListChecks} title={S.more.firstSteps} onPress={() => router.push('/guia')} />
-        <Divider />
-        <ListRow icon={HeartHandshake} title={S.more.howToSupport} onPress={() => router.push('/circulo/acompanar')} />
-      </Card>
-
-      <SectionTitle>{S.settings.title}</SectionTitle>
-      <Card padded={false} style={card}>
-        <ListRow
-          icon={Settings}
-          title={S.more.settings}
-          body={S.more.settingsBody}
-          onPress={() => router.push('/ajustes')}
-        />
-        <Divider />
-        <ListRow
-          icon={ShieldCheck}
-          title={S.more.privacy}
-          onPress={() => router.push({ pathname: '/info/[doc]', params: { doc: 'privacidad' } })}
-        />
-        <Divider />
-        <ListRow
-          icon={Info}
-          title={S.more.about}
-          onPress={() => router.push({ pathname: '/info/[doc]', params: { doc: 'acerca' } })}
-        />
-      </Card>
+      <View style={{ gap: spacing.md }}>
+        {entries.map((e) => (
+          <Card key={e.title} onPress={() => router.push(e.href)} accessibilityLabel={`${e.title}. ${e.body}`}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.lg }}>
+              <IconBadge icon={e.icon} size={48} />
+              <View style={{ flex: 1 }}>
+                <AppText variant="heading">{e.title}</AppText>
+                <AppText variant="caption" tone="textMuted">
+                  {e.body}
+                </AppText>
+              </View>
+            </View>
+          </Card>
+        ))}
+      </View>
     </Screen>
   );
 }

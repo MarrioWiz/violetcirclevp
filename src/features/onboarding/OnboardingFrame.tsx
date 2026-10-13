@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { HAIRLINE, MIN_TOUCH, alpha, palette, radius, spacing, useTheme } from '@/theme';
 import { Backdrop } from '@/components/ui/Backdrop';
 
-export const ONBOARDING_STEPS = 5;
+export const ONBOARDING_STEPS = 7;
 
 interface Props {
   step: number;

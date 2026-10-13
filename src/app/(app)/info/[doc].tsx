@@ -7,13 +7,22 @@ import { Card } from '@/components/Card';
 import { Logo } from '@/components/Logo';
 import { ScopeNotice } from '@/components/ScopeNotice';
 import { Screen } from '@/components/Screen';
+import { QuickExitGuide } from '@/features/auth/QuickExitGuide';
 import { bundled } from '@/features/content/repository';
 import { PrivacyNoticeBody } from '@/features/settings/PrivacyNoticeBody';
 import { S, t } from '@/lib/strings.es';
 import { spacing } from '@/theme';
 
 export default function InfoDoc() {
-  const { doc } = useLocalSearchParams<{ doc: 'privacidad' | 'alcance' | 'acerca' }>();
+  const { doc } = useLocalSearchParams<{ doc: 'privacidad' | 'alcance' | 'acerca' | 'salida-rapida' }>();
+
+  if (doc === 'salida-rapida') {
+    return (
+      <Screen nav="back" eyebrow={S.settings.eyebrow} title={S.quickExitGuide.title} subtitle={S.quickExitGuide.subtitle}>
+        <QuickExitGuide />
+      </Screen>
+    );
+  }
 
   if (doc === 'privacidad') {
     return (

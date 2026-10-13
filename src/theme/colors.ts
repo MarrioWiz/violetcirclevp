@@ -16,13 +16,14 @@ export const palette = {
   text: '#F5F0FF',
   textMuted: '#A89BC4',
   textFaint: '#6F6388', // solo decorativo
-  violet: '#8B5CF6',
-  violetLight: '#A78BFA',
-  violetDeep: '#6D28D9',
+  // Paleta suavizada (2026-10-12, pedido de Mario: "los colores están muy fuertes").
+  violet: '#8A72D6',
+  violetLight: '#B3A1EE',
+  violetDeep: '#6A52B8',
   violetHalo: '#2A1A45',
-  danger: '#FF5C7A', // SOLO 911 / destructivo
-  success: '#34D399',
-  warning: '#FBBF24',
+  danger: '#F0808F', // SOLO 911 / destructivo
+  success: '#86CFAF',
+  warning: '#E5C47A',
   white: '#FFFFFF',
   black: '#000000',
   beadRim: 'rgba(255,255,255,0.35)',
@@ -31,11 +32,11 @@ export const palette = {
 
 /** Acento por sección: el dock y el encabezado se tiñen con él. */
 export const accents = {
-  inicio: '#B794F6',
-  orientacion: '#38BDF8',
-  circulo: '#F472B6',
-  directorio: '#34D399',
-  mas: '#FBBF24',
+  inicio: '#BBA9EC',
+  orientacion: '#93C3E0',
+  circulo: '#DDA6C6',
+  directorio: '#92CDB3',
+  mas: '#DFC48A',
 } as const;
 
 export type AccentKey = keyof typeof accents;
@@ -114,7 +115,7 @@ export const brand = {
 /** Gradientes de acciones destacadas. */
 export const gradients = {
   primary: [palette.violetLight, palette.violetDeep] as const,
-  orb: ['#A78BFA', '#7C3AED', '#C026D3'] as const,
+  orb: ['#B7A5EE', '#8366CF', '#A274C2'] as const,
   sosBg: ['#1B0F33', palette.bg0] as const,
 } as const;
 

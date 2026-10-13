@@ -9,6 +9,7 @@ import { IconBadge } from '@/components/IconBadge';
 import { ToggleRow } from '@/components/Rows';
 import { ScopeNotice } from '@/components/ScopeNotice';
 import { OnboardingFrame } from '@/features/onboarding/OnboardingFrame';
+import { skipSetupGateThisSession } from '@/features/permissions/SetupGate';
 import { S } from '@/lib/strings.es';
 import { useSession } from '@/store/sessionStore';
 import { DISCLAIMER_VERSION, useSettings } from '@/store/settingsStore';
@@ -22,6 +23,7 @@ export default function StatsStep() {
 
   const finish = async () => {
     setBusy(true);
+    skipSetupGateThisSession();
     // Al marcar onboarded, las rutas protegidas cambian solas a la app principal.
     unlock();
     await update({
@@ -34,7 +36,7 @@ export default function StatsStep() {
 
   return (
     <OnboardingFrame
-      step={5}
+      step={7}
       footer={<Button label={S.onboarding.finish} size="lg" loading={busy} onPress={() => void finish()} />}
     >
       <View style={{ alignItems: 'center', gap: spacing.md }}>
