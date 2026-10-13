@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { getPinLength, verifyPin } from '@/services/crypto';
 import { disguise } from '@/theme';
-import { useSession } from '@/store/sessionStore';
+import { isPinLockedOut, useSession } from '@/store/sessionStore';
 
 type Op = '+' | '−' | '×' | '÷';
 
@@ -78,10 +78,17 @@ export function DisguiseCalculator() {
 
   const equals = async () => {
     const len = await getPinLength();
-    if (typed.length >= len && (await verifyPin(typed.slice(-len)))) {
-      setTyped('');
-      await leaveDisguise();
-      return;
+    const session = useSession.getState();
+    // Con la espera por errores activa, el PIN no abre la app (la calculadora sigue funcionando).
+    const waiting = isPinLockedOut();
+    if (!waiting && typed.length >= len) {
+      if (await verifyPin(typed.slice(-len))) {
+        setTyped('');
+        await leaveDisguise();
+        return;
+      }
+      // Solo cuenta como intento si se escribió algo del largo del PIN (no cualquier cuenta).
+      if (typed.length === len) session.registerFailure();
     }
     if (acc !== null && op) {
       const r = compute(acc, Number(display), op);

@@ -25,7 +25,8 @@ class VolumeSosService : AccessibilityService() {
       if (presses.size >= PRESSES) {
         presses.clear()
         try {
-          SosTrigger.launch(this)
+          // 3 veces bajar volumen: 4 s para cancelar (pedido de Mario, 2026-10-12).
+          SosTrigger.launch(this, 4)
         } catch (e: Exception) {
           // Si el sistema no permite abrir la app en este momento, no hacemos nada.
           Log.w("VCVP-SOS", "launch failed: ${e.javaClass.simpleName}")

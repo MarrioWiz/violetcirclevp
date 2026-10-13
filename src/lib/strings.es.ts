@@ -83,7 +83,7 @@ export const S = {
     title: 'Escribe tu PIN',
     wrong: 'PIN incorrecto. Intenta de nuevo.',
     attemptsLeft: 'Te quedan {n} intentos antes de una pausa corta.',
-    lockedOut: 'Por seguridad, espera {s} segundos.',
+    lockedOut: 'Por seguridad, espera {s}.',
     useBiometrics: 'Usar {method}',
     biometricPrompt: 'Abrir VioletCircleVP',
     forgot: '¿Olvidaste tu PIN?',
@@ -402,7 +402,7 @@ export const S = {
       'Agrega al menos una persona en "Mi círculo" para poder avisarle. Mientras tanto, puedes llamar al 911.',
     setupTitle: 'Pedir ayuda rápido',
     setupSubtitle:
-      'Prepara la alerta para usarla sin abrir la app: al activarla tienes unos segundos para cancelar (4 con el botón lateral, 10 con el volumen o el atajo); si no cancelas, se envía sola.',
+      'Prepara la alerta para usarla sin abrir la app: al activarla tienes unos segundos para cancelar (4 con el botón lateral o el volumen, 10 con el atajo); si no cancelas, se envía sola.',
     requirements: 'Lo necesario',
     reqContacts: 'Personas en tu círculo',
     reqContactsOk: '{n} persona(s)',
@@ -416,7 +416,7 @@ export const S = {
     triggers: 'Cómo abrirla sin buscar la app',
     sideButton: 'Botón lateral o Quick Tap',
     sideButtonBody:
-      'Samsung y Pixel solo dejan elegir apps: instala la mini app "Pedir ayuda" (PedirAyuda.apk) y asígnala al botón.',
+      'Instala la mini app "Pedir ayuda" y asígnala al botón. En Samsung, con el cel bloqueado te pide desbloquear: para eso usa el volumen.',
     sideButtonHelpTitle: 'Asignarla a un botón de tu teléfono',
     sideButtonHelp: [
       'Primero instala la mini app "Pedir ayuda" (PedirAyuda.apk). Es pequeña, no pide permisos y solo abre esta alerta.',
@@ -425,7 +425,7 @@ export const S = {
       'Motorola y otras marcas: busca en Ajustes "gestos" o "atajos" y elige abrir la app "Pedir ayuda".',
     ],
     volume: 'Botones de volumen',
-    volumeBody: 'Presiona 3 veces seguidas bajar volumen, aunque la app esté cerrada.',
+    volumeBody: 'Presiona 3 veces seguidas bajar volumen, aunque la app esté cerrada o el cel bloqueado (con la pantalla encendida).',
     volumeOn: 'Activado',
     volumeSetup: 'Activar en Accesibilidad',
     volumeExplainTitle: 'Activar botones de volumen',

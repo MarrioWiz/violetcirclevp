@@ -9,7 +9,7 @@ Código: https://github.com/MarrioWiz/violetcirclevp (privado, rama `master`).
 | Qué | Dónde | Versión |
 |---|---|---|
 | App Android | `release/VioletCircleVP-1.2.0.apk` (63 MB, arm64 + armv7, gitignored) — instalada en el cel 2026-10-12 | 1.2.0 |
-| Mini app "Pedir ayuda" | `release/PedirAyuda-1.0.1.apk` (sin permisos; 4 s para cancelar; se muestra sobre el bloqueo) · código en `companion/` | 1.0.1 |
+| Mini app "Pedir ayuda" | `release/PedirAyuda-1.0.2.apk` (permiso de firma TRIGGER_SOS; 4 s; sobre el bloqueo) · código en `companion/` | 1.0.2 |
 | Web (PWA) | https://violetcirclevp-uvp.web.app | rediseño 1.2.0, publicada 2026-10-12 |
 | Panel de tendencias | https://violetcirclevp-uvp.web.app/panel/ (Google, solo marioimanol02@gmail.com) | — |
 | Firebase | proyecto `violetcirclevp-uvp` (Spark): Auth anónima + Google, Firestore `nam5`, reglas desplegadas | — |
@@ -19,7 +19,7 @@ Ambas apps están instaladas por ADB en el Galaxy S24 Ultra de Mario (SM-S928B, 
 ## Comandos
 
 ```bash
-npm test                 # 79 pruebas (Jest)
+npm test                 # 82 pruebas (Jest)
 npm run test:rules       # 17 pruebas de reglas (emulador de Firestore)
 npx tsc --noEmit && npx eslint .
 
@@ -35,7 +35,7 @@ cd companion && ./gradlew assembleRelease
 
 # Instalar en el cel (USB, depuración activada)
 adb install --user 0 -r release/VioletCircleVP-1.2.0.apk
-adb install --user 0 -r release/PedirAyuda-1.0.1.apk
+adb install --user 0 -r release/PedirAyuda-1.0.2.apk
 ```
 
 ## Cosas que hay que saber
@@ -67,3 +67,4 @@ adb install --user 0 -r release/PedirAyuda-1.0.1.apk
    Nota: `expo prebuild` borra `android/local.properties`; recrearlo con `sdk.dir=C:/Users/Mario/AppData/Local/Android/Sdk`.
 5. Sembrar el contenido en Firestore (necesita llave de cuenta de servicio); hoy la app usa el JSON incluido.
 6. iPhone: sin build todavía (`docs/IPHONE.md`).
+- Seguridad: ver `docs/SEGURIDAD.md` (auditoría 2026-10-12). Instalar SIEMPRE primero la app principal y después la mini app (el permiso de firma lo define la principal).

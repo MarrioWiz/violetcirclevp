@@ -121,17 +121,15 @@ export default function QuickHelpSetup() {
     );
   }
 
-  const toggleLauncher = async (on: boolean) => {
-    native?.setLauncherEntryEnabled(on);
-    await refresh();
-    if (on) {
-      await confirmDialog({
-        title: S.sos.sideButtonHelpTitle,
-        message: S.sos.sideButtonHelp.join('\n\n'),
-        confirmLabel: S.common.done,
-        cancelLabel: S.common.close,
-      });
-    }
+  // El botón lateral usa la mini app "Pedir ayuda" (protegida con permiso de firma). La vieja
+  // entrada del menú de apps queda siempre apagada: cualquier app podía abrirla.
+  const showSideButtonHelp = async () => {
+    await confirmDialog({
+      title: S.sos.sideButtonHelpTitle,
+      message: S.sos.sideButtonHelp.join('\n\n'),
+      confirmLabel: S.common.done,
+      cancelLabel: S.common.close,
+    });
   };
 
   const setupVolume = async () => {
@@ -191,12 +189,11 @@ export default function QuickHelpSetup() {
 
       <SectionTitle>{S.sos.triggers}</SectionTitle>
       <Card padded={false} style={{ paddingHorizontal: spacing.lg }}>
-        <ToggleRow
+        <ListRow
           icon={Smartphone}
           title={S.sos.sideButton}
           body={S.sos.sideButtonBody}
-          value={st.launcher}
-          onChange={(v) => void toggleLauncher(v)}
+          onPress={() => void showSideButtonHelp()}
         />
         <Divider />
         <ListRow

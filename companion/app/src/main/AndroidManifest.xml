@@ -5,6 +5,9 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+  <!-- Permiso de firma que define VioletCircleVP: solo lo obtiene esta mini app (misma llave). -->
+  <uses-permission android:name="mx.uvp.violetcirclevp.permission.TRIGGER_SOS" />
+
   <application
     android:allowBackup="false"
     android:icon="@mipmap/ic_launcher"

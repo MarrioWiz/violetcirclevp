@@ -10,6 +10,8 @@ declare class VcvpSosModule extends NativeModule {
   setIconShortcutEnabled(enabled: boolean): boolean;
   isIconShortcutEnabled(): boolean;
   setShowWhenLocked(on: boolean): Promise<boolean>;
+  /** ¿El enlace de alerta trae la clave secreta de esta instalación? */
+  isValidSosToken(token: string | null): boolean;
 }
 
 // Opcional: solo existe en la build nativa de Android.

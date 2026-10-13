@@ -30,6 +30,8 @@ const config: ExpoConfig = {
     },
   },
   android: {
+    // Sin respaldos automáticos de la app (Google/Samsung): los datos se quedan solo en el teléfono.
+    allowBackup: false,
     package: 'mx.uvp.violetcirclevp',
     adaptiveIcon: {
       backgroundColor: VIOLET,

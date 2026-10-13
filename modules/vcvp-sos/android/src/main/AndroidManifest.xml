@@ -2,6 +2,11 @@
   <!-- Solo para la alerta "Pedir ayuda": se envía cuando ella confirma. -->
   <uses-permission android:name="android.permission.SEND_SMS" />
 
+  <!-- Solo apps firmadas con la misma llave (la mini app "Pedir ayuda") pueden abrir la alerta. -->
+  <permission
+    android:name="mx.uvp.violetcirclevp.permission.TRIGGER_SOS"
+    android:protectionLevel="signature" />
+
   <application>
     <!-- Entrada "Pedir ayuda" (desactivada hasta que ella la active en Ajustes). -->
     <activity
@@ -18,6 +23,18 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+
+    <!-- Entrada protegida para la mini app (permiso de firma). -->
+    <activity
+      android:name="mx.uvp.violetcirclevp.sos.SosEntryActivity"
+      android:exported="true"
+      android:permission="mx.uvp.violetcirclevp.permission.TRIGGER_SOS"
+      android:excludeFromRecents="true"
+      android:noHistory="true"
+      android:taskAffinity=""
+      android:showWhenLocked="true"
+      android:turnScreenOn="true"
+      android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
     <!-- Botones de volumen: solo funciona si ella lo activa en Accesibilidad. -->
     <service

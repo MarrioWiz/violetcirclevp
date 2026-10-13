@@ -73,6 +73,8 @@ export function LockScreen() {
 
   const remaining = MAX_ATTEMPTS - failedAttempts;
   const seconds = Math.max(0, Math.ceil((lockoutUntil - now) / 1000));
+  // "45 segundos" o "14 min" para las esperas largas.
+  const waitText = seconds >= 120 ? `${Math.ceil(seconds / 60)} min` : `${seconds} segundos`;
 
   return (
     <View style={StyleSheet.absoluteFill}>
@@ -90,7 +92,7 @@ export function LockScreen() {
             <View style={{ minHeight: 40, justifyContent: 'center' }} accessibilityLiveRegion="polite">
               {lockedOut ? (
                 <AppText tone="warning" center>
-                  {t(S.lock.lockedOut, { s: seconds })}
+                  {t(S.lock.lockedOut, { s: waitText })}
                 </AppText>
               ) : error ? (
                 <AppText tone="danger" center>

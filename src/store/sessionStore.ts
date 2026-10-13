@@ -7,6 +7,16 @@ export type SosMode = 'external' | 'hold' | 'test';
 const DISGUISE_KEY = 'disguised';
 export const MAX_ATTEMPTS = 5;
 export const LOCKOUT_MS = 30_000;
+/**
+ * Esperas cada vez más largas tras cada tanda de 5 errores (30 s, 1 min, 5 min, 15 min, 1 h).
+ * Se guardan en el teléfono: cerrar y abrir la app no las reinicia.
+ */
+export const LOCKOUT_STEPS_MS = [30_000, 60_000, 5 * 60_000, 15 * 60_000, 60 * 60_000];
+const LOCKOUT_KEY = 'pin-lockout';
+
+export function lockoutFor(level: number): number {
+  return LOCKOUT_STEPS_MS[Math.min(level, LOCKOUT_STEPS_MS.length - 1)];
+}
 /** Si la app abrió otra app (cámara, Mensajes, compartir…), no se bloquea si vuelve antes de esto. */
 export const EXTERNAL_GRACE_MS = 5 * 60_000;
 
@@ -19,6 +29,8 @@ interface SessionState {
   covered: boolean;
   failedAttempts: number;
   lockoutUntil: number;
+  /** Cuántas tandas de 5 errores van (sube la espera). */
+  lockoutLevel: number;
   /** Momento en que la app pasó a segundo plano (para el autobloqueo). */
   backgroundedAt: number | null;
   /** Hasta cuándo una salida a otra app iniciada por la propia app no provoca bloqueo. */
@@ -50,6 +62,7 @@ export const useSession = create<SessionState>((set, get) => ({
   covered: false,
   failedAttempts: 0,
   lockoutUntil: 0,
+  lockoutLevel: 0,
   backgroundedAt: null,
   externalUntil: 0,
   sosActive: false,
@@ -61,19 +74,31 @@ export const useSession = create<SessionState>((set, get) => ({
   markSosSent: () => set({ sosSentAt: Date.now() }),
   markExternal: () => set({ externalUntil: Date.now() + EXTERNAL_GRACE_MS }),
   hydrateDisguise: async () => {
-    set({ disguised: (await storage.get(DISGUISE_KEY)) === '1' });
+    const saved = await storage.getJson<{ until?: number; level?: number; attempts?: number }>(LOCKOUT_KEY, {});
+    set({
+      disguised: (await storage.get(DISGUISE_KEY)) === '1',
+      lockoutUntil: saved.until ?? 0,
+      lockoutLevel: saved.level ?? 0,
+      failedAttempts: saved.attempts ?? 0,
+    });
   },
   lock: () => set({ locked: true }),
-  unlock: () => set({ locked: false, failedAttempts: 0, lockoutUntil: 0 }),
+  unlock: () => {
+    set({ locked: false, failedAttempts: 0, lockoutUntil: 0, lockoutLevel: 0 });
+    void storage.remove(LOCKOUT_KEY);
+  },
   setCovered: (covered) => set({ covered }),
   setBackgroundedAt: (backgroundedAt) => set({ backgroundedAt }),
   registerFailure: () => {
     const attempts = get().failedAttempts + 1;
     if (attempts >= MAX_ATTEMPTS) {
-      set({ failedAttempts: 0, lockoutUntil: Date.now() + LOCKOUT_MS });
+      const level = get().lockoutLevel;
+      set({ failedAttempts: 0, lockoutUntil: Date.now() + lockoutFor(level), lockoutLevel: level + 1 });
     } else {
       set({ failedAttempts: attempts });
     }
+    const { lockoutUntil, lockoutLevel, failedAttempts } = get();
+    void storage.setJson(LOCKOUT_KEY, { until: lockoutUntil, level: lockoutLevel, attempts: failedAttempts });
   },
   quickExit: async () => {
     // Bloquea y disfraza al mismo tiempo: al volver hay que escribir el PIN.
@@ -81,10 +106,16 @@ export const useSession = create<SessionState>((set, get) => ({
     await storage.set(DISGUISE_KEY, '1');
   },
   leaveDisguise: async () => {
-    set({ disguised: false, locked: false, failedAttempts: 0 });
+    set({ disguised: false, locked: false, failedAttempts: 0, lockoutUntil: 0, lockoutLevel: 0 });
     await storage.remove(DISGUISE_KEY);
+    await storage.remove(LOCKOUT_KEY);
   },
 }));
+
+/** ¿Hay una espera activa por errores de PIN? */
+export function isPinLockedOut(): boolean {
+  return useSession.getState().lockoutUntil > Date.now();
+}
 
 /** Llamar justo antes de abrir otra app desde VioletCircleVP (selector, cámara, SMS, compartir…). */
 export function markExternalNavigation(): void {

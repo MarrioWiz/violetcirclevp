@@ -31,6 +31,12 @@ export function buildSosMessage(loc: SosLocation | null, date = new Date(), base
   return `${base} Estoy aquí: ${preciseMapsLink(loc)}${margin}. ${ask} ${sent}`;
 }
 
+/** Clave secreta que traen los disparadores propios (violetcirclevp://sos?k=…). */
+export function sosTokenFromPath(path: string): string | null {
+  const m = /[?&]k=([0-9a-f]{16,64})(&|$)/.exec(path);
+  return m ? m[1] : null;
+}
+
 /**
  * Segundos para cancelar pedidos en el enlace (violetcirclevp://sos?t=4, desde la mini app).
  * Entre 3 y 30; si no viene o no es válido, undefined (se usan los 10 s de siempre).

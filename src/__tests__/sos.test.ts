@@ -1,4 +1,10 @@
-import { buildSosMessage, isSosPath, preciseMapsLink, sosSecondsFromPath } from '@/features/sos/message';
+import { LOCKOUT_STEPS_MS, MAX_ATTEMPTS, lockoutFor, useSession } from '@/store/sessionStore';
+import { buildSosMessage, isSosPath, preciseMapsLink, sosSecondsFromPath, sosTokenFromPath } from '@/features/sos/message';
+
+jest.mock('@react-native-async-storage/async-storage', () =>
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
+);
 
 describe('alerta "Pedir ayuda"', () => {
   const at = new Date(2026, 9, 6, 21, 5);
@@ -35,11 +41,34 @@ describe('alerta "Pedir ayuda"', () => {
     expect(isSosPath('/guia/sos-falso')).toBe(false);
   });
 
+  it('lee la clave secreta del enlace (sin clave no hay alerta)', () => {
+    expect(sosTokenFromPath('violetcirclevp://sos?k=0123456789abcdef0123&t=4')).toBe('0123456789abcdef0123');
+    expect(sosTokenFromPath('violetcirclevp://sos')).toBeNull();
+    expect(sosTokenFromPath('violetcirclevp://sos?k=corta')).toBeNull();
+  });
+
   it('segundos para cancelar desde la mini app', () => {
     expect(sosSecondsFromPath('violetcirclevp://sos?t=4')).toBe(4);
     expect(sosSecondsFromPath('/sos?from=x&t=6')).toBe(6);
     expect(sosSecondsFromPath('violetcirclevp://sos')).toBeUndefined();
     expect(sosSecondsFromPath('/sos?t=1')).toBeUndefined();
     expect(sosSecondsFromPath('/sos?t=99')).toBeUndefined();
+  });
+});
+
+describe('bloqueo por errores de PIN', () => {
+  it('cada tanda de 5 errores alarga la espera', () => {
+    useSession.setState({ failedAttempts: 0, lockoutUntil: 0, lockoutLevel: 0 });
+    const before = Date.now();
+    for (let i = 0; i < MAX_ATTEMPTS; i++) useSession.getState().registerFailure();
+    expect(useSession.getState().lockoutUntil - before).toBeGreaterThanOrEqual(LOCKOUT_STEPS_MS[0]);
+    for (let i = 0; i < MAX_ATTEMPTS; i++) useSession.getState().registerFailure();
+    expect(useSession.getState().lockoutLevel).toBe(2);
+    expect(lockoutFor(10)).toBe(LOCKOUT_STEPS_MS[LOCKOUT_STEPS_MS.length - 1]);
+  });
+
+  it('al desbloquear se reinicia', () => {
+    useSession.getState().unlock();
+    expect(useSession.getState().lockoutLevel).toBe(0);
   });
 });

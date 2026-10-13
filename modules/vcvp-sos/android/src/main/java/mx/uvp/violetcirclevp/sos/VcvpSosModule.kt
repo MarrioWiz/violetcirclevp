@@ -22,6 +22,18 @@ class VcvpSosModule : Module() {
   override fun definition() = ModuleDefinition {
     Name("VcvpSos")
 
+    // Atajo creado con una versión anterior (sin clave): se actualiza al iniciar.
+    OnCreate {
+      val ctx = appContext.reactContext ?: return@OnCreate
+      disableLauncherEntry(ctx)
+      val manager = ctx.getSystemService(ShortcutManager::class.java) ?: return@OnCreate
+      if (manager.dynamicShortcuts.any { it.id == SHORTCUT_ID }) manager.dynamicShortcuts = listOf(buildShortcut(ctx))
+    }
+
+    // ── Clave de los disparadores ─────────────────────────────────────────
+    /** ¿El enlace de alerta trae la clave de esta instalación? (si no, se ignora). */
+    Function("isValidSosToken") { token: String? -> SosToken.isValid(context, token) }
+
     // ── SMS automático ────────────────────────────────────────────────────
     AsyncFunction("sendSms") { phones: List<String>, message: String ->
       if (context.checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
@@ -67,26 +79,16 @@ class VcvpSosModule : Module() {
         PackageManager.COMPONENT_ENABLED_STATE_ENABLED
     }
 
-    Function("setLauncherEntryEnabled") { enabled: Boolean ->
-      context.packageManager.setComponentEnabledSetting(
-        launcherComponent(),
-        if (enabled) PackageManager.COMPONENT_ENABLED_STATE_ENABLED else PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-        PackageManager.DONT_KILL_APP,
-      )
-    }
+    // Seguridad: la entrada del menú de apps queda SIEMPRE apagada (estaba exportada y cualquier app
+    // podía abrir la alerta con ella). El botón lateral usa la mini app con permiso de firma.
+    Function("setLauncherEntryEnabled") { _: Boolean -> disableLauncherEntry(context) }
 
     // ── Atajo al mantener presionado el ícono ─────────────────────────────
     Function("setIconShortcutEnabled") { enabled: Boolean ->
       val manager = context.getSystemService(ShortcutManager::class.java)
       if (manager != null) {
         if (enabled) {
-          val shortcut = ShortcutInfo.Builder(context, SHORTCUT_ID)
-            .setShortLabel("Pedir ayuda")
-            .setLongLabel("Pedir ayuda")
-            .setIcon(Icon.createWithResource(context, context.applicationInfo.icon))
-            .setIntent(SosTrigger.intent(context))
-            .build()
-          manager.dynamicShortcuts = listOf(shortcut)
+          manager.dynamicShortcuts = listOf(buildShortcut(context))
         } else {
           manager.removeDynamicShortcuts(listOf(SHORTCUT_ID))
         }
@@ -115,6 +117,22 @@ class VcvpSosModule : Module() {
   }
 
   private fun launcherComponent() = ComponentName(context, SosLauncherActivity::class.java)
+
+  private fun disableLauncherEntry(ctx: Context) {
+    ctx.packageManager.setComponentEnabledSetting(
+      ComponentName(ctx, SosLauncherActivity::class.java),
+      PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+      PackageManager.DONT_KILL_APP,
+    )
+  }
+
+  private fun buildShortcut(ctx: Context): ShortcutInfo =
+    ShortcutInfo.Builder(ctx, SHORTCUT_ID)
+      .setShortLabel("Pedir ayuda")
+      .setLongLabel("Pedir ayuda")
+      .setIcon(Icon.createWithResource(ctx, ctx.applicationInfo.icon))
+      .setIntent(SosTrigger.intent(ctx))
+      .build()
 
   companion object {
     const val SHORTCUT_ID = "vcvp_sos"

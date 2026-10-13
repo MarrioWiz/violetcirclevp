@@ -8,13 +8,22 @@ import android.net.Uri
 object SosTrigger {
   const val SOS_URI = "violetcirclevp://sos"
 
-  fun intent(context: Context): Intent =
-    Intent(Intent.ACTION_VIEW, Uri.parse(SOS_URI)).apply {
+  /**
+   * `seconds`: segundos para cancelar (null = los 10 de siempre). Siempre lleva la clave secreta
+   * (`k`): sin ella la app ignora el enlace.
+   */
+  fun intent(context: Context, seconds: Int? = null): Intent {
+    val query = buildString {
+      append("k=").append(SosToken.get(context))
+      if (seconds != null) append("&t=").append(seconds)
+    }
+    return Intent(Intent.ACTION_VIEW, Uri.parse("$SOS_URI?$query")).apply {
       setPackage(context.packageName)
       addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
     }
+  }
 
-  fun launch(context: Context) {
-    context.startActivity(intent(context))
+  fun launch(context: Context, seconds: Int? = null) {
+    context.startActivity(intent(context, seconds))
   }
 }

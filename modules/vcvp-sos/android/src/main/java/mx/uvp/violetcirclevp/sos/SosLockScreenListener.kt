@@ -34,6 +34,8 @@ class SosLockScreenListener : ReactActivityLifecycleListener {
   private fun showOverLockIfSos(activity: Activity, intent: Intent?) {
     val data = intent?.data ?: return
     if (data.scheme != "violetcirclevp" || data.host != "sos") return
+    // Solo los disparadores propios (con la clave) pueden mostrar la app sobre el bloqueo.
+    if (!SosToken.isValid(activity, data.getQueryParameter("k"))) return
     activity.runOnUiThread {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
         activity.setShowWhenLocked(true)
