@@ -141,6 +141,46 @@ const DANGER = [
 
 const INTENTS: Intent[] = [
   {
+    id: 'inPerson',
+    keys: [
+      'en persona',
+      'en la calle',
+      'en el camion',
+      'en el transporte',
+      'en el metro',
+      'en la uni',
+      'en la escuela',
+      'en el salon',
+      'en clase',
+      'mi maestro',
+      'mi profesor',
+      'un maestro',
+      'un profesor',
+      'me toca',
+      'me toco',
+      'me manosea',
+      'me agarra',
+      'me agarro',
+      'acoso callejero',
+      'piropos',
+      'me chiflan',
+      'me silban',
+      'en el trabajo',
+      'mi jefe',
+      'en mi casa',
+      'mi pareja',
+      'mi novio',
+    ],
+    reply: () => ({
+      messages: [
+        'Lo que pasa en persona también es acoso, y no es tu culpa. Si estás en peligro ahora, ve a un lugar con gente y llama al 911.',
+        'Anota qué pasó, dónde, a qué hora y quién fue, y cuéntale a alguien de confianza. Telmujer te escucha las 24 horas.',
+      ],
+      actions: [A.help, A.support],
+      suggestions: ['¿Cómo lo denuncio?', 'Me siento muy mal'],
+    }),
+  },
+  {
     id: 'intimate',
     keys: ['fotos intim', 'foto intim', 'packs', ' pack ', 'nudes', 'desnud', 'sextors', 'sexting', 'video intim', 'contenido intim', 'ley olimpia'],
     reply: () => ({

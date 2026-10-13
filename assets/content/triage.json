@@ -67,6 +67,14 @@
           "set": {
             "platform": "otra"
           }
+        },
+        {
+          "label": "En persona, no en internet",
+          "next": "q_inperson",
+          "set": {
+            "platform": "presencial"
+          },
+          "hint": "En la escuela, la calle, el transporte, la casa o el trabajo."
         }
       ]
     },
@@ -113,6 +121,68 @@
           "label": "Es otra cosa",
           "next": "r_otro",
           "hint": "Igual te oriento."
+        }
+      ]
+    },
+    {
+      "id": "q_inperson",
+      "question": "¿Dónde está pasando?",
+      "help": "Elige el lugar donde pasa más seguido.",
+      "options": [
+        {
+          "label": "En la universidad",
+          "next": "q_contact",
+          "set": {
+            "where": "uni"
+          },
+          "hint": "Salón, pasillos, transporte escolar o eventos."
+        },
+        {
+          "label": "En la calle o el transporte",
+          "next": "q_contact",
+          "set": {
+            "where": "calle"
+          },
+          "hint": "Camión, taxi, en el camino o en un lugar público."
+        },
+        {
+          "label": "En casa o con mi pareja o expareja",
+          "next": "q_contact",
+          "set": {
+            "where": "casa"
+          },
+          "hint": "Alguien con quien vives o con quien tienes o tuviste una relación."
+        },
+        {
+          "label": "En el trabajo",
+          "next": "q_contact",
+          "set": {
+            "where": "trabajo"
+          },
+          "hint": "Jefes, compañeros o clientes."
+        },
+        {
+          "label": "En otro lugar",
+          "next": "q_contact"
+        }
+      ]
+    },
+    {
+      "id": "q_contact",
+      "question": "¿Te ha tocado sin tu permiso, te ha seguido o te ha amenazado?",
+      "options": [
+        {
+          "label": "Sí",
+          "next": "r_presencial",
+          "set": {
+            "contact": "si"
+          },
+          "hint": "Esto es serio: te muestro qué hacer."
+        },
+        {
+          "label": "No, pero me hace sentir incómoda o con miedo",
+          "next": "r_presencial",
+          "hint": "Lo que sientes cuenta."
         }
       ]
     },
@@ -248,6 +318,10 @@
     {
       "id": "r_otro",
       "result": "otro"
+    },
+    {
+      "id": "r_presencial",
+      "result": "presencial"
     }
   ],
   "results": {
@@ -451,6 +525,27 @@
       ],
       "level": 1,
       "law": "Aunque no encaje en una definición legal, lo que te incomoda importa. Registrarlo te deja más opciones después."
+    },
+    "presencial": {
+      "kind": "presencial",
+      "title": "Acoso en persona",
+      "explanation": "Miradas, comentarios, tocamientos, seguirte o presionarte en persona sin tu consentimiento es acoso. No depende de cómo ibas vestida ni de a dónde fuiste: la responsabilidad es de quien lo hace.",
+      "urgent": false,
+      "doNow": [
+        "Si estás en peligro, ve a un lugar con gente y llama al 911 o usa \"Pedir ayuda\".",
+        "Anota qué pasó, dónde, a qué hora, quién fue y si alguien lo vio. Guárdalo en Mis registros.",
+        "Cuéntale a alguien de tu círculo y, si puedes, no vayas sola a ese lugar por ahora.",
+        "Busca apoyo: Telmujer atiende 24 h; si pasa en la UVP, Atención a estudiantes; para denunciar, la Fiscalía."
+      ],
+      "dontDo": [
+        "No te culpes por cómo reaccionaste: quedarse paralizada es una respuesta normal.",
+        "No enfrentes sola a la persona si sientes que puede ponerse peor."
+      ],
+      "guides": [
+        "rutas-formales"
+      ],
+      "level": 3,
+      "law": "El acoso sexual y el hostigamiento sexual son delitos en el Código Penal de Puebla, y tocarte sin tu consentimiento puede ser abuso sexual. Puedes denunciar ante la Fiscalía y pedir medidas de protección."
     }
   },
   "extras": [
@@ -477,6 +572,36 @@
         "unsure": "si"
       },
       "text": "Si en algún momento sientes que estás en peligro, llama al 911 o avisa a tu círculo."
+    },
+    {
+      "when": {
+        "where": "uni"
+      },
+      "text": "Si la persona es de la UVP, la universidad puede activar su protocolo y evitar que tengas contacto con ella. Está en Apoyo → Atención a estudiantes UVP."
+    },
+    {
+      "when": {
+        "where": "calle"
+      },
+      "text": "En la calle o el transporte, si puedes, acércate a otras personas o a un negocio abierto, y comparte tu ubicación con tu círculo."
+    },
+    {
+      "when": {
+        "where": "casa"
+      },
+      "text": "Si pasa en casa o con tu pareja o expareja, Telmujer te escucha 24 h y te orienta para pedir medidas de protección. No tienes que denunciar para llamar."
+    },
+    {
+      "when": {
+        "where": "trabajo"
+      },
+      "text": "En el trabajo, el hostigamiento sexual se puede reportar a Recursos Humanos y también ante la Fiscalía."
+    },
+    {
+      "when": {
+        "contact": "si"
+      },
+      "text": "Si hubo contacto físico sin tu consentimiento o te siguen, es más urgente: avisa hoy mismo a alguien de confianza y, si quieres, ve acompañada a denunciar."
     }
   ]
 }

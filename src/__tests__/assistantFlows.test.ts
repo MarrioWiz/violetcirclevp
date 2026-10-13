@@ -83,3 +83,23 @@ describe('Vi: conversaciones guiadas', () => {
     expect(out.reply.messages[0]).toMatch(/Sextorsión/);
   });
 });
+
+describe('Vi: acoso en persona', () => {
+  it('pregunta si está a salvo, dónde pasa y da consejos del lugar', async () => {
+    const { replies, state } = await chat(
+      ['un maestro me acosa en clase', 'Sí, estoy a salvo', 'En la universidad', 'Sí'],
+      ['Ana'],
+    );
+    expect(replies[0].intent).toBe('inPerson');
+    expect(replies[1].suggestions).toContain('En la universidad');
+    expect(replies[2].messages[0]).toMatch(/protocolo/);
+    expect(replies[2].actions?.[0]).toMatchObject({ href: expect.stringContaining('platform=presencial') });
+    expect(replies[3].messages.join(' ')).toMatch(/delito/);
+    expect(state.flow).toBe('next');
+  });
+
+  it('en casa ofrece llamar a Telmujer', async () => {
+    const { replies } = await chat(['mi pareja me agarra fuerte', 'si', 'En casa o con mi pareja']);
+    expect(replies[2].actions?.some((a) => a.kind === 'call' && a.phone === '2222323738')).toBe(true);
+  });
+});

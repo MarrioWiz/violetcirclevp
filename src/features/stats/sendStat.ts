@@ -11,7 +11,8 @@ const PLATFORMS: Platform[] = ['whatsapp', 'instagram', 'tiktok', 'facebook', 'o
 /** Construye el documento anónimo: solo { kind, platform, week }. */
 export function buildStat(kind: ViolenceKind, platform: string | undefined, date = new Date()) {
   const p: Platform = PLATFORMS.includes(platform as Platform) ? (platform as Platform) : 'otra';
-  return { kind, platform: p, week: isoWeek(date) };
+  // Las reglas de Firestore aún no conocen 'presencial': se cuenta como 'otro' (sin perder privacidad).
+  return { kind: kind === 'presencial' ? 'otro' : kind, platform: p, week: isoWeek(date) };
 }
 
 /**

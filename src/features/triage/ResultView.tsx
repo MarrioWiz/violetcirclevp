@@ -270,7 +270,7 @@ export function ResultView({ resolved, answers, onChange }: Props) {
         />
         <Divider />
         <NextRow icon={LifeBuoy} title={S.triage.whereToGo} body={S.triage.whereToGoBody} onPress={() => router.push('/directorio')} />
-        {platform ? (
+        {platform && platform !== 'presencial' ? (
           <>
             <Divider />
             <NextRow

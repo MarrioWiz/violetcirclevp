@@ -9,6 +9,7 @@ export const PLATFORM_LABEL: Record<string, string> = {
   tiktok: 'TikTok',
   facebook: 'Facebook',
   otra: 'Correo u otra',
+  presencial: 'En persona',
 };
 
 export const KIND_LABEL: Record<string, string> = {
@@ -20,6 +21,7 @@ export const KIND_LABEL: Record<string, string> = {
   difusion: 'Difusión de contenido íntimo sin consentimiento',
   grooming: 'Grooming',
   amenazas: 'Amenazas',
+  presencial: 'Acoso en persona',
   otro: 'Otro',
 };
 

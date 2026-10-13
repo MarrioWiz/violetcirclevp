@@ -1,4 +1,4 @@
-import { Camera, Mail, MessageCircle, Music2, Users, type LucideIcon } from 'lucide-react-native';
+import { Camera, Mail, MapPin, MessageCircle, Music2, Users, type LucideIcon } from 'lucide-react-native';
 
 /** Ícono genérico por plataforma (sin logos de marca). Lo usan Orienta, Mis registros y Vi. */
 export const PLATFORM_ICON: Record<string, LucideIcon> = {
@@ -7,4 +7,5 @@ export const PLATFORM_ICON: Record<string, LucideIcon> = {
   tiktok: Music2,
   facebook: Users,
   otra: Mail,
+  presencial: MapPin,
 };

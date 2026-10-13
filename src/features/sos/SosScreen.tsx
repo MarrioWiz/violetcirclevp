@@ -30,7 +30,7 @@ type Stage = 'countdown' | 'sending' | 'sent' | 'manual' | 'test' | 'cancelled' 
 
 /**
  * "Pedir ayuda".
- * - Desde fuera de la app (botón lateral, volumen, atajo): cuenta 10 s PARA CANCELAR; si no se
+ * - Desde fuera de la app: cuenta PARA CANCELAR (10 s; 4 s desde la mini app del botón lateral); si no se
  *   cancela, se envía sola (puede que ella no pueda tocar la pantalla). Tocar el círculo envía ya.
  * - Desde dentro de la app (círculo mantenido presionado): ya está confirmado, se envía de inmediato.
  * - Modo prueba: igual que desde fuera, pero nunca envía nada.
@@ -49,7 +49,7 @@ export function SosScreen() {
   // Si ya se había enviado (p. ej. la app se cerró y volvió a abrir), se muestra el resultado sin reenviar.
   const alreadySent = useSession.getState().sosSentAt !== null;
   const [stage, setStage] = useState<Stage>(alreadySent ? 'sent' : 'countdown');
-  const [left, setLeft] = useState(SOS_SECONDS);
+  const [left, setLeft] = useState(() => useSession.getState().sosSeconds || SOS_SECONDS);
   const [count, setCount] = useState(0);
   const [sentCount, setSentCount] = useState(0);
   const [message, setMessage] = useState('');
@@ -154,7 +154,7 @@ export function SosScreen() {
     return () => clearTimeout(id);
   }, [stage, close]);
 
-  const progress = stage === 'countdown' ? left / SOS_SECONDS : 1;
+  const progress = stage === 'countdown' ? left / (useSession.getState().sosSeconds || SOS_SECONDS) : 1;
 
   return (
     <SafeAreaView style={styles.root}>

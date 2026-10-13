@@ -9,8 +9,8 @@ Código: https://github.com/MarrioWiz/violetcirclevp (privado, rama `master`).
 | Qué | Dónde | Versión |
 |---|---|---|
 | App Android | `release/VioletCircleVP-1.2.0.apk` (63 MB, arm64 + armv7, gitignored) — instalada en el cel 2026-10-12 | 1.2.0 |
-| Mini app "Pedir ayuda" | `release/PedirAyuda-1.0.0.apk` (180 KB, sin permisos) · código en `companion/` | 1.0.0 |
-| Web (PWA) | https://violetcirclevp-uvp.web.app | build de `d7e8ed2` (aún SIN el rediseño 1.2.0: falta `npm run build:web` + deploy) |
+| Mini app "Pedir ayuda" | `release/PedirAyuda-1.0.1.apk` (sin permisos; 4 s para cancelar; se muestra sobre el bloqueo) · código en `companion/` | 1.0.1 |
+| Web (PWA) | https://violetcirclevp-uvp.web.app | rediseño 1.2.0, publicada 2026-10-12 |
 | Panel de tendencias | https://violetcirclevp-uvp.web.app/panel/ (Google, solo marioimanol02@gmail.com) | — |
 | Firebase | proyecto `violetcirclevp-uvp` (Spark): Auth anónima + Google, Firestore `nam5`, reglas desplegadas | — |
 
@@ -19,7 +19,7 @@ Ambas apps están instaladas por ADB en el Galaxy S24 Ultra de Mario (SM-S928B, 
 ## Comandos
 
 ```bash
-npm test                 # 76 pruebas (Jest)
+npm test                 # 79 pruebas (Jest)
 npm run test:rules       # 17 pruebas de reglas (emulador de Firestore)
 npx tsc --noEmit && npx eslint .
 
@@ -35,7 +35,7 @@ cd companion && ./gradlew assembleRelease
 
 # Instalar en el cel (USB, depuración activada)
 adb install --user 0 -r release/VioletCircleVP-1.2.0.apk
-adb install --user 0 -r release/PedirAyuda-1.0.0.apk
+adb install --user 0 -r release/PedirAyuda-1.0.1.apk
 ```
 
 ## Cosas que hay que saber
@@ -53,6 +53,10 @@ adb install --user 0 -r release/PedirAyuda-1.0.0.apk
 - La web y el panel comparten dominio: el panel ve la sesión anónima de la web y la trata como "sin sesión".
 
 ## Pendiente
+
+0. **Probar con el cel bloqueado** (2026-10-12): botón lateral 2 veces → mini app 1.0.1 → la alerta debe
+   encender la pantalla y verse SOBRE el bloqueo con 4 s para cancelar (`SosLockScreenListener` en el módulo).
+   Usar un contacto avisado o "Probar sin enviar".
 
 1. **Probar en el cel real**: 3× volumen abajo (servicio de accesibilidad; en Android 13+ requiere
    "Permitir ajustes restringidos"), tecla lateral → mini app, y ambos **con la pantalla bloqueada**.

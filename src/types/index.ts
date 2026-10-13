@@ -1,7 +1,16 @@
-export type Platform = 'whatsapp' | 'instagram' | 'tiktok' | 'facebook' | 'otra';
+export type Platform = 'whatsapp' | 'instagram' | 'tiktok' | 'facebook' | 'otra' | 'presencial';
 
 export type ViolenceKind =
-  'riesgo' | 'ciberacoso' | 'sextorsion' | 'doxing' | 'suplantacion' | 'difusion' | 'grooming' | 'amenazas' | 'otro';
+  | 'riesgo'
+  | 'ciberacoso'
+  | 'sextorsion'
+  | 'doxing'
+  | 'suplantacion'
+  | 'difusion'
+  | 'grooming'
+  | 'amenazas'
+  | 'presencial'
+  | 'otro';
 
 export type ReviewStatus = 'borrador' | 'revisado' | 'publicado';
 

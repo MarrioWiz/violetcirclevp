@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { S } from '@/lib/strings.es';
 
-export const PLATFORM_VALUES = ['whatsapp', 'instagram', 'tiktok', 'facebook', 'otra'] as const;
+export const PLATFORM_VALUES = ['whatsapp', 'instagram', 'tiktok', 'facebook', 'otra', 'presencial'] as const;
 export const KIND_VALUES = [
   'ciberacoso',
   'sextorsion',
@@ -11,6 +11,7 @@ export const KIND_VALUES = [
   'difusion',
   'grooming',
   'amenazas',
+  'presencial',
   'otro',
 ] as const;
 

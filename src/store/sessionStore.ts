@@ -28,7 +28,9 @@ interface SessionState {
   sosActive: boolean;
   /** external = botón/volumen/atajo (10 s para cancelar), hold = círculo mantenido en la app, test = no envía. */
   sosMode: SosMode;
-  setSosActive: (on: boolean, mode?: SosMode) => void;
+  /** Segundos para cancelar (10 normalmente; la mini app pide 4). */
+  sosSeconds: number;
+  setSosActive: (on: boolean, mode?: SosMode, seconds?: number) => void;
   /** Se marca al empezar a enviar: si la pantalla se vuelve a montar, NO se reenvía. */
   sosSentAt: number | null;
   markSosSent: () => void;
@@ -52,7 +54,9 @@ export const useSession = create<SessionState>((set, get) => ({
   externalUntil: 0,
   sosActive: false,
   sosMode: 'external',
-  setSosActive: (sosActive, mode = 'external') => set({ sosActive, sosMode: mode, sosSentAt: null }),
+  sosSeconds: 10,
+  setSosActive: (sosActive, mode = 'external', seconds = 10) =>
+    set({ sosActive, sosMode: mode, sosSeconds: seconds, sosSentAt: null }),
   sosSentAt: null,
   markSosSent: () => set({ sosSentAt: Date.now() }),
   markExternal: () => set({ externalUntil: Date.now() + EXTERNAL_GRACE_MS }),

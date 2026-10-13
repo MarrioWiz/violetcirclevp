@@ -12,7 +12,7 @@ import { MAIN_SUGGESTIONS, classify, normalize, replyFor, type BotAction, type B
 
 const tree = triageJson as unknown as TriageTree;
 
-type Flow = 'harass' | 'intimate' | 'evidence' | 'report' | 'offerTriage' | 'triage' | 'breathe' | 'next';
+type Flow = 'inPerson' | 'harass' | 'intimate' | 'evidence' | 'report' | 'offerTriage' | 'triage' | 'breathe' | 'next';
 
 export interface ViState {
   flow?: Flow;
@@ -70,6 +70,38 @@ const PLATFORM_TIPS: Record<string, string[]> = {
   ],
 };
 
+const PLACE_CHIPS = ['En la universidad', 'En la calle o transporte', 'En casa o con mi pareja', 'En el trabajo', 'Otro lugar'];
+
+/** Qué hacer según dónde pasa el acoso en persona. */
+const PLACE_ADVICE: Record<string, string[]> = {
+  uni: [
+    'Si la persona es de la UVP, la universidad puede activar su protocolo y evitar que tengas contacto con ella.',
+    'Mientras, trata de no quedarte sola con esa persona y avisa a una amiga o maestra de confianza.',
+  ],
+  calle: [
+    'Si vuelve a pasar, acércate a otras personas o a un negocio abierto y pide ayuda; el 911 atiende siempre.',
+    'Comparte tu ubicación con tu círculo cuando te muevas por esa zona.',
+  ],
+  casa: [
+    'Telmujer te escucha 24 h y te orienta para pedir medidas de protección. No tienes que denunciar para llamar.',
+    'Ten tu teléfono cargado y piensa a dónde podrías ir si necesitas salir rápido.',
+  ],
+  trabajo: [
+    'El hostigamiento sexual en el trabajo se puede reportar a Recursos Humanos y también ante la Fiscalía.',
+    'Anota fechas y testigos; si hay mensajes o correos, guárdalos.',
+  ],
+  otro: ['Si vuelve a pasar, busca un lugar con gente y pide ayuda; el 911 atiende siempre.'],
+};
+
+function pickPlace(t: string): string | undefined {
+  if (has(t, [' uni', 'escuela', 'salon', 'clase', 'maestr', 'profe', 'campus'])) return 'uni';
+  if (has(t, ['calle', 'transporte', 'camion', 'taxi', 'metro', 'parada'])) return 'calle';
+  if (has(t, ['casa', 'pareja', 'novio', ' ex ', 'esposo'])) return 'casa';
+  if (has(t, ['trabajo', 'jefe', 'oficina'])) return 'trabajo';
+  if (has(t, ['otro'])) return 'otro';
+  return undefined;
+}
+
 const CAPTURE_TIPS = [
   'Que se vea el @usuario o el número completo, no solo el nombre.',
   'Que se vean la fecha y la hora.',
@@ -86,6 +118,7 @@ const A = {
   call911: { kind: 'call911', label: 'Llamar al 911' },
   help: { kind: 'route', label: 'Pedir ayuda', href: '/alerta' },
   vida: { kind: 'call', label: 'Línea de la Vida (24 h)', phone: '8009112000' },
+  telmujer: { kind: 'call', label: 'Llamar a Telmujer (24 h)', phone: '2222323738' },
 } satisfies Record<string, BotAction>;
 
 function newRecord(platform?: string, type?: string, title = 'Lo que pasó'): BotAction {
@@ -195,6 +228,18 @@ function matchOption(t: string, labels: string[]): number {
 
 function start(intent: string, names: string[]): ViOutput | null {
   switch (intent) {
+    case 'inPerson':
+      return {
+        reply: bot(
+          [
+            'Lo que pasa en persona también es acoso, y no es tu culpa: no depende de cómo ibas vestida ni de a dónde fuiste.',
+            'Antes de seguir: ¿estás a salvo ahora mismo?',
+          ],
+          { suggestions: ['Sí, estoy a salvo', 'No', 'No estoy segura'] },
+          'inPerson',
+        ),
+        state: { flow: 'inPerson', step: 'safe' },
+      };
     case 'harassment':
       return {
         reply: bot(
@@ -273,6 +318,50 @@ function start(intent: string, names: string[]): ViOutput | null {
 function step(state: ViState, t: string, names: string[]): ViOutput | null {
   const d = state.data ?? {};
   switch (state.flow) {
+    case 'inPerson': {
+      if (state.step === 'safe') {
+        if (isNo(t)) return { reply: replyFor('danger'), state: {} };
+        if (isYes(t))
+          return {
+            reply: bot(['Me alegra. ¿Dónde está pasando?'], { suggestions: PLACE_CHIPS }),
+            state: { flow: 'inPerson', step: 'place' },
+          };
+        return {
+          reply: bot(['Solo para estar segura: ¿estás a salvo ahora mismo?'], {
+            suggestions: ['Sí, estoy a salvo', 'No', 'No estoy segura'],
+          }),
+          state,
+        };
+      }
+      if (state.step === 'place') {
+        const place = pickPlace(t);
+        if (!place) return { reply: bot(['¿En cuál de estos lugares?'], { suggestions: PLACE_CHIPS }), state };
+        return {
+          reply: bot(
+            [
+              `Esto te puede ayudar:\n• ${PLACE_ADVICE[place].join('\n• ')}`,
+              'Anota qué pasó, dónde, a qué hora, quién fue y si alguien lo vio: eso sirve mucho si decides denunciar.',
+              '¿Te ha tocado sin tu permiso, te ha seguido o te ha amenazado?',
+            ],
+            {
+              suggestions: ['Sí', 'No, pero me da miedo'],
+              actions: [newRecord('presencial', 'presencial', 'Acoso en persona'), ...(place === 'casa' ? [A.telmujer] : [])],
+            },
+          ),
+          state: { flow: 'inPerson', step: 'contact', data: { place } },
+        };
+      }
+      if (state.step === 'contact') {
+        const serious = isYes(t);
+        return nextQuestion(names, [
+          serious
+            ? 'Eso es serio y puede ser delito (abuso o acoso sexual). Avisa hoy mismo a alguien de confianza y, si quieres denunciar, la Fiscalía te atiende; puedes ir acompañada.'
+            : 'Lo que sientes cuenta, aunque no haya pasado algo más. Registrarlo y contárselo a alguien te protege.',
+        ]);
+      }
+      return null;
+    }
+
     case 'harass': {
       if (state.step === 'safe') {
         if (isNo(t)) return { reply: replyFor('danger'), state: {} };

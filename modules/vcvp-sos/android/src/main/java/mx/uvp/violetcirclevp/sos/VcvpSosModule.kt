@@ -106,6 +106,8 @@ class VcvpSosModule : Module() {
         activity.runOnUiThread {
           activity.setShowWhenLocked(on)
           activity.setTurnScreenOn(on)
+          // Al cerrar la alerta, la pantalla vuelve a apagarse sola como siempre.
+          if (!on) activity.window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
       }
       activity != null

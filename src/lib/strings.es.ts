@@ -402,7 +402,7 @@ export const S = {
       'Agrega al menos una persona en "Mi círculo" para poder avisarle. Mientras tanto, puedes llamar al 911.',
     setupTitle: 'Pedir ayuda rápido',
     setupSubtitle:
-      'Prepara la alerta para usarla sin abrir la app: al activarla tienes 10 segundos para cancelar; si no cancelas, se envía sola.',
+      'Prepara la alerta para usarla sin abrir la app: al activarla tienes unos segundos para cancelar (4 con el botón lateral, 10 con el volumen o el atajo); si no cancelas, se envía sola.',
     requirements: 'Lo necesario',
     reqContacts: 'Personas en tu círculo',
     reqContactsOk: '{n} persona(s)',
@@ -442,7 +442,7 @@ export const S = {
     simTitle: 'Modo simulación (web)',
     simBody: 'Así se ve en la app de Android. Aquí puedes activar todo para probarlo, pero el navegador no puede usar los botones del teléfono ni mandar SMS solo.',
     webIntro:
-      'En la app de Android puedes mandar la alerta sin abrir VioletCircleVP: tienes 10 segundos para cancelar y, si no cancelas, se envía sola con tu ubicación.',
+      'En la app de Android puedes mandar la alerta sin abrir VioletCircleVP: tienes unos segundos para cancelar (4 con el botón lateral) y, si no cancelas, se envía sola con tu ubicación.',
     webHowTitle: 'En el iPhone (versión web)',
     webHowBody:
       'Apple no deja que una página web use los botones del teléfono. Aquí usa el botón "Pedir ayuda" de Inicio: mantenlo 2 segundos y se abre Mensajes con tu ubicación lista para enviar.',
