@@ -82,7 +82,7 @@ export default function SettingsScreen() {
   };
 
   return (
-    <Screen nav="back" title={S.settings.title} eyebrow={S.settings.eyebrow}>
+    <Screen nav="back" title={S.settings.title}>
       <View style={{ gap: spacing.md }}>
         <Expandable icon={ShieldCheck} title={S.settings.security} summary={S.settings.securitySummary} defaultOpen>
           <ListRow icon={KeyRound} title={S.settings.changePin} onPress={() => router.push('/ajustes/pin')} />

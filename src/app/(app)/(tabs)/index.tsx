@@ -1,10 +1,9 @@
 import { router, useFocusEffect, type Href } from 'expo-router';
-import { ChevronRight, Compass, NotebookPen, Phone, Siren, type LucideIcon } from 'lucide-react-native';
+import { ChevronRight, Compass, NotebookPen, Phone, Send, Siren, type LucideIcon } from 'lucide-react-native';
 import { useCallback, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
-import { Divider } from '@/components/Rows';
 import { Screen } from '@/components/Screen';
 import { tabMeta } from '@/components/dock/tabs';
 import { IconBadge } from '@/components/IconBadge';
@@ -14,33 +13,36 @@ import { ReadinessRow } from '@/features/sos/ReadinessRow';
 import { sosNative } from '@/features/sos/sosService';
 import { SIMULATED, sosSim } from '@/features/sos/webSimulator';
 import { S } from '@/lib/strings.es';
-import { HAIRLINE, palette, radius, spacing } from '@/theme';
+import { alpha, fonts, palette, radius, spacing, useTheme } from '@/theme';
 
 interface Shortcut {
   key: string;
   icon: LucideIcon;
   title: string;
   body: string;
+  /** Nombre corto bajo el círculo. */
+  short: string;
   danger?: boolean;
   onPress: () => void;
 }
 
-function ShortcutRow({ s }: { s: Shortcut }) {
+/** Botón redondo con su nombre abajo (fila de acciones rápidas, estilo banca móvil). */
+function ActionCircle({ s }: { s: Shortcut }) {
+  const { accent } = useTheme();
+  const tint = s.danger ? palette.danger : accent;
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={`${s.title}. ${s.body}`}
       onPress={s.onPress}
-      style={({ pressed }) => [styles.row, { opacity: pressed ? 0.7 : 1 }]}
+      style={({ pressed }) => [styles.action, { opacity: pressed ? 0.7 : 1, transform: [{ scale: pressed ? 0.96 : 1 }] }]}
     >
-      <IconBadge icon={s.icon} size={42} tone={s.danger ? 'danger' : 'accent'} />
-      <View style={{ flex: 1 }}>
-        <AppText variant="bodyStrong">{s.title}</AppText>
-        <AppText variant="caption" tone="textMuted">
-          {s.body}
-        </AppText>
+      <View style={[styles.circle, { backgroundColor: alpha(tint, 0.18) }]}>
+        <s.icon size={24} color={tint} strokeWidth={2} />
       </View>
-      <ChevronRight size={18} color={palette.textMuted} strokeWidth={1.75} />
+      <AppText variant="caption" center numberOfLines={2} style={{ fontFamily: fonts.semi, color: palette.text }}>
+        {s.short}
+      </AppText>
     </Pressable>
   );
 }
@@ -69,14 +71,19 @@ export default function Home() {
   const sc = S.home.shortcuts;
 
   const shortcuts: Shortcut[] = [
-    { key: '911', icon: Phone, danger: true, ...sc.call911, onPress: () => void call911() },
-    { key: 'orient', icon: Compass, ...sc.orient, onPress: () => router.push('/orientacion') },
-    { key: 'save', icon: NotebookPen, ...sc.save, onPress: () => router.push('/bitacora/nueva') },
-    // Solo en Android y mientras no esté configurado; después vive en Más → Pedir ayuda rápido.
-    ...(quickHelpOn === false
-      ? [{ key: 'quick', icon: Siren, ...sc.quickHelp, onPress: () => router.push('/ajustes/ayuda-rapida' as Href) }]
-      : []),
+    { key: '911', icon: Phone, danger: true, ...sc.call911, short: '911', onPress: () => void call911() },
+    {
+      key: 'notify',
+      icon: Send,
+      title: 'Avisar a mi círculo',
+      body: 'Prepara el mensaje para tus personas de confianza',
+      short: 'Avisar',
+      onPress: () => router.push({ pathname: '/alerta', params: { compose: '1' } }),
+    },
+    { key: 'orient', icon: Compass, ...sc.orient, short: '¿Es violencia?', onPress: () => router.push('/orientacion') },
+    { key: 'save', icon: NotebookPen, ...sc.save, short: 'Guardar prueba', onPress: () => router.push('/bitacora/nueva') },
   ];
+  const quick = sc.quickHelp;
 
   return (
     <Screen
@@ -94,26 +101,45 @@ export default function Home() {
       <HoldToHelpOrb />
       <ReadinessRow />
 
-      <View style={styles.list}>
-        {shortcuts.map((s, i) => (
-          <View key={s.key}>
-            {i > 0 && <Divider />}
-            <ShortcutRow s={s} />
-          </View>
+      <View style={styles.actions}>
+        {shortcuts.map((s) => (
+          <ActionCircle key={s.key} s={s} />
         ))}
       </View>
+
+      {/* Solo en Android (o simulado en web) y mientras no esté configurado. */}
+      {quickHelpOn === false && (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`${quick.title}. ${quick.body}`}
+          onPress={() => router.push('/ajustes/ayuda-rapida' as Href)}
+          style={({ pressed }) => [styles.promo, { opacity: pressed ? 0.85 : 1 }]}
+        >
+          <IconBadge icon={Siren} size={44} />
+          <View style={{ flex: 1 }}>
+            <AppText variant="bodyStrong">{quick.title}</AppText>
+            <AppText variant="caption" tone="textMuted">
+              {quick.body}
+            </AppText>
+          </View>
+          <ChevronRight size={18} color={palette.textMuted} strokeWidth={1.75} />
+        </Pressable>
+      )}
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  list: {
-    marginTop: spacing.lg,
-    paddingHorizontal: spacing.lg,
-    borderRadius: radius.lg,
-    borderWidth: HAIRLINE,
-    borderColor: palette.stroke,
+  actions: { flexDirection: 'row', justifyContent: 'space-between', marginTop: spacing.lg, gap: spacing.sm },
+  action: { flex: 1, alignItems: 'center', gap: spacing.sm },
+  circle: { width: 60, height: 60, borderRadius: 30, alignItems: 'center', justifyContent: 'center' },
+  promo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    marginTop: spacing.xl,
+    padding: spacing.lg,
+    borderRadius: radius.xl,
     backgroundColor: palette.glass,
   },
-  row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, minHeight: 64, paddingVertical: spacing.sm },
 });

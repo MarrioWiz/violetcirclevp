@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
-import { spacing, useTheme } from '@/theme';
+import { spacing } from '@/theme';
 
 interface Props {
   eyebrow?: string;
@@ -13,28 +13,19 @@ interface Props {
 }
 
 /** Eyebrow mono con punto del acento + título enorme y apretado + subtítulo lavanda. */
-export function ScreenHeader({
-  eyebrow = 'VioletCircleVP',
-  title,
-  subtitle,
-  accent: accentProp,
-  size = 'display',
-}: Props) {
-  const { accent } = useTheme();
-  const dot = accentProp ?? accent;
+export function ScreenHeader({ eyebrow, title, subtitle, size = 'display' }: Props) {
   return (
-    <View style={{ gap: spacing.sm, marginBottom: spacing.xxl }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }} accessibilityElementsHidden>
-        <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: dot }} />
-        <AppText variant="label" tone="textMuted">
+    <View style={{ gap: spacing.xs, marginBottom: spacing.xxl }}>
+      {eyebrow ? (
+        <AppText variant="bodyStrong" style={{ color: 'rgba(255,255,255,0.75)' }}>
           {eyebrow}
         </AppText>
-      </View>
+      ) : null}
       <AppText variant={size} numberOfLines={2} adjustsFontSizeToFit minimumFontScale={0.6} accessibilityRole="header">
         {title}
       </AppText>
       {subtitle ? (
-        <AppText variant="subtitle" tone="textMuted">
+        <AppText variant="body" style={{ color: 'rgba(255,255,255,0.72)', marginTop: 2 }}>
           {subtitle}
         </AppText>
       ) : null}

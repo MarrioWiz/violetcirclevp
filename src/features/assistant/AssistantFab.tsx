@@ -14,7 +14,7 @@ const GLOW = SIZE * 1.9;
 /** Pestañas del dock (ahí el botón va encima del dock). */
 const TAB_PATHS = new Set(['/', '/orientacion', '/circulo', '/directorio', '/mas']);
 /** Pantallas con botones fijos abajo: el botón sube para no taparlos. */
-const FOOTER_PATHS = ['/bitacora', '/circulo/acompanar'];
+const FOOTER_PATHS = ['/bitacora', '/circulo/acompanar', '/guia'];
 /** Donde estorbaría: el propio chat, formularios con teclado y la alerta. */
 const HIDDEN = ['/asistente', '/alerta', '/circulo/nuevo', '/bitacora/nueva', '/ajustes/pin', '/aprende/autoevaluacion'];
 

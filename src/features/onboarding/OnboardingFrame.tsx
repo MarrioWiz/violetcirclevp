@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { HAIRLINE, MIN_TOUCH, alpha, palette, radius, spacing, useTheme } from '@/theme';
+import { MIN_TOUCH, alpha, palette, radius, spacing, useTheme } from '@/theme';
 import { Backdrop } from '@/components/ui/Backdrop';
 
 export const ONBOARDING_STEPS = 7;
@@ -30,7 +30,7 @@ export function OnboardingFrame({ step, children, footer, canGoBack = true }: Pr
               onPress={() => router.back()}
               style={[styles.back, styles.backBtn]}
             >
-              <ChevronLeft size={20} color={colors.text} strokeWidth={1.9} />
+              <ChevronLeft size={26} color={colors.text} strokeWidth={2.2} />
             </Pressable>
           ) : (
             <View style={styles.back} />
@@ -84,12 +84,7 @@ const styles = StyleSheet.create({
   },
   progress: { flex: 1, flexDirection: 'row', gap: 6, justifyContent: 'center', alignItems: 'center' },
   dot: { width: 8, height: 8, borderRadius: radius.pill },
-  backBtn: {
-    borderRadius: radius.pill,
-    backgroundColor: palette.glassStrong,
-    borderWidth: HAIRLINE,
-    borderColor: palette.strokeStrong,
-  },
+  backBtn: { alignItems: 'flex-start' },
   content: { paddingHorizontal: spacing.xl, paddingTop: spacing.xxl, paddingBottom: spacing.xxl, gap: spacing.lg },
   footer: { paddingHorizontal: spacing.xl, paddingBottom: spacing.md, paddingTop: spacing.sm, gap: spacing.sm },
 });

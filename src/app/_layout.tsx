@@ -6,7 +6,6 @@ import {
   Inter_800ExtraBold,
 } from '@expo-google-fonts/inter';
 import { JetBrainsMono_500Medium } from '@expo-google-fonts/jetbrains-mono';
-import { SpaceGrotesk_600SemiBold, SpaceGrotesk_700Bold } from '@expo-google-fonts/space-grotesk';
 import { useFonts } from 'expo-font';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -41,8 +40,6 @@ export default function RootLayout() {
     Inter_700Bold,
     Inter_800ExtraBold,
     JetBrainsMono_500Medium,
-    SpaceGrotesk_600SemiBold,
-    SpaceGrotesk_700Bold,
   });
   const [booted, setBooted] = useState(false);
 

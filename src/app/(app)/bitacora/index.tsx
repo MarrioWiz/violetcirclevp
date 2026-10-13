@@ -105,7 +105,8 @@ export default function JournalIndex() {
       });
     const out: { month: string; items: Incident[] }[] = [];
     for (const i of list) {
-      const month = format(new Date(i.occurredAt), 'MMMM yyyy', { locale: es });
+      const raw = format(new Date(i.occurredAt), 'MMMM yyyy', { locale: es });
+      const month = raw.charAt(0).toUpperCase() + raw.slice(1);
       const last = out[out.length - 1];
       if (last?.month === month) last.items.push(i);
       else out.push({ month, items: [i] });

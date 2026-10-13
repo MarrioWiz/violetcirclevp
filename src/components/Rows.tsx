@@ -188,24 +188,17 @@ export function Divider() {
   return <View style={{ height: HAIRLINE, backgroundColor: palette.stroke, marginVertical: spacing.xs }} />;
 }
 
-/** Título de sección: punto del acento + mono en mayúsculas. */
+/** Título de sección: texto limpio, sin mayúsculas ni adornos. */
 export function SectionTitle({ children }: { children: string }) {
-  const { accent } = useTheme();
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacing.sm,
-        marginTop: spacing.x3,
-        marginBottom: spacing.md,
-      }}
+    <AppText
+      variant="subheading"
+      tone="textMuted"
+      accessibilityRole="header"
+      style={{ marginTop: spacing.x3, marginBottom: spacing.md }}
     >
-      <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: accent }} />
-      <AppText variant="label" tone="textMuted" accessibilityRole="header">
-        {children}
-      </AppText>
-    </View>
+      {children}
+    </AppText>
   );
 }
 

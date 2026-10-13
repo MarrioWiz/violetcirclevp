@@ -37,23 +37,26 @@ interface Props {
   dock?: boolean;
 }
 
-/** Ruta visible ("Más · Mis registros") para saber siempre en qué sección se está. */
-const BREADCRUMBS: [string, string][] = [
-  ['/bitacora', 'Más · Mis registros'],
-  ['/biblioteca', 'Más · Biblioteca'],
-  ['/guia', 'Más · Biblioteca'],
-  ['/aprende', 'Más · Biblioteca'],
-  ['/circulo/acompanar', 'Más · Biblioteca'],
-  ['/ajustes/ayuda-rapida', 'Más · Pedir ayuda rápido'],
-  ['/ajustes', 'Más · Ajustes'],
-  ['/info', 'Más · Ajustes'],
-  ['/directorio/', 'Apoyo'],
-  ['/circulo/nuevo', 'Círculo'],
-  ['/alerta', 'Pedir ayuda'],
+/**
+ * Texto del botón de regresar según la pantalla ("‹ Más"), para saber siempre a dónde vuelves.
+ * Solo donde el origen es uno solo; si se puede llegar desde varios lados, dice "Atrás".
+ */
+const BACK_LABELS: [RegExp, string][] = [
+  [/^\/bitacora\/(nueva|exportar)$/, 'Mis registros'],
+  [/^\/bitacora\/[^/]+$/, 'Mis registros'],
+  [/^\/bitacora$/, 'Más'],
+  [/^\/biblioteca$/, 'Más'],
+  [/^\/ajustes\/ayuda-rapida$/, 'Más'],
+  [/^\/ajustes\/pin$/, 'Ajustes'],
+  [/^\/ajustes$/, 'Más'],
+  [/^\/info\//, 'Ajustes'],
+  [/^\/aprende\//, 'Biblioteca'],
+  [/^\/circulo\/acompanar$/, 'Biblioteca'],
+  [/^\/directorio\//, 'Apoyo'],
 ];
 
-export function breadcrumbFor(pathname: string): string | undefined {
-  return BREADCRUMBS.find(([p]) => pathname === p || pathname.startsWith(p.endsWith('/') ? p : `${p}/`))?.[1];
+export function backLabelFor(pathname: string): string {
+  return BACK_LABELS.find(([re]) => re.test(pathname))?.[1] ?? 'Atrás';
 }
 
 const COLLAPSE_FROM = 40;
@@ -79,7 +82,6 @@ export function Screen({
 }: Props) {
   const dockInset = useDockInset();
   const pathname = usePathname();
-  const crumb = eyebrow ?? breadcrumbFor(pathname);
   const NavIcon = nav === 'close' ? X : ChevronLeft;
   const y = useSharedValue(0);
   const onScroll = useAnimatedScrollHandler((e) => {
@@ -102,12 +104,17 @@ export function Screen({
       {nav ? (
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={nav === 'close' ? 'Cerrar' : 'Regresar'}
-          hitSlop={8}
+          accessibilityLabel={nav === 'close' ? 'Cerrar' : `Regresar a ${backLabelFor(pathname)}`}
+          hitSlop={10}
           onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
-          style={({ pressed }) => [styles.navBtn, { opacity: pressed ? 0.7 : 1 }]}
+          style={({ pressed }) => [nav === 'close' ? styles.closeBtn : styles.backBtn, { opacity: pressed ? 0.6 : 1 }]}
         >
-          <NavIcon size={20} color={palette.text} strokeWidth={1.9} />
+          <NavIcon size={nav === 'close' ? 20 : 24} color={palette.text} strokeWidth={2.2} />
+          {nav === 'back' ? (
+            <AppText variant="bodyStrong" numberOfLines={1}>
+              {backLabelFor(pathname)}
+            </AppText>
+          ) : null}
         </Pressable>
       ) : (
         <View />
@@ -120,7 +127,7 @@ export function Screen({
   );
 
   const header = title ? (
-    <ScreenHeader eyebrow={crumb} title={title} subtitle={subtitle} size={bigTitle ? 'display' : 'hero'} />
+    <ScreenHeader eyebrow={eyebrow} title={title} subtitle={subtitle} size={bigTitle ? 'display' : 'hero'} />
   ) : null;
 
   // En pestañas también se deja lugar para el botón de Vi (abajo a la derecha, sobre el dock).
@@ -172,24 +179,21 @@ const styles = StyleSheet.create({
   },
   compactBg: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: palette.bg1,
-    borderBottomWidth: HAIRLINE,
-    borderBottomColor: palette.stroke,
+    backgroundColor: 'rgba(9,9,13,0.92)',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 120,
   },
   compactTitle: { textAlign: 'center' },
   right: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  navBtn: {
+  backBtn: { flexDirection: 'row', alignItems: 'center', gap: 2, minHeight: 40, paddingRight: spacing.sm, marginLeft: -6 },
+  closeBtn: {
     width: 40,
     height: 40,
     borderRadius: radius.pill,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: palette.glassStrong,
-    borderWidth: HAIRLINE,
-    borderColor: palette.strokeStrong,
   },
   content: { paddingHorizontal: spacing.xl, paddingTop: spacing.md },
   contentStatic: { paddingHorizontal: spacing.xl, paddingTop: spacing.md },

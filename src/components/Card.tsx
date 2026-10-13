@@ -3,14 +3,13 @@ import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'rea
 
 import { HAIRLINE, alpha, palette, radius, spacing, useTheme } from '@/theme';
 
-import { Sheen } from './ui/Sheen';
 
 interface Props {
   children: ReactNode;
   onPress?: () => void;
   style?: StyleProp<ViewStyle>;
   /**
-   * surface = vidrio (GlassCard default) · strong = vidrio más denso · accent = teñido con el acento ·
+   * surface = tarjeta sólida (default) · strong = un tono más claro · accent = teñida con el acento ·
    * soft = teñido violeta · danger/success/warning = estados.
    */
   tone?: 'surface' | 'strong' | 'accent' | 'soft' | 'danger' | 'success' | 'warning';
@@ -19,7 +18,7 @@ interface Props {
   padded?: boolean;
 }
 
-/** Tarjeta de vidrio: relleno translúcido, borde hairline y brillo superior de 1 px. */
+/** Tarjeta sólida y muy redondeada (estilo banca móvil): sin bordes, el color hace la jerarquía. */
 export function Card({
   children,
   onPress,
@@ -29,23 +28,18 @@ export function Card({
   accessibilityHint,
   padded = true,
 }: Props) {
-  const { colors, accent } = useTheme();
+  const { accent } = useTheme();
   const look = {
-    surface: { bg: palette.glass, border: palette.stroke, sheen: undefined },
-    strong: { bg: palette.glassStrong, border: palette.strokeStrong, sheen: undefined },
-    accent: { bg: alpha(accent, 0.08), border: alpha(accent, 0.25), sheen: accent },
-    soft: { bg: colors.primarySoft, border: alpha(palette.violet, 0.25), sheen: palette.violet },
-    danger: { bg: colors.dangerSoft, border: alpha(palette.danger, 0.35), sheen: palette.danger },
-    success: { bg: colors.successSoft, border: alpha(palette.success, 0.25), sheen: palette.success },
-    warning: { bg: colors.warningSoft, border: alpha(palette.warning, 0.25), sheen: palette.warning },
+    surface: { bg: palette.glass, border: 'transparent' },
+    strong: { bg: palette.glassStrong, border: 'transparent' },
+    accent: { bg: alpha(accent, 0.14), border: 'transparent' },
+    soft: { bg: alpha(palette.violet, 0.14), border: 'transparent' },
+    danger: { bg: alpha(palette.danger, 0.14), border: alpha(palette.danger, 0.3) },
+    success: { bg: alpha(palette.success, 0.12), border: 'transparent' },
+    warning: { bg: alpha(palette.warning, 0.12), border: 'transparent' },
   }[tone];
   const base = [styles.card, { backgroundColor: look.bg, borderColor: look.border }, padded && styles.padded, style];
-  const content = (
-    <>
-      <Sheen color={look.sheen} />
-      {children}
-    </>
-  );
+  const content = <>{children}</>;
 
   if (!onPress) return <View style={base}>{content}</View>;
   return (
@@ -62,7 +56,7 @@ export function Card({
 }
 
 const styles = StyleSheet.create({
-  card: { borderRadius: radius.lg, borderWidth: HAIRLINE, overflow: 'hidden' },
+  card: { borderRadius: radius.xl, borderWidth: HAIRLINE, overflow: 'hidden' },
   padded: { padding: spacing.lg },
 });
 

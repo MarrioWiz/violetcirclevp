@@ -1,7 +1,7 @@
 import type { LucideIcon } from 'lucide-react-native';
 import { View } from 'react-native';
 
-import { HAIRLINE, alpha, palette, radius, useTheme } from '@/theme';
+import { alpha, palette, radius, useTheme } from '@/theme';
 
 interface Props {
   icon: LucideIcon;
@@ -11,8 +11,8 @@ interface Props {
   square?: boolean;
 }
 
-/** Ícono lineal dentro de un contenedor de vidrio tintado. */
-export function IconBadge({ icon: Icon, size = 44, tone = 'accent', square = true }: Props) {
+/** Ícono lineal dentro de un círculo tintado con el color de la sección. */
+export function IconBadge({ icon: Icon, size = 44, tone = 'accent', square = false }: Props) {
   const { colors, accent } = useTheme();
   const fg = {
     primary: colors.primary,
@@ -30,9 +30,7 @@ export function IconBadge({ icon: Icon, size = 44, tone = 'accent', square = tru
         width: size,
         height: size,
         borderRadius: square ? Math.min(radius.md, size / 2.6) : size / 2,
-        backgroundColor: tone === 'onPrimary' ? palette.glassStrong : alpha(fg, 0.12),
-        borderWidth: HAIRLINE,
-        borderColor: tone === 'onPrimary' ? palette.strokeStrong : alpha(fg, 0.22),
+        backgroundColor: tone === 'onPrimary' ? 'rgba(255,255,255,0.16)' : alpha(fg, 0.16),
         alignItems: 'center',
         justifyContent: 'center',
       }}

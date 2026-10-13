@@ -18,7 +18,7 @@ export default function InfoDoc() {
 
   if (doc === 'salida-rapida') {
     return (
-      <Screen nav="back" eyebrow={S.settings.eyebrow} title={S.quickExitGuide.title} subtitle={S.quickExitGuide.subtitle}>
+      <Screen nav="back" title={S.quickExitGuide.title} subtitle={S.quickExitGuide.subtitle}>
         <QuickExitGuide />
       </Screen>
     );

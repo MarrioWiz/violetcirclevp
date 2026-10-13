@@ -3,7 +3,7 @@ import { useState, type ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
-import { HAIRLINE, MIN_TOUCH, palette, radius, spacing, useTheme } from '@/theme';
+import { MIN_TOUCH, palette, radius, spacing, useTheme } from '@/theme';
 
 import { AppText } from './AppText';
 import { IconBadge } from './IconBadge';
@@ -57,9 +57,7 @@ export function Expandable({ title, summary, icon, defaultOpen = false, children
 
 const styles = StyleSheet.create({
   box: {
-    borderRadius: radius.lg,
-    borderWidth: HAIRLINE,
-    borderColor: palette.stroke,
+    borderRadius: radius.xl,
     backgroundColor: palette.glass,
     overflow: 'hidden',
   },

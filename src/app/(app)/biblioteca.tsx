@@ -94,7 +94,7 @@ export default function Library() {
   }, [articles, favorites, q]);
 
   return (
-    <Screen nav="back" title={S.library.title} subtitle={S.library.subtitle} eyebrow={S.library.eyebrow}>
+    <Screen nav="back" title={S.library.title} subtitle={S.library.subtitle}>
       <Segmented<Tab>
         label={S.library.title}
         value={tab}

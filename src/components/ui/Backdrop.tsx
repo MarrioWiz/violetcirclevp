@@ -4,28 +4,35 @@ import Svg, { Defs, Ellipse, RadialGradient, Stop } from 'react-native-svg';
 import { palette, useTheme } from '@/theme';
 
 /**
- * Fondo ambiental: base casi negra, radial violeta muy sutil arriba y un resplandor
- * del acento de la sección abajo. Estático (sin animación) para no gastar batería.
+ * Fondo: base casi negra con una "aurora" de color vivo arriba (violeta + el color de la
+ * sección), como el fondo de color de las apps de banca modernas. Se desvanece hacia abajo
+ * para que el contenido quede sobre negro limpio. Estático (sin animación).
  */
-export function Backdrop({ accent: accentProp, bottomGlow = true }: { accent?: string; bottomGlow?: boolean }) {
+export function Backdrop({ accent: accentProp }: { accent?: string; bottomGlow?: boolean }) {
   const { width, height } = useWindowDimensions();
   const { accent } = useTheme();
-  const glow = accentProp ?? accent;
+  const second = accentProp ?? accent;
+  const h = Math.min(height, 900);
   return (
     <View pointerEvents="none" style={[StyleSheet.absoluteFill, { backgroundColor: palette.bg0 }]}>
-      <Svg width={width} height={height}>
+      <Svg width={width} height={h}>
         <Defs>
-          <RadialGradient id="top" cx="50%" cy="0%" rx="70%" ry="45%" fx="50%" fy="0%">
-            <Stop offset="0" stopColor={palette.violetHalo} stopOpacity={0.4} />
-            <Stop offset="1" stopColor={palette.violetHalo} stopOpacity={0} />
+          <RadialGradient id="auroraA" cx="50%" cy="50%" rx="50%" ry="50%">
+            <Stop offset="0" stopColor={palette.violet} stopOpacity={0.75} />
+            <Stop offset="1" stopColor={palette.violet} stopOpacity={0} />
           </RadialGradient>
-          <RadialGradient id="bottom" cx="50%" cy="100%" rx="60%" ry="30%" fx="50%" fy="100%">
-            <Stop offset="0" stopColor={glow} stopOpacity={0.1} />
-            <Stop offset="1" stopColor={glow} stopOpacity={0} />
+          <RadialGradient id="auroraB" cx="50%" cy="50%" rx="50%" ry="50%">
+            <Stop offset="0" stopColor={second} stopOpacity={0.6} />
+            <Stop offset="1" stopColor={second} stopOpacity={0} />
+          </RadialGradient>
+          <RadialGradient id="auroraC" cx="50%" cy="50%" rx="50%" ry="50%">
+            <Stop offset="0" stopColor={palette.violetDeep} stopOpacity={0.45} />
+            <Stop offset="1" stopColor={palette.violetDeep} stopOpacity={0} />
           </RadialGradient>
         </Defs>
-        <Ellipse cx={width / 2} cy={0} rx={width * 0.85} ry={height * 0.45} fill="url(#top)" />
-        {bottomGlow && <Ellipse cx={width / 2} cy={height} rx={width * 0.75} ry={height * 0.3} fill="url(#bottom)" />}
+        <Ellipse cx={width * 0.12} cy={h * 0.02} rx={width * 0.75} ry={h * 0.28} fill="url(#auroraA)" />
+        <Ellipse cx={width * 0.95} cy={h * 0.08} rx={width * 0.6} ry={h * 0.25} fill="url(#auroraB)" />
+        <Ellipse cx={width * 0.5} cy={h * 0.24} rx={width * 0.7} ry={h * 0.18} fill="url(#auroraC)" />
       </Svg>
     </View>
   );

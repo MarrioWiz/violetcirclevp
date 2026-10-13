@@ -1,9 +1,8 @@
 import * as Haptics from 'expo-haptics';
-import { LinearGradient } from 'expo-linear-gradient';
 import type { LucideIcon } from 'lucide-react-native';
 import { ActivityIndicator, Platform, Pressable, StyleSheet, View, type ViewStyle } from 'react-native';
 
-import { HAIRLINE, gradients, palette, radius, spacing, useTheme } from '@/theme';
+import { HAIRLINE, palette, radius, spacing, useTheme } from '@/theme';
 
 import { AppText } from './AppText';
 
@@ -43,12 +42,12 @@ export function Button({
   const { colors } = useTheme();
 
   const look: Record<Variant, { bg: string; fg: string; border?: string }> = {
-    primary: { bg: 'transparent', fg: palette.white },
-    secondary: { bg: palette.glassStrong, fg: colors.text, border: palette.strokeStrong },
-    outline: { bg: palette.glass, fg: colors.text, border: palette.stroke },
+    primary: { bg: palette.violet, fg: palette.white },
+    secondary: { bg: palette.glassStrong, fg: colors.text },
+    outline: { bg: 'transparent', fg: colors.text, border: palette.strokeStrong },
     ghost: { bg: 'transparent', fg: colors.primary },
     danger: { bg: colors.danger, fg: colors.onDanger },
-    inverse: { bg: palette.glassStrong, fg: palette.white, border: palette.strokeStrong },
+    inverse: { bg: 'rgba(255,255,255,0.14)', fg: palette.white },
   };
   const p = look[variant];
   const inactive = disabled || loading;
@@ -80,15 +79,7 @@ export function Button({
     >
       {({ pressed }) => (
         <>
-          {variant === 'primary' && (
-            <LinearGradient
-              colors={gradients.primary}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={[StyleSheet.absoluteFill, { borderRadius: radius.pill, opacity: pressed ? 0.9 : 1 }]}
-            />
-          )}
-          {variant === 'primary' && <View style={styles.primaryRim} pointerEvents="none" />}
+          {pressed && <View style={[StyleSheet.absoluteFill, styles.pressed]} pointerEvents="none" />}
           {loading ? (
             <ActivityIndicator color={p.fg} />
           ) : (
@@ -114,11 +105,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'hidden',
   },
-  primaryRim: {
-    ...StyleSheet.absoluteFill,
-    borderRadius: radius.pill,
-    borderWidth: HAIRLINE,
-    borderColor: palette.strokeStrong,
-  },
+  pressed: { backgroundColor: 'rgba(0,0,0,0.15)' },
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
 });
