@@ -92,6 +92,15 @@ Pedido de Mario: pantallas saturadas, rutas duplicadas, permisos sin pedir y col
 - `AssistantFab.tsx`: circulito abajo a la derecha en todas las pantallas de la app; sube sobre el dock o los pies con botón; se oculta en el chat, la alerta y formularios.
 - `app/(app)/asistente.tsx`: chat modal, "escribiendo…", chips, botones de acción. En web, Enter envía.
 
-**Paleta suavizada:** violeta `#8A72D6`, acentos pastel (lavanda, cielo, rosa empolvado, menta, ámbar suave), orbe y resplandores con menos opacidad. Todo en `src/theme/colors.ts`.
+**Paleta "aurora violeta" (v1.2.0):** fondo índigo `#130E24`, orquídea `#A97BEA`, orbe lila → periwinkle; acentos: Inicio lila, Orienta periwinkle, Círculo rosa, Apoyo aqua, Más durazno. Títulos en **Space Grotesk**, cuerpo en Inter. Todo en `src/theme/`.
+
+**Segunda ronda (mismo día):** ideas tomadas (no copiadas) de la app del compañero de equipo, adaptadas al estilo propio:
+- Inicio: el círculo en órbita del orbe (satélites + "+"), mensaje con nombres y 3 atajos.
+- Orienta: entrada, opciones con explicación, medidor de 3 niveles (Te afecta · Es violencia digital · Puede ser delito), "Qué dice la ley" (texto general, sin números de artículo), plan marcable, guardar en Mis registros prellenado (`/bitacora/nueva?platform&type&title`), "Hablar con Vi" (`/asistente?tema=`), y `/orientacion?ruta=1.0.1.2` para abrir un recorrido hecho en el chat.
+- Vi: `features/assistant/flows.ts` (conversación por pasos con estado) sobre `engine.ts` (intenciones). Riesgo siempre primero; "salir" corta el flujo.
+- Mis registros (antes "Mi bitácora"): agrupado por mes, consejos de captura, formulario en 3 bloques.
+- Guías: pasos numerados con palomita, sin tachado.
+- Web: `features/sos/webSimulator.ts` simula lo que solo existe en Android (botones, SMS, ícono discreto, recordatorios, adjuntar capturas), con aviso "Modo simulación".
+- Salida rápida: se queda la calculadora (Mario descartó otra pantalla de disfraz).
 
 **Web/PWA:** `scripts/build-web.mjs` agrega `manifest.json`, ícono y metas de Apple para instalarla en la pantalla de inicio del iPhone. En la web del iPhone no se piden notificaciones (no hay push).
