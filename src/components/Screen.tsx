@@ -1,13 +1,7 @@
 import { router, usePathname } from 'expo-router';
 import { ChevronLeft, X } from 'lucide-react-native';
 import type { ReactNode } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from 'react-native';
-import Animated, {
-  interpolate,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView, type Edge } from 'react-native-safe-area-context';
 
 import { HAIRLINE, MIN_TOUCH, palette, radius, spacing } from '@/theme';
@@ -59,12 +53,9 @@ export function backLabelFor(pathname: string): string {
   return BACK_LABELS.find(([re]) => re.test(pathname))?.[1] ?? 'Atrás';
 }
 
-const COLLAPSE_FROM = 40;
-const COLLAPSE_TO = 110;
-
 /**
- * Pantalla base: fondo oscuro con resplandores, encabezado enorme que se contrae a una barra
- * compacta al hacer scroll, y la píldora de "Salida rápida" siempre visible arriba a la derecha.
+ * Pantalla base: fondo con aurora, título grande que se desplaza con el contenido (sin barra
+ * que aparezca al hacer scroll) y la píldora de "Salida rápida" siempre visible arriba a la derecha.
  */
 export function Screen({
   title,
@@ -83,24 +74,10 @@ export function Screen({
   const dockInset = useDockInset();
   const pathname = usePathname();
   const NavIcon = nav === 'close' ? X : ChevronLeft;
-  const y = useSharedValue(0);
-  const onScroll = useAnimatedScrollHandler((e) => {
-    y.value = e.contentOffset.y;
-  });
-  const compact = useAnimatedStyle(() => ({
-    opacity: interpolate(y.value, [COLLAPSE_FROM, COLLAPSE_TO], [0, 1], 'clamp'),
-  }));
   const bigTitle = largeTitle ?? (dock || !nav);
 
   const topBar = (
     <View style={styles.topBar}>
-      {title && scroll ? (
-        <Animated.View pointerEvents="none" style={[styles.compactBg, compact]}>
-          <AppText variant="subheading" numberOfLines={1} style={styles.compactTitle}>
-            {title}
-          </AppText>
-        </Animated.View>
-      ) : null}
       {nav ? (
         <Pressable
           accessibilityRole="button"
@@ -140,18 +117,16 @@ export function Screen({
         <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
           {topBar}
           {scroll ? (
-            <Animated.ScrollView
+            <ScrollView
               style={styles.flex}
               contentContainerStyle={[styles.content, { paddingBottom: bottomPad }]}
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
-              onScroll={onScroll}
-              scrollEventThrottle={16}
             >
               {header}
               {children}
               {dock && footer ? <View style={{ marginTop: spacing.x3 }}>{footer}</View> : null}
-            </Animated.ScrollView>
+            </ScrollView>
           ) : (
             <View style={[styles.flex, styles.contentStatic, dock && { paddingBottom: dockInset }]}>
               {header}
@@ -177,14 +152,6 @@ const styles = StyleSheet.create({
     minHeight: MIN_TOUCH + 8,
     zIndex: 2,
   },
-  compactBg: {
-    ...StyleSheet.absoluteFill,
-    backgroundColor: 'rgba(9,9,13,0.92)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 120,
-  },
-  compactTitle: { textAlign: 'center' },
   right: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   backBtn: { flexDirection: 'row', alignItems: 'center', gap: 2, minHeight: 40, paddingRight: spacing.sm, marginLeft: -6 },
   closeBtn: {
