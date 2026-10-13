@@ -104,3 +104,5 @@ Pedido de Mario: pantallas saturadas, rutas duplicadas, permisos sin pedir y col
 - Salida rápida: se queda la calculadora (Mario descartó otra pantalla de disfraz).
 
 **Web/PWA:** `scripts/build-web.mjs` agrega `manifest.json`, ícono y metas de Apple para instalarla en la pantalla de inicio del iPhone. En la web del iPhone no se piden notificaciones (no hay push).
+
+**Tercera ronda (estilo banca móvil, inspirado en Revolut):** fondo `#09090D` con aurora (violeta + color de la sección) arriba; superficies sólidas `#15151C`/`#1F1F29` con radio 28, sin bordes ni vidrio; violeta eléctrico `#7C5CFF`, acentos vivos (Inicio violeta, Orienta azul `#3D8BFF`, Círculo rosa, Apoyo turquesa, Más ámbar); títulos Inter 800; etiquetas sin mayúsculas espaciadas; botón regresar = "‹ Sección anterior" (`backLabelFor` en `Screen`); Inicio con fila de acciones redondas (911 · Avisar · ¿Es violencia? · Guardar prueba); guías como tutorial (un paso por pantalla). El dock conserva forma, posición y pestañas.
