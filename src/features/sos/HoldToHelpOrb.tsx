@@ -17,8 +17,11 @@ import Animated, {
 import Svg, { Circle, Defs, RadialGradient, Stop } from 'react-native-svg';
 
 import { AppText } from '@/components/AppText';
-import { S } from '@/lib/strings.es';
+import { S, t } from '@/lib/strings.es';
+import { useCircle } from '@/store/circleStore';
 import { useSession } from '@/store/sessionStore';
+
+import { OrbitSatellites } from './OrbitSatellites';
 import { HAIRLINE, alpha, gradients, palette, spacing } from '@/theme';
 
 const HOLD_MS = 2000;
@@ -33,6 +36,13 @@ const CIRC = 2 * Math.PI * R;
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
+/** "Ana", "Ana y Luz", "Ana, Luz y Mamá", "Ana, Luz y 3 más". */
+function joinNames(list: string[]): string {
+  if (list.length <= 1) return list[0] ?? '';
+  if (list.length > 3) return `${list.slice(0, 2).join(', ')} y ${list.length - 2} más`;
+  return `${list.slice(0, -1).join(', ')} y ${list[list.length - 1]}`;
+}
+
 /**
  * Botón principal de Inicio: tocar = opciones de ayuda; mantener 2 s = enviar SMS con ubicación.
  * El anillo se llena mientras mantiene presionado; si suelta antes, no se envía nada.
@@ -44,6 +54,7 @@ export function HoldToHelpOrb() {
   const breathe = useSharedValue(0);
   const pressedAt = useRef(0);
   const [holding, setHolding] = useState(false);
+  const names = useCircle((s) => s.contacts.map((c) => c.name.split(' ')[0]).join('|'));
 
   // Solo "respira" cuando Inicio está a la vista y desbloqueada: ahorra batería y no anima
   // detrás del PIN, la capa de privacidad ni otras pestañas.
@@ -202,16 +213,17 @@ export function HoldToHelpOrb() {
             </LinearGradient>
           </Animated.View>
         </Pressable>
+        <OrbitSatellites size={RING} />
       </View>
-      <AppText variant="caption" tone="textMuted" center style={{ marginTop: spacing.md, maxWidth: 300 }}>
-        {S.sos.holdHint}
+      <AppText variant="caption" tone="textMuted" center style={{ marginTop: spacing.lg, maxWidth: 300 }}>
+        {names ? t(S.sos.holdHintNames, { names: joinNames(names.split('|')) }) : S.sos.holdHintEmpty}
       </AppText>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  wrap: { alignItems: 'center', marginTop: spacing.sm, marginBottom: spacing.lg },
+  wrap: { alignItems: 'center', marginTop: spacing.xxl, marginBottom: spacing.lg },
   stage: { width: RING, height: RING, alignItems: 'center', justifyContent: 'center' },
   glow: { position: 'absolute', left: (RING - GLOW) / 2, top: (RING - GLOW) / 2 },
   breath: {

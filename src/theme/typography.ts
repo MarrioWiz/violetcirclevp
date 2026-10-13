@@ -1,6 +1,9 @@
 import type { TextStyle } from 'react-native';
 
 export const fonts = {
+  // Títulos en Space Grotesk (geométrica, futurista), cuerpo en Inter.
+  grotesk: 'SpaceGrotesk_600SemiBold',
+  groteskBold: 'SpaceGrotesk_700Bold',
   display: 'Inter_800ExtraBold',
   bold: 'Inter_700Bold',
   semi: 'Inter_600SemiBold',
@@ -29,10 +32,10 @@ const track = (size: number, em: number) => size * em;
 
 export const typeScale: Record<TextVariant, TextStyle> = {
   // Títulos gigantes del encabezado: ultra-bold y tracking apretado (−4 %).
-  display: { fontFamily: fonts.display, fontSize: 48, lineHeight: 50, letterSpacing: track(48, -0.04) },
-  hero: { fontFamily: fonts.display, fontSize: 34, lineHeight: 38, letterSpacing: track(34, -0.035) },
-  title: { fontFamily: fonts.bold, fontSize: 26, lineHeight: 31, letterSpacing: track(26, -0.02) },
-  heading: { fontFamily: fonts.bold, fontSize: 20, lineHeight: 26, letterSpacing: track(20, -0.015) },
+  display: { fontFamily: fonts.groteskBold, fontSize: 44, lineHeight: 50, letterSpacing: track(44, -0.03) },
+  hero: { fontFamily: fonts.groteskBold, fontSize: 32, lineHeight: 38, letterSpacing: track(32, -0.02) },
+  title: { fontFamily: fonts.groteskBold, fontSize: 25, lineHeight: 31, letterSpacing: track(25, -0.01) },
+  heading: { fontFamily: fonts.grotesk, fontSize: 20, lineHeight: 26 },
   subheading: { fontFamily: fonts.semi, fontSize: 16, lineHeight: 22 },
   subtitle: { fontFamily: fonts.medium, fontSize: 18, lineHeight: 25 },
   body: { fontFamily: fonts.body, fontSize: 16, lineHeight: 24 },

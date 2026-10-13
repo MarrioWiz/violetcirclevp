@@ -31,8 +31,8 @@ writeFileSync(
       scope: '/',
       display: 'standalone',
       orientation: 'portrait',
-      background_color: '#08050F',
-      theme_color: '#08050F',
+      background_color: '#130E24',
+      theme_color: '#130E24',
       icons: [{ src: '/icon-1024.png', sizes: '1024x1024', type: 'image/png', purpose: 'any' }],
     },
     null,
@@ -50,7 +50,7 @@ const pwaHead = [
 const indexHtml = readFileSync('dist/index.html', 'utf8')
   // viewport-fit=cover: las zonas seguras (barrita de inicio del iPhone) llegan a la app.
   .replace('shrink-to-fit=no"', 'shrink-to-fit=no, viewport-fit=cover"')
-  .replace('content="#6D28D9"', 'content="#08050F"')
+  .replace('content="#6D28D9"', 'content="#130E24"')
   .replace('</head>', `${pwaHead}</head>`);
 writeFileSync('dist/index.html', indexHtml);
 

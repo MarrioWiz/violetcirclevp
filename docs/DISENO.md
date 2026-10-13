@@ -65,3 +65,33 @@ Ver `src/theme/colors.ts`, `typography.ts`, `spacing.ts`.
 - "Pedir ayuda": anillo de cuenta regresiva, número gigante y "Cancelar, no enviar" grande.
 
 Pendiente de revisar en iPhone (cuando haya build): home indicator, Dynamic Type grande y VoiceOver sobre el dock.
+
+## 8. Rediseño de UX (2026-10-12, v1.2.0)
+
+Pedido de Mario: pantallas saturadas, rutas duplicadas, permisos sin pedir y colores muy fuertes. El **dock no se tocó** (estilo, posición, pestañas); solo hereda la paleta suavizada.
+
+**Regla:** cada función tiene UNA entrada de menú. Se permiten botones de acción dentro de un flujo crítico (p. ej. "Avisar a mi círculo" en el resultado de Orienta).
+
+| Pantalla | Acción principal | Cambio |
+|---|---|---|
+| Onboarding | — | 1 Permisos → 2 Bienvenida → 3 Privacidad → 4 PIN → **5 Salida rápida** → 6 Círculo → 7 Estadísticas |
+| Aviso tras el PIN (`features/permissions/SetupGate`) | Permitir | Solo si falta ubicación (y SMS en Android) o no se vio la guía de salida rápida; "Ahora no" vale por sesión |
+| Inicio | Orbe "Pedir ayuda" | Sin mosaicos; una línea "Ayuda lista / Falta un paso" (`features/sos/ReadinessRow`) + 911 |
+| Orienta | Responder | Tarjetas, una pregunta por vez, barra de progreso y "Anterior". Ya no es chat |
+| Círculo | Avisar a mi círculo | Lista; cada persona abre una hoja (`components/ActionSheet`) |
+| Apoyo | Llamar | Tarjeta simple + botón de llamar; guías por plataforma → Biblioteca |
+| Más | — | Bitácora · Biblioteca · Pedir ayuda rápido (solo Android) · Ajustes |
+| Biblioteca (`app/(app)/biblioteca.tsx`) | — | Guías \| Lecturas; reemplaza `guia/index` y `aprende/index` |
+| Ajustes | — | 4 grupos `Expandable`; Privacidad/Alcance/Acerca solo aquí; nueva "Cómo funciona la salida rápida" (`info/salida-rapida`) |
+
+**Ruta visible:** `Screen` pone "Más · Bitácora", "Más · Ajustes"… según la ruta (`breadcrumbFor`).
+
+**Asistente Vi** (`features/assistant/`):
+- `engine.ts`: `reply(mensaje, historial) → Promise<BotReply>` (burbujas, acciones, sugerencias, `urgent`). Palabras clave normalizadas; **riesgo y autolesión se revisan antes que todo** (911, Pedir ayuda, Línea de la Vida 800 911 2000). Para usar una IA real: reemplazar `reply()`; la interfaz no cambia.
+- `assistantStore.ts`: conversación solo en memoria; se borra al bloquear o con la salida rápida.
+- `AssistantFab.tsx`: circulito abajo a la derecha en todas las pantallas de la app; sube sobre el dock o los pies con botón; se oculta en el chat, la alerta y formularios.
+- `app/(app)/asistente.tsx`: chat modal, "escribiendo…", chips, botones de acción. En web, Enter envía.
+
+**Paleta suavizada:** violeta `#8A72D6`, acentos pastel (lavanda, cielo, rosa empolvado, menta, ámbar suave), orbe y resplandores con menos opacidad. Todo en `src/theme/colors.ts`.
+
+**Web/PWA:** `scripts/build-web.mjs` agrega `manifest.json`, ícono y metas de Apple para instalarla en la pantalla de inicio del iPhone. En la web del iPhone no se piden notificaciones (no hay push).

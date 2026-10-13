@@ -28,7 +28,7 @@ import { confirmDialog, notify } from '@/lib/dialog';
 import { S } from '@/lib/strings.es';
 import { attachEvidence, deleteEvidenceFile, type PickSource } from '@/services/evidenceFiles';
 import { useIncidents } from '@/store/incidentsStore';
-import { spacing } from '@/theme';
+import { HAIRLINE, palette, radius, spacing } from '@/theme';
 
 const fmt = (iso: string) => format(new Date(iso), "d 'de' MMMM yyyy, HH:mm", { locale: es });
 
@@ -40,6 +40,23 @@ function Field({ label, value }: { label: string; value?: string }) {
         {label}
       </AppText>
       <AppText selectable>{value}</AppText>
+    </View>
+  );
+}
+
+function Pill({ text }: { text: string }) {
+  return (
+    <View
+      style={{
+        paddingHorizontal: spacing.md,
+        paddingVertical: 4,
+        borderRadius: radius.pill,
+        borderWidth: HAIRLINE,
+        borderColor: palette.strokeStrong,
+        backgroundColor: palette.glass,
+      }}
+    >
+      <AppText variant="caption">{text}</AppText>
     </View>
   );
 }
@@ -105,6 +122,8 @@ export default function IncidentDetail() {
   return (
     <Screen
       nav="back"
+      title={incident.title}
+      subtitle={`${fmt(incident.occurredAt)} · ${PLATFORM_LABEL[incident.platform]}`}
       footer={
         <View style={{ flexDirection: 'row', gap: spacing.sm }}>
           <Button
@@ -124,20 +143,18 @@ export default function IncidentDetail() {
         </View>
       }
     >
-      {incident.isAlertLog ? (
-        <AppText variant="label" tone="primary">
-          {S.journal.alertLog}
-        </AppText>
-      ) : null}
-      <AppText variant="title" accessibilityRole="header" style={{ marginTop: spacing.xs }}>
-        {incident.title}
-      </AppText>
-      <AppText tone="textMuted" style={{ marginTop: spacing.xs }}>
-        {fmt(incident.occurredAt)} · {PLATFORM_LABEL[incident.platform]}
-        {incident.type ? ` · ${KIND_LABEL[incident.type]}` : ''}
-      </AppText>
+      {(incident.isAlertLog || incident.type || incident.locked) && (
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginBottom: spacing.md }}>
+          {incident.isAlertLog ? <Pill text={S.journal.alertLog} /> : null}
+          {incident.type ? <Pill text={KIND_LABEL[incident.type]} /> : null}
+          {incident.locked ? <Pill text={S.journal.locked} /> : null}
+        </View>
+      )}
 
-      <Card style={{ marginTop: spacing.lg }}>
+      <Card>
+        <AppText variant="label" tone="textMuted" style={{ marginBottom: spacing.sm }}>
+          {S.journal.fields.description}
+        </AppText>
         <AppText selectable>{incident.description}</AppText>
         <Field label={S.journal.fields.involved} value={incident.involved} />
         <Field label={S.journal.fields.mood} value={incident.mood ? S.journal.moods[incident.mood - 1] : undefined} />
@@ -157,9 +174,11 @@ export default function IncidentDetail() {
       </Card>
 
       <SectionTitle>{S.journal.evidence}</SectionTitle>
-      {Platform.OS === 'web' ? (
-        <AppText tone="textMuted">{S.journal.webUnavailable}</AppText>
-      ) : (
+      {/* En web se muestran los mismos botones (simulación): el navegador no guarda archivos cifrados. */}
+      {(() => {
+        const web = Platform.OS === 'web';
+        const press = (src: PickSource) => (web ? notify(S.journal.webUnavailable) : void attach(src));
+        return (
         <>
           <View style={{ flexDirection: 'row', gap: spacing.sm }}>
             <Button
@@ -168,7 +187,7 @@ export default function IncidentDetail() {
               variant="outline"
               style={{ flex: 1 }}
               loading={attaching === 'photos'}
-              onPress={() => void attach('photos')}
+              onPress={() => press('photos')}
             />
             <Button
               label={S.journal.addCamera}
@@ -176,7 +195,7 @@ export default function IncidentDetail() {
               variant="outline"
               style={{ flex: 1 }}
               loading={attaching === 'camera'}
-              onPress={() => void attach('camera')}
+              onPress={() => press('camera')}
             />
             <Button
               label={S.journal.addFile}
@@ -184,7 +203,7 @@ export default function IncidentDetail() {
               variant="outline"
               style={{ flex: 1 }}
               loading={attaching === 'files'}
-              onPress={() => void attach('files')}
+              onPress={() => press('files')}
             />
           </View>
           <AppText variant="caption" tone="textMuted" style={{ marginTop: spacing.sm }}>
@@ -198,7 +217,8 @@ export default function IncidentDetail() {
             )}
           </View>
         </>
-      )}
+        );
+      })()}
 
       {incident.history.length > 0 && (
         <>

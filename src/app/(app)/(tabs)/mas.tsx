@@ -1,6 +1,6 @@
 import { router, type Href } from 'expo-router';
 import { BookHeart, NotebookPen, Settings, Siren, type LucideIcon } from 'lucide-react-native';
-import { Platform, View } from 'react-native';
+import { View } from 'react-native';
 
 import { AppText } from '@/components/AppText';
 import { Card } from '@/components/Card';
@@ -18,7 +18,7 @@ interface Entry {
   href: Href;
 }
 
-/** Más: solo 4 lugares (3 en web). Cada función vive en uno solo. */
+/** Más: solo 4 lugares. Cada función vive en uno solo. */
 export default function More() {
   const meta = tabMeta('mas');
   const count = useIncidents((s) => s.incidents.length);
@@ -31,10 +31,8 @@ export default function More() {
       href: '/bitacora',
     },
     { icon: BookHeart, title: S.more.library, body: S.more.libraryBody, href: '/biblioteca' },
-    // La configuración de botones solo existe en el APK de Android.
-    ...(Platform.OS === 'android'
-      ? [{ icon: Siren, title: S.more.quickHelp, body: S.more.quickHelpBody, href: '/ajustes/ayuda-rapida' as Href }]
-      : []),
+    // Visible en todas las plataformas; en web explica que se activa desde la app de Android.
+    { icon: Siren, title: S.more.quickHelp, body: S.more.quickHelpBody, href: '/ajustes/ayuda-rapida' },
     { icon: Settings, title: S.more.settings, body: S.more.settingsBody, href: '/ajustes' },
   ];
 

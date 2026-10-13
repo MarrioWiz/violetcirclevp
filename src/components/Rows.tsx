@@ -170,13 +170,8 @@ export function CheckRow({
         {checked ? <Check size={15} color={palette.bg0} strokeWidth={3} /> : null}
       </View>
       <View style={styles.flex}>
-        <AppText
-          variant="bodyStrong"
-          tone={checked ? 'textMuted' : 'text'}
-          style={checked ? { textDecorationLine: 'line-through' } : undefined}
-        >
-          {label}
-        </AppText>
+        {/* Sin tachado: lo hecho se marca con la palomita y queda legible. */}
+        <AppText variant="bodyStrong">{label}</AppText>
         {detail ? (
           <AppText variant="caption" tone="textMuted" style={{ marginTop: 2 }}>
             {detail}

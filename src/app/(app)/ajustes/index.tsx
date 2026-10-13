@@ -30,6 +30,7 @@ import { S, t } from '@/lib/strings.es';
 import { authenticateBiometric, getBiometricInfo } from '@/services/biometrics';
 import { isDiscreetIconOn, setDiscreetIcon, supportsDiscreetIcon } from '@/services/discreet';
 import { cancelAllReminders, scheduleSelfCareReminder } from '@/services/notifications';
+import { SIMULATED, useWebSim } from '@/features/sos/webSimulator';
 import { useSettings } from '@/store/settingsStore';
 import { spacing } from '@/theme';
 import type { AutoLock, TextScale } from '@/types';
@@ -40,6 +41,7 @@ const FEEDBACK_EMAIL = '';
 export default function SettingsScreen() {
   const s = useSettings();
   const wipe = useWipeAllData();
+  const sim = useWebSim();
   const [bio, setBio] = useState<{ available: boolean; label: string }>({ available: false, label: 'Face ID' });
 
   const [iconSupported, setIconSupported] = useState(false);
@@ -105,7 +107,7 @@ export default function SettingsScreen() {
             value={s.hidePreview}
             onChange={(v) => void s.update({ hidePreview: v })}
           />
-          {iconSupported && (
+          {iconSupported ? (
             <ToggleRow
               icon={Calculator}
               title={S.settings.discreetIcon}
@@ -113,7 +115,15 @@ export default function SettingsScreen() {
               value={discreet}
               onChange={(v) => void toggleDiscreet(v)}
             />
-          )}
+          ) : SIMULATED ? (
+            <ToggleRow
+              icon={Calculator}
+              title={S.settings.discreetIcon}
+              body={`${S.settings.discreetIconBody} ${S.settings.simulated}`}
+              value={sim.discreetIcon}
+              onChange={(v) => sim.set({ discreetIcon: v })}
+            />
+          ) : null}
           <View style={{ gap: spacing.sm, paddingTop: spacing.sm }}>
             <AppText variant="bodyStrong">{S.settings.autolock}</AppText>
             <Segmented<AutoLock>
@@ -138,16 +148,14 @@ export default function SettingsScreen() {
               options={(['1', '1.15', '1.3'] as const).map((v) => ({ value: v, label: S.settings.textSizeOptions[v] }))}
             />
           </View>
-          {/* En la web del iPhone no hay notificaciones. */}
-          {Platform.OS !== 'web' && (
-            <ToggleRow
-              icon={Bell}
-              title={S.settings.reminders}
-              body={S.settings.remindersBody}
-              value={s.selfCareReminders}
-              onChange={(v) => void toggleReminders(v)}
-            />
-          )}
+          {/* En la web del iPhone no hay notificaciones: se simula el interruptor. */}
+          <ToggleRow
+            icon={Bell}
+            title={S.settings.reminders}
+            body={SIMULATED ? `${S.settings.remindersBody} ${S.settings.simulated}` : S.settings.remindersBody}
+            value={SIMULATED ? sim.reminders : s.selfCareReminders}
+            onChange={(v) => (SIMULATED ? sim.set({ reminders: v }) : void toggleReminders(v))}
+          />
         </Expandable>
 
         <Expandable icon={Download} title={S.settings.data} summary={S.settings.dataSummary}>

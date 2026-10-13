@@ -36,8 +36,13 @@ function EntryCard({ e }: { e: DirectoryEntry }) {
             {S.directory.types[e.type]}
           </AppText>
           <AppText variant="subheading">{e.name}</AppText>
+          {e.whatToExpect ? (
+            <AppText variant="caption" tone="textMuted" numberOfLines={3} style={{ marginTop: 2 }}>
+              {e.whatToExpect}
+            </AppText>
+          ) : null}
           {e.hours ? (
-            <AppText variant="caption" tone="textMuted" numberOfLines={1}>
+            <AppText variant="caption" style={{ color: tint, marginTop: 2 }} numberOfLines={1}>
               {e.hours}
             </AppText>
           ) : null}
@@ -76,6 +81,10 @@ export default function DirectoryTab() {
 
   return (
     <Screen dock title={meta.title} subtitle={meta.subtitle} footer={<EmergencyBanner />}>
+      <AppText tone="textMuted" style={{ marginBottom: spacing.lg }}>
+        {S.directory.intro}
+      </AppText>
+
       {offline && (
         <View style={styles.offline}>
           <WifiOff size={14} color={colors.warning} />

@@ -8,9 +8,24 @@
       "question": "Antes de empezar: ¿sientes que estás en peligro ahora mismo?",
       "help": "Por ejemplo, alguien sabe dónde estás y amenaza con buscarte.",
       "options": [
-        { "label": "Sí, siento que estoy en peligro", "next": "r_riesgo" },
-        { "label": "No en este momento", "next": "q_platform" },
-        { "label": "No estoy segura", "next": "q_platform", "set": { "unsure": "si" } }
+        {
+          "label": "Sí, siento que estoy en peligro",
+          "next": "r_riesgo",
+          "hint": "Te muestro de inmediato cómo pedir ayuda."
+        },
+        {
+          "label": "No en este momento",
+          "next": "q_platform",
+          "hint": "Seguimos con unas preguntas cortas."
+        },
+        {
+          "label": "No estoy segura",
+          "next": "q_platform",
+          "set": {
+            "unsure": "si"
+          },
+          "hint": "Está bien. Vamos con calma."
+        }
       ]
     },
     {
@@ -18,25 +33,87 @@
       "question": "¿Dónde está pasando?",
       "help": "Si pasa en varias, elige la principal.",
       "options": [
-        { "label": "WhatsApp", "next": "q_what", "set": { "platform": "whatsapp" } },
-        { "label": "Instagram", "next": "q_what", "set": { "platform": "instagram" } },
-        { "label": "TikTok", "next": "q_what", "set": { "platform": "tiktok" } },
-        { "label": "Facebook", "next": "q_what", "set": { "platform": "facebook" } },
-        { "label": "Correo u otra", "next": "q_what", "set": { "platform": "otra" } }
+        {
+          "label": "WhatsApp",
+          "next": "q_what",
+          "set": {
+            "platform": "whatsapp"
+          }
+        },
+        {
+          "label": "Instagram",
+          "next": "q_what",
+          "set": {
+            "platform": "instagram"
+          }
+        },
+        {
+          "label": "TikTok",
+          "next": "q_what",
+          "set": {
+            "platform": "tiktok"
+          }
+        },
+        {
+          "label": "Facebook",
+          "next": "q_what",
+          "set": {
+            "platform": "facebook"
+          }
+        },
+        {
+          "label": "Correo u otra",
+          "next": "q_what",
+          "set": {
+            "platform": "otra"
+          }
+        }
       ]
     },
     {
       "id": "q_what",
       "question": "¿Qué es lo que más se parece a lo que estás viviendo?",
       "options": [
-        { "label": "Me piden dinero o más fotos a cambio de no publicar algo", "next": "q_sext" },
-        { "label": "Compartieron fotos o videos íntimos míos sin mi permiso", "next": "q_diffusion" },
-        { "label": "Publicaron mis datos (dirección, teléfono, horarios, escuela)", "next": "r_doxing" },
-        { "label": "Alguien se hace pasar por mí o usa mis fotos", "next": "r_suplantacion" },
-        { "label": "Me amenazan con hacerme daño", "next": "q_threat" },
-        { "label": "Recibo mensajes insistentes, insultos o burlas", "next": "q_known" },
-        { "label": "Soy menor de edad y una persona adulta me busca con intenciones sexuales", "next": "r_grooming" },
-        { "label": "Es otra cosa", "next": "r_otro" }
+        {
+          "label": "Me piden dinero o más fotos a cambio de no publicar algo",
+          "next": "q_sext",
+          "hint": "Alguien te presiona para pagar o mandar más fotos."
+        },
+        {
+          "label": "Compartieron fotos o videos íntimos míos sin mi permiso",
+          "next": "q_diffusion",
+          "hint": "Se publicaron o reenviaron sin tu permiso."
+        },
+        {
+          "label": "Publicaron mis datos (dirección, teléfono, horarios, escuela)",
+          "next": "r_doxing",
+          "hint": "Dirección, teléfono, horarios o escuela."
+        },
+        {
+          "label": "Alguien se hace pasar por mí o usa mis fotos",
+          "next": "r_suplantacion",
+          "hint": "Un perfil falso con tu nombre o tus fotos."
+        },
+        {
+          "label": "Me amenazan con hacerme daño",
+          "next": "q_threat",
+          "hint": "A ti o a alguien cercano."
+        },
+        {
+          "label": "Recibo mensajes insistentes, insultos o burlas",
+          "next": "q_known",
+          "hint": "Aunque le hayas pedido que parara."
+        },
+        {
+          "label": "Soy menor de edad y una persona adulta me busca con intenciones sexuales",
+          "next": "r_grooming",
+          "hint": "Te pide fotos, encuentros o que guardes secretos."
+        },
+        {
+          "label": "Es otra cosa",
+          "next": "r_otro",
+          "hint": "Igual te oriento."
+        }
       ]
     },
     {
@@ -44,47 +121,134 @@
       "question": "¿Ya enviaste dinero o más contenido?",
       "help": "No importa la respuesta: no es tu culpa y aún puedes protegerte.",
       "options": [
-        { "label": "Sí", "next": "r_sextorsion", "set": { "paid": "si" } },
-        { "label": "No", "next": "r_sextorsion" }
+        {
+          "label": "Sí",
+          "next": "r_sextorsion",
+          "set": {
+            "paid": "si"
+          },
+          "hint": "No pasa nada: puedes dejar de responder desde hoy."
+        },
+        {
+          "label": "No",
+          "next": "r_sextorsion",
+          "hint": "Bien. No mandes nada más."
+        }
       ]
     },
     {
       "id": "q_diffusion",
       "question": "¿Además te están amenazando o pidiendo algo a cambio?",
       "options": [
-        { "label": "Sí, me piden dinero o más contenido", "next": "r_sextorsion" },
-        { "label": "Sí, me amenazan con hacerme daño", "next": "q_threat" },
-        { "label": "No, solo lo compartieron", "next": "r_difusion" }
+        {
+          "label": "Sí, me piden dinero o más contenido",
+          "next": "r_sextorsion"
+        },
+        {
+          "label": "Sí, me amenazan con hacerme daño",
+          "next": "q_threat"
+        },
+        {
+          "label": "No, solo lo compartieron",
+          "next": "r_difusion"
+        }
       ]
     },
     {
       "id": "q_threat",
       "question": "¿Crees que podría cumplir la amenaza pronto, o sabe dónde estás?",
       "options": [
-        { "label": "Sí", "next": "r_riesgo" },
-        { "label": "No lo sé", "next": "r_amenazas", "set": { "unsure": "si" } },
-        { "label": "No", "next": "r_amenazas" }
+        {
+          "label": "Sí",
+          "next": "r_riesgo",
+          "hint": "Te muestro cómo pedir ayuda ya."
+        },
+        {
+          "label": "No lo sé",
+          "next": "r_amenazas",
+          "set": {
+            "unsure": "si"
+          }
+        },
+        {
+          "label": "No",
+          "next": "r_amenazas"
+        }
       ]
     },
     {
       "id": "q_known",
       "question": "¿Conoces a la persona?",
       "options": [
-        { "label": "Sí, es o fue mi pareja", "next": "r_ciberacoso", "set": { "relation": "pareja" } },
-        { "label": "Sí, es de la universidad", "next": "r_ciberacoso", "set": { "relation": "escuela" } },
-        { "label": "Sí, la conozco de otro lado", "next": "r_ciberacoso", "set": { "relation": "conocida" } },
-        { "label": "No / es una cuenta anónima", "next": "r_ciberacoso", "set": { "relation": "anonima" } }
+        {
+          "label": "Sí, es o fue mi pareja",
+          "next": "r_ciberacoso",
+          "set": {
+            "relation": "pareja"
+          },
+          "hint": "Actual o anterior."
+        },
+        {
+          "label": "Sí, es de la universidad",
+          "next": "r_ciberacoso",
+          "set": {
+            "relation": "escuela"
+          },
+          "hint": "Estudia o trabaja en la UVP."
+        },
+        {
+          "label": "Sí, la conozco de otro lado",
+          "next": "r_ciberacoso",
+          "set": {
+            "relation": "conocida"
+          }
+        },
+        {
+          "label": "No / es una cuenta anónima",
+          "next": "r_ciberacoso",
+          "set": {
+            "relation": "anonima"
+          },
+          "hint": "No sabes quién es."
+        }
       ]
     },
-    { "id": "r_riesgo", "result": "riesgo" },
-    { "id": "r_ciberacoso", "result": "ciberacoso" },
-    { "id": "r_sextorsion", "result": "sextorsion" },
-    { "id": "r_doxing", "result": "doxing" },
-    { "id": "r_suplantacion", "result": "suplantacion" },
-    { "id": "r_difusion", "result": "difusion" },
-    { "id": "r_grooming", "result": "grooming" },
-    { "id": "r_amenazas", "result": "amenazas" },
-    { "id": "r_otro", "result": "otro" }
+    {
+      "id": "r_riesgo",
+      "result": "riesgo"
+    },
+    {
+      "id": "r_ciberacoso",
+      "result": "ciberacoso"
+    },
+    {
+      "id": "r_sextorsion",
+      "result": "sextorsion"
+    },
+    {
+      "id": "r_doxing",
+      "result": "doxing"
+    },
+    {
+      "id": "r_suplantacion",
+      "result": "suplantacion"
+    },
+    {
+      "id": "r_difusion",
+      "result": "difusion"
+    },
+    {
+      "id": "r_grooming",
+      "result": "grooming"
+    },
+    {
+      "id": "r_amenazas",
+      "result": "amenazas"
+    },
+    {
+      "id": "r_otro",
+      "result": "otro"
+    }
   ],
   "results": {
     "riesgo": {
@@ -102,7 +266,12 @@
         "No vayas sola a encontrarte con la persona.",
         "No borres los mensajes: pueden servir después."
       ],
-      "guides": ["conservar-evidencia", "rutas-formales"]
+      "guides": [
+        "conservar-evidencia",
+        "rutas-formales"
+      ],
+      "level": 3,
+      "law": "Si alguien pone en riesgo tu vida o tu integridad, el 911 y la Fiscalía deben atenderte. Tu seguridad va primero; la denuncia puede esperar."
     },
     "ciberacoso": {
       "kind": "ciberacoso",
@@ -119,7 +288,12 @@
         "No respondas desde el enojo: puede escalar la situación.",
         "No borres la conversación antes de guardar evidencia."
       ],
-      "guides": ["conservar-evidencia", "seguridad-cuentas"]
+      "guides": [
+        "conservar-evidencia",
+        "seguridad-cuentas"
+      ],
+      "level": 2,
+      "law": "La violencia digital está reconocida en la Ley General de Acceso de las Mujeres a una Vida Libre de Violencia. Según cómo ocurra, el acoso puede llegar a ser delito (acoso u hostigamiento)."
     },
     "sextorsion": {
       "kind": "sextorsion",
@@ -138,7 +312,13 @@
         "No negocies ni amenaces a la persona.",
         "No borres la conversación."
       ],
-      "guides": ["conservar-evidencia", "evitar-riesgos", "rutas-formales"]
+      "guides": [
+        "conservar-evidencia",
+        "evitar-riesgos",
+        "rutas-formales"
+      ],
+      "level": 3,
+      "law": "Pedir dinero o más contenido a cambio de no publicar algo puede ser extorsión y violación a la intimidad sexual (Ley Olimpia). Se denuncia ante la Fiscalía o la Policía Cibernética."
     },
     "doxing": {
       "kind": "doxing",
@@ -155,7 +335,12 @@
         "No publiques más datos para desmentir o aclarar.",
         "No confrontes a la persona en público."
       ],
-      "guides": ["conservar-evidencia", "seguridad-cuentas"]
+      "guides": [
+        "conservar-evidencia",
+        "seguridad-cuentas"
+      ],
+      "level": 2,
+      "law": "Publicar tus datos personales sin permiso es violencia digital y puede llegar a ser delito si se usa para acosarte o amenazarte. Las plataformas lo retiran si lo reportas."
     },
     "suplantacion": {
       "kind": "suplantacion",
@@ -172,7 +357,12 @@
         "No escribas desde tu cuenta a la cuenta falsa.",
         "No compartas tu identificación oficial fuera de los canales oficiales de la plataforma."
       ],
-      "guides": ["seguridad-cuentas", "conservar-evidencia"]
+      "guides": [
+        "seguridad-cuentas",
+        "conservar-evidencia"
+      ],
+      "level": 3,
+      "law": "Usar tu nombre, tus fotos o tus datos para hacerse pasar por ti puede ser delito de usurpación de identidad, y además rompe las reglas de las plataformas."
     },
     "difusion": {
       "kind": "difusion",
@@ -189,7 +379,12 @@
         "No reenvíes el contenido, ni siquiera para pedir ayuda: comparte solo el enlace o la captura con lo indispensable.",
         "No te culpes: confiar en alguien no es un error."
       ],
-      "guides": ["conservar-evidencia", "rutas-formales"]
+      "guides": [
+        "conservar-evidencia",
+        "rutas-formales"
+      ],
+      "level": 3,
+      "law": "Difundir, compartir o amenazar con publicar contenido íntimo sin consentimiento es delito en Puebla y en todo México (Ley Olimpia: violación a la intimidad sexual). Aplica aunque tú hayas enviado ese contenido a alguien de confianza."
     },
     "grooming": {
       "kind": "grooming",
@@ -206,7 +401,12 @@
         "No envíes fotos ni datos personales.",
         "No aceptes encuentros, aunque la persona parezca amable."
       ],
-      "guides": ["conservar-evidencia", "rutas-formales"]
+      "guides": [
+        "conservar-evidencia",
+        "rutas-formales"
+      ],
+      "level": 3,
+      "law": "Que una persona adulta busque a una persona menor de edad con fines sexuales es delito. Contarlo no te mete en problemas: avisa a una persona adulta de confianza."
     },
     "amenazas": {
       "kind": "amenazas",
@@ -223,7 +423,12 @@
         "No respondas a las amenazas.",
         "No borres los mensajes."
       ],
-      "guides": ["conservar-evidencia", "rutas-formales"]
+      "guides": [
+        "conservar-evidencia",
+        "rutas-formales"
+      ],
+      "level": 3,
+      "law": "Amenazar con hacerte daño a ti o a alguien cercano es el delito de amenazas en el Código Penal de Puebla. Guardar los mensajes ayuda a la denuncia."
     },
     "otro": {
       "kind": "otro",
@@ -240,13 +445,38 @@
         "No minimices lo que sientes.",
         "No borres información que podría servirte."
       ],
-      "guides": ["conservar-evidencia", "seguridad-cuentas"]
+      "guides": [
+        "conservar-evidencia",
+        "seguridad-cuentas"
+      ],
+      "level": 1,
+      "law": "Aunque no encaje en una definición legal, lo que te incomoda importa. Registrarlo te deja más opciones después."
     }
   },
   "extras": [
-    { "when": { "paid": "si" }, "text": "Haber pagado o enviado algo no te quita el derecho a pedir ayuda ni a denunciar. Puedes dejar de responder desde hoy." },
-    { "when": { "relation": "pareja" }, "text": "Cuando la violencia viene de una pareja o expareja, suele combinarse con otras formas de control. Considera hablar con una instancia de atención a mujeres (ver directorio)." },
-    { "when": { "relation": "escuela" }, "text": "Si la persona es de la universidad, puedes buscar la instancia de atención de la UVP (ver directorio)." },
-    { "when": { "unsure": "si" }, "text": "Si en algún momento sientes que estás en peligro, llama al 911 o avisa a tu círculo." }
+    {
+      "when": {
+        "paid": "si"
+      },
+      "text": "Haber pagado o enviado algo no te quita el derecho a pedir ayuda ni a denunciar. Puedes dejar de responder desde hoy."
+    },
+    {
+      "when": {
+        "relation": "pareja"
+      },
+      "text": "Cuando la violencia viene de una pareja o expareja, suele combinarse con otras formas de control. Considera hablar con una instancia de atención a mujeres (ver directorio)."
+    },
+    {
+      "when": {
+        "relation": "escuela"
+      },
+      "text": "Si la persona es de la universidad, puedes buscar la instancia de atención de la UVP (ver directorio)."
+    },
+    {
+      "when": {
+        "unsure": "si"
+      },
+      "text": "Si en algún momento sientes que estás en peligro, llama al 911 o avisa a tu círculo."
+    }
   ]
 }

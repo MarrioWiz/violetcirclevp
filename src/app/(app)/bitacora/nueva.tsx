@@ -8,7 +8,13 @@ import { S } from '@/lib/strings.es';
 import { useIncidents } from '@/store/incidentsStore';
 
 export default function IncidentEditor() {
-  const { id } = useLocalSearchParams<{ id?: string }>();
+  // Desde Orienta o Vi se puede abrir prellenada (plataforma, tipo y título).
+  const { id, platform, type, title } = useLocalSearchParams<{
+    id?: string;
+    platform?: IncidentFormValues['platform'];
+    type?: IncidentFormValues['type'];
+    title?: string;
+  }>();
   const existing = useIncidents((s) => s.incidents.find((i) => i.id === id));
   const create = useIncidents((s) => s.create);
   const update = useIncidents((s) => s.update);
@@ -26,7 +32,7 @@ export default function IncidentEditor() {
         notes: existing.notes,
         locked: !!existing.locked,
       }
-    : { title: '', occurredAt: new Date(), platform: 'whatsapp', description: '', locked: false };
+    : { title: title ?? '', occurredAt: new Date(), platform: platform ?? 'whatsapp', type, description: '', locked: false };
 
   const onSubmit = async (v: IncidentFormValues) => {
     const data = {
@@ -61,7 +67,12 @@ export default function IncidentEditor() {
       subtitle={S.journal.subtitle}
       edges={['top', 'bottom']}
     >
-      <IncidentForm defaults={defaults} submitLabel={S.common.save} onSubmit={onSubmit} />
+      <IncidentForm
+        defaults={defaults}
+        submitLabel={S.common.save}
+        onSubmit={onSubmit}
+        footnote={existing ? undefined : S.journal.afterSave}
+      />
     </Screen>
   );
 }

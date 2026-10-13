@@ -37,9 +37,9 @@ interface Props {
   dock?: boolean;
 }
 
-/** Ruta visible ("Más · Bitácora") para saber siempre en qué sección se está. */
+/** Ruta visible ("Más · Mis registros") para saber siempre en qué sección se está. */
 const BREADCRUMBS: [string, string][] = [
-  ['/bitacora', 'Más · Bitácora'],
+  ['/bitacora', 'Más · Mis registros'],
   ['/biblioteca', 'Más · Biblioteca'],
   ['/guia', 'Más · Biblioteca'],
   ['/aprende', 'Más · Biblioteca'],

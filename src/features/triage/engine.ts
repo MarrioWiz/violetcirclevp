@@ -28,6 +28,22 @@ export function answer(step: TriageStep, option: TriageOption): TriageStep {
   return { nodeId: option.next, context: { ...step.context, ...(option.set ?? {}) } };
 }
 
+/**
+ * Repite un recorrido a partir de los índices de opción elegidos ("1.0.5").
+ * Sirve para abrir Orienta con las respuestas que ya se dieron en el chat de Vi.
+ */
+export function replayPath(tree: TriageTree, path: number[]): TriageStep[] {
+  const steps: TriageStep[] = [{ nodeId: tree.start, context: {} }];
+  for (const idx of path) {
+    const node = getNode(tree, steps[steps.length - 1].nodeId);
+    if (isResultNode(node)) break;
+    const opt = node.options[idx];
+    if (!opt) break;
+    steps.push(answer(steps[steps.length - 1], opt));
+  }
+  return steps;
+}
+
 /** Máximo de preguntas que aún pueden faltar desde un nodo (para la barra de progreso). */
 export function remainingQuestions(tree: TriageTree, id: string, seen: Set<string> = new Set()): number {
   const node = getNode(tree, id);

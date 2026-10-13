@@ -25,8 +25,9 @@ import {
   requestPreciseLocation,
   requestSmsPermission,
   sosNative,
-  sosSupported,
 } from '@/features/sos/sosService';
+import { SIMULATED, sosSim, useWebSim } from '@/features/sos/webSimulator';
+import { SimulationBanner } from '@/features/sos/SimulationBanner';
 import { confirmDialog } from '@/lib/dialog';
 import { S, t } from '@/lib/strings.es';
 import { useCircle } from '@/store/circleStore';
@@ -47,8 +48,10 @@ function Requirement({
   body,
   icon,
   onGrant,
+  actionLabel,
 }: {
   ok: boolean;
+  actionLabel?: string;
   title: string;
   body: string;
   icon: typeof Users;
@@ -67,7 +70,7 @@ function Requirement({
             <CheckCircle2 size={20} color={colors.success} />
           </View>
         ) : onGrant ? (
-          <Button label={S.sos.grant} variant="secondary" onPress={onGrant} />
+          <Button label={actionLabel ?? S.sos.grant} variant="secondary" onPress={onGrant} />
         ) : (
           <Circle size={20} color={colors.warning} />
         )
@@ -75,6 +78,9 @@ function Requirement({
     />
   );
 }
+
+/** En Android, el módulo real; en web, la simulación (misma forma). */
+const native = sosNative ?? (SIMULATED ? sosSim : null);
 
 export default function QuickHelpSetup() {
   const contacts = useCircle((s) => s.contacts.length);
@@ -89,11 +95,11 @@ export default function QuickHelpSetup() {
 
   const refresh = useCallback(async () => {
     setSt({
-      sms: await hasSmsPermission(),
+      sms: SIMULATED ? useWebSim.getState().sms : await hasSmsPermission(),
       location: await hasPreciseLocation(),
-      launcher: sosNative?.isLauncherEntryEnabled() ?? false,
-      volume: sosNative?.isVolumeTriggerEnabled() ?? false,
-      shortcut: sosNative?.isIconShortcutEnabled() ?? false,
+      launcher: native?.isLauncherEntryEnabled() ?? false,
+      volume: native?.isVolumeTriggerEnabled() ?? false,
+      shortcut: native?.isIconShortcutEnabled() ?? false,
     });
   }, []);
 
@@ -106,7 +112,8 @@ export default function QuickHelpSetup() {
     }, [refresh]),
   );
 
-  if (!sosSupported) {
+  // iOS nativo (sin build todavía): solo explicación.
+  if (!native) {
     return (
       <Screen nav="back" title={S.sos.setupTitle} subtitle={S.sos.notSupported}>
         <View />
@@ -115,7 +122,7 @@ export default function QuickHelpSetup() {
   }
 
   const toggleLauncher = async (on: boolean) => {
-    sosNative?.setLauncherEntryEnabled(on);
+    native?.setLauncherEntryEnabled(on);
     await refresh();
     if (on) {
       await confirmDialog({
@@ -135,16 +142,18 @@ export default function QuickHelpSetup() {
     });
     if (!ok) return;
     markExternalNavigation();
-    sosNative?.openAccessibilitySettings();
+    native?.openAccessibilitySettings();
+    if (SIMULATED) await refresh();
   };
 
   const toggleShortcut = async (on: boolean) => {
-    sosNative?.setIconShortcutEnabled(on);
+    native?.setIconShortcutEnabled(on);
     await refresh();
   };
 
   return (
     <Screen nav="back" title={S.sos.setupTitle} subtitle={S.sos.setupSubtitle}>
+      {SIMULATED && <SimulationBanner />}
       <SectionTitle>{S.sos.requirements}</SectionTitle>
       <Card padded={false} style={{ paddingHorizontal: spacing.lg }}>
         <Requirement
@@ -153,6 +162,7 @@ export default function QuickHelpSetup() {
           title={S.sos.reqContacts}
           body={contacts > 0 ? t(S.sos.reqContactsOk, { n: contacts }) : S.sos.reqContactsMissing}
           onGrant={contacts > 0 ? undefined : () => router.push('/circulo/nuevo')}
+          actionLabel="Agregar"
         />
         <Divider />
         <Requirement
@@ -161,7 +171,8 @@ export default function QuickHelpSetup() {
           title={S.sos.reqSms}
           body={S.sos.reqSmsBody}
           onGrant={async () => {
-            await requestSmsPermission();
+            if (SIMULATED) useWebSim.getState().set({ sms: true });
+            else await requestSmsPermission();
             await refresh();
           }}
         />

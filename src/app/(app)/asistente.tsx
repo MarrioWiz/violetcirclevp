@@ -1,5 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { router, type Href } from 'expo-router';
+import { router, useLocalSearchParams, type Href } from 'expo-router';
 import { ArrowUp, Phone, RotateCcw, X } from 'lucide-react-native';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -37,7 +37,7 @@ function runAction(a: BotAction) {
   if (a.kind === 'call911') return void call911();
   if (a.kind === 'call') return void callNumber(a.phone);
   // Cierra el chat y abre la sección (así "atrás" no regresa a un chat encima de otro modal).
-  router.back();
+  if (router.canGoBack()) router.back();
   setTimeout(() => router.push(a.href as Href), 60);
 }
 
@@ -144,6 +144,29 @@ export default function AssistantChat() {
   const [text, setText] = useState('');
   const scroll = useRef<ScrollView>(null);
 
+  // Baja al final con cada burbuja nueva (después de que entra su animación).
+  useEffect(() => {
+    const toEnd = () => scroll.current?.scrollToEnd({ animated: true });
+    // Dos intentos: uno rápido y otro cuando ya terminó la animación de entrada de la burbuja.
+    const a = setTimeout(toEnd, 80);
+    const b = setTimeout(toEnd, 420);
+    return () => {
+      clearTimeout(a);
+      clearTimeout(b);
+    };
+  }, [messages.length, typing, suggestions.length]);
+
+  // Desde un resultado de Orienta ("Hablar con Vi sobre esto"): Vi abre con ese tema, una sola vez.
+  const { tema } = useLocalSearchParams<{ tema?: string }>();
+  const topicDone = useRef<string | null>(null);
+  useEffect(() => {
+    if (!tema || topicDone.current === tema) return;
+    topicDone.current = tema;
+    void useAssistant.getState().startTopic(tema);
+  }, [tema]);
+
+  const longChips = suggestions.some((x) => x.length > 30);
+
   const submit = (value: string) => {
     if (!value.trim() || typing) return;
     setText('');
@@ -195,6 +218,8 @@ export default function AssistantChat() {
             contentContainerStyle={styles.list}
             keyboardShouldPersistTaps="handled"
             onContentSizeChange={() => scroll.current?.scrollToEnd({ animated: true })}
+            // Al aparecer/desaparecer las sugerencias el área cambia de alto: volver a bajar.
+            onLayout={() => scroll.current?.scrollToEnd({ animated: false })}
           >
             <AppText variant="caption" tone="textMuted" center style={{ marginBottom: spacing.sm }}>
               {S.assistant.privacy}
@@ -207,11 +232,12 @@ export default function AssistantChat() {
 
           {suggestions.length > 0 && !typing && (
             <ScrollView
-              horizontal
+              // Opciones largas (preguntas de Orienta) en lista vertical; cortas, en fila.
+              horizontal={!longChips}
               showsHorizontalScrollIndicator={false}
               keyboardShouldPersistTaps="handled"
-              style={{ flexGrow: 0 }}
-              contentContainerStyle={styles.chips}
+              style={longChips ? styles.chipsColumn : { flexGrow: 0 }}
+              contentContainerStyle={longChips ? styles.chipsColumnContent : styles.chips}
             >
               {suggestions.map((s) => (
                 <Pressable
@@ -219,7 +245,11 @@ export default function AssistantChat() {
                   accessibilityRole="button"
                   accessibilityLabel={s}
                   onPress={() => submit(s)}
-                  style={({ pressed }) => [styles.chip, { borderColor: alpha(accent, 0.4), opacity: pressed ? 0.7 : 1 }]}
+                  style={({ pressed }) => [
+                    styles.chip,
+                    longChips && styles.chipWide,
+                    { borderColor: alpha(accent, 0.4), opacity: pressed ? 0.7 : 1 },
+                  ]}
                 >
                   <AppText variant="caption" style={{ fontFamily: fonts.semi, color: accent }}>
                     {s}
@@ -324,6 +354,9 @@ const styles = StyleSheet.create({
     backgroundColor: palette.glass,
   },
   chips: { gap: spacing.sm, paddingHorizontal: spacing.lg, paddingBottom: spacing.sm },
+  chipsColumn: { flexGrow: 0, maxHeight: 230 },
+  chipsColumnContent: { gap: 6, paddingHorizontal: spacing.lg, paddingBottom: spacing.sm },
+  chipWide: { paddingVertical: spacing.sm, borderRadius: radius.md },
   chip: {
     minHeight: 38,
     paddingHorizontal: spacing.lg,

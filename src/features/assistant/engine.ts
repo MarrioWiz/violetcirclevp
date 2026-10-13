@@ -1,8 +1,9 @@
 /**
  * Cerebro de Vi (asistente). HOY: respuestas programadas por palabras clave, sin red.
  *
- * Para cambiarla por una IA real, reemplaza `reply()` por una llamada a tu API que devuelva
- * el mismo `BotReply`. La interfaz (burbujas, sugerencias, botones) no cambia.
+ * Dos capas: este archivo entiende UN mensaje (intenciones) y `flows.ts` lleva la conversación
+ * por pasos (preguntas de seguimiento). Para cambiarla por una IA real, reemplaza `respond()`
+ * de `flows.ts` por una llamada a tu API que devuelva el mismo `BotReply`; la interfaz no cambia.
  * Regla que debe conservar cualquier versión: revisar RIESGO antes que cualquier otra cosa.
  */
 
@@ -97,8 +98,9 @@ const SELF_HARM = [
   'quiero matarme',
   'no quiero vivir',
   'no quiero seguir viviendo',
-  'hacerme dano',
-  'lastimarme',
+  'quiero hacerme dano',
+  'me quiero hacer dano',
+  'quiero lastimarme',
   'cortarme',
   'quiero morir',
   'me quiero morir',
@@ -165,11 +167,11 @@ const INTENTS: Intent[] = [
   },
   {
     id: 'evidence',
-    keys: ['evidencia', 'captura', 'pantallazo', 'screenshot', 'prueba', 'guardar', 'bitacora', 'registrar', 'anotar'],
+    keys: ['evidencia', 'captura', 'pantallazo', 'screenshot', 'prueba', 'guardar', 'bitacora', 'registro', 'registrar', 'anotar'],
     reply: () => ({
       messages: [
         'Guardar lo que pasa te da más opciones después, aunque hoy no quieras denunciar.',
-        'Haz capturas donde se vea la fecha, el usuario y el mensaje; copia los enlaces y no borres las conversaciones. En "Mi bitácora" puedes guardarlo todo cifrado, solo en tu teléfono.',
+        'Haz capturas donde se vea la fecha, el usuario y el mensaje; copia los enlaces y no borres las conversaciones. En "Mis registros" puedes guardarlo todo cifrado, solo en tu teléfono.',
       ],
       actions: [A.newEntry, A.evidenceGuide],
       suggestions: ['¿Cómo reporto un caso?', '¿Quién puede ver mis datos?'],
@@ -278,7 +280,7 @@ const INTENTS: Intent[] = [
     keys: ['privacidad', 'mis datos', 'quien ve', 'quien puede ver', 'se guarda', 'seguro', 'segura la app', 'rastre', 'espia'],
     reply: () => ({
       messages: [
-        'Tu bitácora, tu evidencia y tu círculo se guardan cifrados solo en este teléfono, protegidos con tu PIN. No pedimos tu nombre ni usamos publicidad.',
+        'Tus registros, tus capturas y tu círculo se guardan cifrados solo en este teléfono, protegidos con tu PIN. No pedimos tu nombre ni usamos publicidad.',
         'Y esta conversación conmigo no se guarda: se borra al bloquear la app.',
       ],
       actions: [A.quickExit],
@@ -291,7 +293,7 @@ const INTENTS: Intent[] = [
     reply: () => ({
       messages: [
         'Te cuento rápido dónde está cada cosa (abajo, en la barra):',
-        '• Inicio: el botón "Pedir ayuda".\n• Orienta: preguntas cortas para entender lo que pasó.\n• Círculo: tus personas de confianza.\n• Apoyo: contactos verificados.\n• Más: tu bitácora privada, guías y ajustes.',
+        '• Inicio: el botón "Pedir ayuda".\n• Orienta: preguntas cortas para entender lo que pasó.\n• Círculo: tus personas de confianza.\n• Apoyo: contactos verificados.\n• Más: tus registros privados, guías y ajustes.',
         '¿Por dónde te gustaría empezar?',
       ],
       suggestions: ['¿Esto es violencia digital?', '¿Cómo reporto un caso?', '¿Cómo pido ayuda rápido?'],
@@ -365,7 +367,8 @@ export function classify(message: string): string {
   return best.id;
 }
 
-function build(intent: string): BotReply {
+/** Respuesta de una sola vuelta para una intención (la usan los flujos de `flows.ts`). */
+export function replyFor(intent: string): BotReply {
   if (intent === 'selfHarm') {
     return {
       intent,
@@ -412,5 +415,5 @@ export async function reply(message: string, _history: ChatTurn[] = []): Promise
       messages: ['Está bien. Aquí estoy por si me necesitas; puedes escribirme lo que quieras.'],
     };
   }
-  return build(classify(message));
+  return replyFor(classify(message));
 }

@@ -144,6 +144,8 @@ export interface DirectoryEntry {
 
 export interface TriageOption {
   label: string;
+  /** Una línea que explica la opción (opcional). */
+  hint?: string;
   next: string;
   set?: Record<string, string>;
 }
@@ -170,6 +172,10 @@ export interface TriageResult {
   doNow: string[];
   dontDo: string[];
   guides: string[];
+  /** 1 = te afecta · 2 = es violencia digital · 3 = puede ser delito. */
+  level?: 1 | 2 | 3;
+  /** Qué dice la ley, en lenguaje sencillo (información general, no asesoría). */
+  law?: string;
 }
 
 export interface TriageExtra {

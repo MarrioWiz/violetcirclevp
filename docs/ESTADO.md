@@ -1,6 +1,6 @@
 # Estado del proyecto — para retomar
 
-Última actualización: 2026-10-06.
+Última actualización: 2026-10-12 (v1.2.0: rediseño de UX y asistente Vi, ver `docs/DISENO.md` §8).
 
 Código: https://github.com/MarrioWiz/violetcirclevp (privado, rama `master`).
 
@@ -8,7 +8,7 @@ Código: https://github.com/MarrioWiz/violetcirclevp (privado, rama `master`).
 
 | Qué | Dónde | Versión |
 |---|---|---|
-| App Android | `release/VioletCircleVP-1.1.0.apk` (62 MB, arm64 + armv7, gitignored) | 1.1.0 |
+| App Android | `release/VioletCircleVP-1.2.0.apk` (arm64 + armv7, gitignored) — en el cel sigue la 1.1.0 hasta instalarla | 1.2.0 |
 | Mini app "Pedir ayuda" | `release/PedirAyuda-1.0.0.apk` (180 KB, sin permisos) · código en `companion/` | 1.0.0 |
 | Web (PWA) | https://violetcirclevp-uvp.web.app | build de `d7e8ed2` |
 | Panel de tendencias | https://violetcirclevp-uvp.web.app/panel/ (Google, solo marioimanol02@gmail.com) | — |
@@ -19,7 +19,7 @@ Ambas apps están instaladas por ADB en el Galaxy S24 Ultra de Mario (SM-S928B, 
 ## Comandos
 
 ```bash
-npm test                 # 49 pruebas (Jest)
+npm test                 # 67 pruebas (Jest)
 npm run test:rules       # 17 pruebas de reglas (emulador de Firestore)
 npx tsc --noEmit && npx eslint .
 
@@ -34,7 +34,7 @@ npm run build:web && npx firebase deploy --only hosting
 cd companion && ./gradlew assembleRelease
 
 # Instalar en el cel (USB, depuración activada)
-adb install --user 0 -r release/VioletCircleVP-1.1.0.apk
+adb install --user 0 -r release/VioletCircleVP-1.2.0.apk
 adb install --user 0 -r release/PedirAyuda-1.0.0.apk
 ```
 
@@ -57,9 +57,8 @@ adb install --user 0 -r release/PedirAyuda-1.0.0.apk
 1. **Probar en el cel real**: 3× volumen abajo (servicio de accesibilidad; en Android 13+ requiere
    "Permitir ajustes restringidos"), tecla lateral → mini app, y ambos **con la pantalla bloqueada**.
 2. **Confirmar en navegador móvil** que mantener presionado el círculo ya completa los 2 s (arreglo `d7e8ed2`).
-3. **Actualizar el texto de Ajustes** de la app: la opción "entrada para botón lateral" (`SosLauncherActivity`)
-   no aparece en el selector de Samsung/Pixel; debería explicar que se use la mini app "Pedir ayuda".
-4. Generar un APK nuevo (1.1.1) cuando haya cambios nativos/JS — el arreglo del temporizador del orbe aún no
-   está en el APK instalado (solo en la web).
+3. ~~Texto del botón lateral~~ (hecho en 1.2.0: apunta a la mini app).
+4. **Instalar la 1.2.0 en el cel** (incluye el arreglo del orbe y el rediseño) y revisar: permisos al inicio,
+   aviso tras el PIN, chat de Vi con el teclado de Samsung.
 5. Sembrar el contenido en Firestore (necesita llave de cuenta de servicio); hoy la app usa el JSON incluido.
 6. iPhone: sin build todavía (`docs/IPHONE.md`).

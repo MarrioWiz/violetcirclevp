@@ -5,23 +5,23 @@ export type ColorScheme = 'dark';
 
 /** Tokens base (ver docs/DISENO.md). */
 export const palette = {
-  bg0: '#08050F',
-  bg1: '#0F0A1C',
-  bg2: '#160F28',
+  // Paleta "aurora violeta" (2026-10-12): índigo profundo, orquídea y periwinkle.
+  bg0: '#130E24',
+  bg1: '#1A1430',
+  bg2: '#231B3D',
   glass: 'rgba(255,255,255,0.04)',
   glassStrong: 'rgba(255,255,255,0.07)',
   stroke: 'rgba(255,255,255,0.08)',
   strokeStrong: 'rgba(255,255,255,0.14)',
   sheen: 'rgba(255,255,255,0.14)',
-  text: '#F5F0FF',
-  textMuted: '#A89BC4',
-  textFaint: '#6F6388', // solo decorativo
-  // Paleta suavizada (2026-10-12, pedido de Mario: "los colores están muy fuertes").
-  violet: '#8A72D6',
-  violetLight: '#B3A1EE',
-  violetDeep: '#6A52B8',
-  violetHalo: '#2A1A45',
-  danger: '#F0808F', // SOLO 911 / destructivo
+  text: '#F1ECFA',
+  textMuted: '#ADA3C9',
+  textFaint: '#71688F', // solo decorativo
+  violet: '#A97BEA',
+  violetLight: '#C9A8F7',
+  violetDeep: '#7A5BD6',
+  violetHalo: '#2D2152',
+  danger: '#F0627D', // SOLO 911 / destructivo
   success: '#86CFAF',
   warning: '#E5C47A',
   white: '#FFFFFF',
@@ -32,11 +32,11 @@ export const palette = {
 
 /** Acento por sección: el dock y el encabezado se tiñen con él. */
 export const accents = {
-  inicio: '#BBA9EC',
-  orientacion: '#93C3E0',
-  circulo: '#DDA6C6',
-  directorio: '#92CDB3',
-  mas: '#DFC48A',
+  inicio: '#C9A8F7',
+  orientacion: '#9DB2F7',
+  circulo: '#F2A9D4',
+  directorio: '#8FDACF',
+  mas: '#F4C690',
 } as const;
 
 export type AccentKey = keyof typeof accents;
@@ -76,7 +76,7 @@ export interface Palette {
 
 export const dark: Palette = {
   primary: palette.violetLight,
-  primaryDark: '#DDD6FE',
+  primaryDark: '#E7DAFD',
   primarySoft: alpha(palette.violet, 0.16),
   accent: accents.inicio,
   onPrimary: palette.white,
@@ -90,7 +90,7 @@ export const dark: Palette = {
   textFaint: palette.textFaint,
   danger: palette.danger,
   dangerSoft: alpha(palette.danger, 0.12),
-  onDanger: '#1A0610',
+  onDanger: '#FFFFFF',
   success: palette.success,
   successSoft: alpha(palette.success, 0.12),
   warning: palette.warning,
@@ -115,8 +115,8 @@ export const brand = {
 /** Gradientes de acciones destacadas. */
 export const gradients = {
   primary: [palette.violetLight, palette.violetDeep] as const,
-  orb: ['#B7A5EE', '#8366CF', '#A274C2'] as const,
-  sosBg: ['#1B0F33', palette.bg0] as const,
+  orb: ['#DCC2FB', '#A97BEA', '#7F8FF2'] as const,
+  sosBg: ['#251A45', palette.bg0] as const,
 } as const;
 
 /**
